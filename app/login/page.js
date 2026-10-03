@@ -6,12 +6,49 @@ import Link from "next/link";
 export default function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
+  const [error, setError] = useState("");
+  const [cargando, setCargando] = useState(false);
 
-  function iniciarSesion(event) {
+  async function iniciarSesion(event) {
     event.preventDefault();
 
-    console.log("Correo:", correo);
-    console.log("Contraseña:", contrasena);
+    setError("");
+    setCargando(true);
+
+    try {
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            correo_institucional: correo,
+            password: contrasena,
+          }),
+        }
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        setError(datos.message || "No se pudo iniciar sesión");
+        return;
+      }
+
+      localStorage.setItem("token", datos.token);
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify(datos.usuario)
+      );
+
+      window.location.href = "/admin/dashboard";
+    } catch {
+      setError("No se pudo conectar con el servidor");
+    } finally {
+      setCargando(false);
+    }
   }
 
   return (
@@ -44,6 +81,7 @@ export default function Login() {
             </div>
 
             <form onSubmit={iniciarSesion}>
+
               <div className="loginField">
                 <label htmlFor="correo">
                   Correo institucional
@@ -53,8 +91,8 @@ export default function Login() {
                   id="correo"
                   type="email"
                   value={correo}
-                  onChange={(event) => setCorreo(event.target.value)}
-                  placeholder="correo@institucion.gob.mx"
+                  onChange={(e) => setCorreo(e.target.value)}
+                  placeholder="usuario@dominio.gob.mx"
                   required
                 />
               </div>
@@ -68,17 +106,26 @@ export default function Login() {
                   id="contrasena"
                   type="password"
                   value={contrasena}
-                  onChange={(event) => setContrasena(event.target.value)}
+                  onChange={(e) => setContrasena(e.target.value)}
                   placeholder="Ingresa tu contraseña"
                   required
                 />
               </div>
 
+              {error && (
+                <p className="loginError">
+                  {error}
+                </p>
+              )}
+
               <button
                 type="submit"
                 className="loginButton"
+                disabled={cargando}
               >
-                Iniciar sesión
+                {cargando
+                  ? "Iniciando sesión..."
+                  : "Iniciar sesión"}
               </button>
             </form>
           </div>
