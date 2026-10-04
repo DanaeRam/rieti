@@ -5,7 +5,7 @@ import Header from "@/components/Header";
 import { useState } from "react";
 
 export default function AdminLayout({ children }) {
-  const [sidebarAbierto, setSidebarAbierto] = useState(false);
+  const [sidebarAbierto, setSidebarAbierto] = useState(true);
 
   return (
     <div className="rieti-layout">
@@ -13,7 +13,7 @@ export default function AdminLayout({ children }) {
         abierto={sidebarAbierto}
         setAbierto={setSidebarAbierto}
       />
-      
+
       {sidebarAbierto && (
       <button
         className="rieti-overlay"

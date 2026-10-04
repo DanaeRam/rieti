@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 
-export default function Sidebar({ abierto, setAbierto }) {
+
+export default function Sidebar({ abierto }) {
   return (
     <aside className={`rieti-sidebar ${abierto ? "open" : "closed"}`}>
       <div className="rieti-sidebar-header">
