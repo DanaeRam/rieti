@@ -14,7 +14,11 @@ export default function AdminLayout({ children }) {
         setAbierto={setSidebarAbierto}
       />
 
-      <div className="rieti-main">
+      <div
+        className={`rieti-main ${
+          sidebarAbierto ? "sidebar-abierto" : "sidebar-cerrado"
+        }`}
+      >
         <Header
           setSidebarAbierto={setSidebarAbierto}
         />
@@ -22,9 +26,7 @@ export default function AdminLayout({ children }) {
         <main className="rieti-content">
           {children}
         </main>
-
       </div>
-
     </div>
   );
 }
