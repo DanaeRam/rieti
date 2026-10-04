@@ -509,15 +509,6 @@ body {
     justify-content: center;
   }
 
-  .rieti-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 95;
-    display: block;
-    border: 0;
-    background: rgba(16, 24, 40, 0.35);
-  }
-
   .rieti-header {
     padding: 12px 18px;
   }
@@ -546,6 +537,23 @@ body {
     width: 100%;
     padding: 16px;
   }  
+}
+
+.rieti-overlay {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .rieti-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    width: 100%;
+    height: 100%;
+    border: none;
+    cursor: pointer;
+  }
 }
 
 
@@ -785,11 +793,6 @@ button {
 .rieti-status-list .status-total strong {
   font-size: 25px;
 }
-
-.rieti-overlay {
-  display: none;
-}
-
 
 @media (max-width: 768px) {
   .rieti-content {
