@@ -1,7 +1,6 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
@@ -9,13 +8,10 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 
 const meses = [];
 const reportesPorMes = [];
-
 const municipios = [];
 const reportesPorMunicipio = [];
 
 export default function Dashboard() {
-  const [menuAbierto, setMenuAbierto] = useState(false);
-
   const graficaMensual = {
     series: [
       {
@@ -23,7 +19,6 @@ export default function Dashboard() {
         data: reportesPorMes,
       },
     ],
-
     options: {
       chart: {
         type: "bar",
@@ -32,38 +27,30 @@ export default function Dashboard() {
         },
         fontFamily: "Arial, sans-serif",
       },
-
       colors: ["#3E3869"],
-
       plotOptions: {
         bar: {
           borderRadius: 6,
           columnWidth: "45%",
         },
       },
-
       dataLabels: {
         enabled: false,
       },
-
       xaxis: {
         categories: meses,
-
         labels: {
           style: {
             colors: "#667085",
           },
         },
-
         axisBorder: {
           show: false,
         },
-
         axisTicks: {
           show: false,
         },
       },
-
       yaxis: {
         labels: {
           style: {
@@ -71,11 +58,9 @@ export default function Dashboard() {
           },
         },
       },
-
       grid: {
         borderColor: "#EAECF0",
       },
-
       tooltip: {
         theme: "light",
       },
@@ -89,7 +74,6 @@ export default function Dashboard() {
         data: reportesPorMunicipio,
       },
     ],
-
     options: {
       chart: {
         type: "bar",
@@ -98,9 +82,7 @@ export default function Dashboard() {
         },
         fontFamily: "Arial, sans-serif",
       },
-
       colors: ["#55AFC1"],
-
       plotOptions: {
         bar: {
           horizontal: true,
@@ -108,21 +90,17 @@ export default function Dashboard() {
           barHeight: "55%",
         },
       },
-
       dataLabels: {
         enabled: false,
       },
-
       xaxis: {
         categories: municipios,
-
         labels: {
           style: {
             colors: "#667085",
           },
         },
       },
-
       yaxis: {
         labels: {
           style: {
@@ -130,11 +108,9 @@ export default function Dashboard() {
           },
         },
       },
-
       grid: {
         borderColor: "#EAECF0",
       },
-
       tooltip: {
         theme: "light",
       },
@@ -143,38 +119,27 @@ export default function Dashboard() {
 
   const graficaEstados = {
     series: [],
-
     options: {
       chart: {
         type: "donut",
         fontFamily: "Arial, sans-serif",
       },
-
-      colors: [
-        "#D16C9A",
-        "#496A9F",
-        "#55AFC1",
-      ],
-
+      colors: ["#D16C9A", "#496A9F", "#55AFC1"],
       labels: [
         "Pendientes",
         "En seguimiento",
         "Concluidos",
       ],
-
       legend: {
         position: "bottom",
         fontSize: "13px",
-
         labels: {
           colors: "#344054",
         },
       },
-
       dataLabels: {
         enabled: true,
       },
-
       plotOptions: {
         pie: {
           donut: {
@@ -182,7 +147,6 @@ export default function Dashboard() {
           },
         },
       },
-
       stroke: {
         width: 3,
         colors: ["#FFFFFF"],
@@ -191,465 +155,167 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="rieti-layout">
-
-      <aside
-        className={`rieti-sidebar ${
-          menuAbierto ? "open" : ""
-        }`}
-      >
-
-        <div className="rieti-logo">
-          <img
-            src="/rieti_logo.png"
-            alt="RIETI"
-          />
-        </div>
-
-        <nav className="rieti-menu">
-
-          <a
-            href="/admin/dashboard"
-            className="rieti-menu-item active"
-          >
-            <span>▦</span>
-            <strong>Dashboard</strong>
-          </a>
-
-          <a
-            href="/admin/reportes"
-            className="rieti-menu-item"
-          >
-            <span>▤</span>
-            <strong>Bandeja de reportes</strong>
-          </a>
-
-          <a
-            href="/admin/estadisticas"
-            className="rieti-menu-item"
-          >
-            <span>◫</span>
-            <strong>Estadísticas y analítica</strong>
-          </a>
-
-          <a
-            href="/admin/usuarios"
-            className="rieti-menu-item"
-          >
-            <span>♙</span>
-            <strong>Administración de usuarios</strong>
-          </a>
-
-        </nav>
-
-        <div className="rieti-sidebar-bottom">
-          <span>RIETI</span>
-          <small>Sistema de reportes</small>
-        </div>
-
-      </aside>
-
-      <div className="rieti-main">
-
-        <header className="rieti-header">
-
-          <div className="rieti-header-left">
-
-            <button
-              className="rieti-menu-button"
-              onClick={() =>
-                setMenuAbierto(!menuAbierto)
-              }
-            >
-              ☰
-            </button>
-
-            <div>
-
-              <span className="rieti-header-label">
-                RIETI · ADMINISTRACIÓN
-              </span>
-
-              <h1>
-                Dashboard
-              </h1>
-
-            </div>
-
-          </div>
-
-          <div className="rieti-header-right">
-
-            <button className="rieti-notification">
-              🔔
-            </button>
-
-            <div className="rieti-profile">
-
-              <div className="rieti-profile-avatar">
-                —
-              </div>
-
-              <div className="rieti-profile-info">
-
-                <strong>
-                  Usuario
-                </strong>
-
-                <small>
-                  Panel administrativo
-                </small>
-
-              </div>
-
-              <span className="rieti-profile-arrow">
-                ⌄
-              </span>
-
-            </div>
-
-          </div>
-
-        </header>
-
-        <main className="rieti-content">
-
-          <div className="rieti-page-title">
-
-            <span>
-              RIETI · ADMINISTRACIÓN
-            </span>
-
-            <h2>
-              Dashboard
-            </h2>
-
-            <p>
-              Resumen general de los reportes registrados en el sistema.
-            </p>
-
-          </div>
-
-          <section className="rieti-metrics">
-
-            <article className="rieti-metric purple">
-
-              <span>
-                TOTAL DE REPORTES
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Reportes registrados
-              </small>
-
-            </article>
-
-            <article className="rieti-metric pink">
-
-              <span>
-                REPORTES PENDIENTES
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Requieren atención
-              </small>
-
-            </article>
-
-            <article className="rieti-metric blue">
-
-              <span>
-                EN SEGUIMIENTO
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Casos canalizados
-              </small>
-
-            </article>
-
-            <article className="rieti-metric turquoise">
-
-              <span>
-                CONCLUIDOS
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Casos atendidos
-              </small>
-
-            </article>
-
-          </section>
-
-          <section className="rieti-mini-metrics">
-
-            <article>
-
-              <span>
-                ESTE MES
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Reportes recibidos
-              </small>
-
-            </article>
-
-            <article>
-
-              <span>
-                ESTA SEMANA
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Reportes recibidos
-              </small>
-
-            </article>
-
-            <article>
-
-              <span>
-                HOY
-              </span>
-
-              <strong>
-                —
-              </strong>
-
-              <small>
-                Reportes recibidos
-              </small>
-
-            </article>
-
-          </section>
-
-          <section className="rieti-chart-grid">
-
-            <article className="rieti-panel large">
-
-              <div className="rieti-panel-header">
-
-                <div>
-
-                  <span>
-                    ACTIVIDAD
-                  </span>
-
-                  <h3>
-                    Reportes recibidos por mes
-                  </h3>
-
-                </div>
-
-                <button>
-                  ⋮
-                </button>
-
-              </div>
-
-              <div className="rieti-chart">
-
-                <Chart
-                  options={graficaMensual.options}
-                  series={graficaMensual.series}
-                  type="bar"
-                  height={320}
-                />
-
-              </div>
-
-            </article>
-
-            <article className="rieti-panel">
-
-              <div className="rieti-panel-header">
-
-                <div>
-
-                  <span>
-                    COBERTURA
-                  </span>
-
-                  <h3>
-                    Reportes por municipio
-                  </h3>
-
-                </div>
-
-                <button>
-                  ⋮
-                </button>
-
-              </div>
-
-              <div className="rieti-chart">
-
-                <Chart
-                  options={graficaMunicipios.options}
-                  series={graficaMunicipios.series}
-                  type="bar"
-                  height={320}
-                />
-
-              </div>
-
-            </article>
-
-          </section>
-
-          <section className="rieti-bottom-grid">
-
-            <article className="rieti-panel">
-
-              <div className="rieti-panel-header">
-
-                <div>
-
-                  <span>
-                    ESTADO
-                  </span>
-
-                  <h3>
-                    Distribución de reportes
-                  </h3>
-
-                </div>
-
-                <button>
-                  ⋮
-                </button>
-
-              </div>
-
-              <div className="rieti-chart">
-
-                <Chart
-                  options={graficaEstados.options}
-                  series={graficaEstados.series}
-                  type="donut"
-                  height={320}
-                />
-
-              </div>
-
-            </article>
-
-            <article className="rieti-panel">
-
-              <div className="rieti-panel-header">
-
-                <div>
-
-                  <span>
-                    RESUMEN
-                  </span>
-
-                  <h3>
-                    Estado de los reportes
-                  </h3>
-
-                </div>
-
-              </div>
-
-              <div className="rieti-status-list">
-
-                <div>
-
-                  <span>
-                    <i className="status-dot pink"></i>
-                    Pendientes
-                  </span>
-
-                  <strong>
-                    —
-                  </strong>
-
-                </div>
-
-                <div>
-
-                  <span>
-                    <i className="status-dot blue"></i>
-                    En seguimiento
-                  </span>
-
-                  <strong>
-                    —
-                  </strong>
-
-                </div>
-
-                <div>
-
-                  <span>
-                    <i className="status-dot turquoise"></i>
-                    Concluidos
-                  </span>
-
-                  <strong>
-                    —
-                  </strong>
-
-                </div>
-
-                <div className="status-total">
-
-                  <span>
-                    Total
-                  </span>
-
-                  <strong>
-                    —
-                  </strong>
-
-                </div>
-
-              </div>
-
-            </article>
-
-          </section>
-
-        </main>
-
+    <>
+      <div className="rieti-page-title">
+        <span>RIETI · ADMINISTRACIÓN</span>
+        <h2>Dashboard</h2>
+        <p>
+          Resumen general de los reportes registrados
+        </p>
       </div>
 
-      {menuAbierto && (
-        <button
-          className="rieti-overlay"
-          onClick={() => setMenuAbierto(false)}
-          aria-label="Cerrar menú"
-        />
-      )}
+      <section className="rieti-metrics">
+        <article className="rieti-metric purple">
+          <span>TOTAL DE REPORTES</span>
+          <strong>—</strong>
+          <small>Reportes registrados</small>
+        </article>
 
-    </div>
+        <article className="rieti-metric pink">
+          <span>REPORTES PENDIENTES</span>
+          <strong>—</strong>
+          <small>Requieren atención</small>
+        </article>
+
+        <article className="rieti-metric blue">
+          <span>EN SEGUIMIENTO</span>
+          <strong>—</strong>
+          <small>Casos canalizados</small>
+        </article>
+
+        <article className="rieti-metric turquoise">
+          <span>CONCLUIDOS</span>
+          <strong>—</strong>
+          <small>Casos atendidos</small>
+        </article>
+      </section>
+
+      <section className="rieti-mini-metrics">
+        <article>
+          <span>ESTE MES</span>
+          <strong>—</strong>
+          <small>Reportes recibidos</small>
+        </article>
+
+        <article>
+          <span>ESTA SEMANA</span>
+          <strong>—</strong>
+          <small>Reportes recibidos</small>
+        </article>
+
+        <article>
+          <span>HOY</span>
+          <strong>—</strong>
+          <small>Reportes recibidos</small>
+        </article>
+      </section>
+
+      <section className="rieti-chart-grid">
+        <article className="rieti-panel large">
+          <div className="rieti-panel-header">
+            <div>
+              <span>ACTIVIDAD</span>
+              <h3>Reportes recibidos por mes</h3>
+            </div>
+
+            <button>⋮</button>
+          </div>
+
+          <div className="rieti-chart">
+            <Chart
+              options={graficaMensual.options}
+              series={graficaMensual.series}
+              type="bar"
+              height={320}
+            />
+          </div>
+        </article>
+
+        <article className="rieti-panel">
+          <div className="rieti-panel-header">
+            <div>
+              <span>COBERTURA</span>
+              <h3>Reportes por municipio</h3>
+            </div>
+
+            <button>⋮</button>
+          </div>
+
+          <div className="rieti-chart">
+            <Chart
+              options={graficaMunicipios.options}
+              series={graficaMunicipios.series}
+              type="bar"
+              height={320}
+            />
+          </div>
+        </article>
+      </section>
+
+      <section className="rieti-bottom-grid">
+        <article className="rieti-panel">
+          <div className="rieti-panel-header">
+            <div>
+              <span>ESTADO</span>
+              <h3>Distribución de reportes</h3>
+            </div>
+
+            <button>⋮</button>
+          </div>
+
+          <div className="rieti-chart">
+            <Chart
+              options={graficaEstados.options}
+              series={graficaEstados.series}
+              type="donut"
+              height={320}
+            />
+          </div>
+        </article>
+
+        <article className="rieti-panel">
+          <div className="rieti-panel-header">
+            <div>
+              <span>RESUMEN</span>
+              <h3>Estado de los reportes</h3>
+            </div>
+          </div>
+
+          <div className="rieti-status-list">
+            <div>
+              <span>
+                <i className="status-dot pink"></i>
+                Pendientes
+              </span>
+
+              <strong>—</strong>
+            </div>
+
+            <div>
+              <span>
+                <i className="status-dot blue"></i>
+                En seguimiento
+              </span>
+
+              <strong>—</strong>
+            </div>
+
+            <div>
+              <span>
+                <i className="status-dot turquoise"></i>
+                Concluidos
+              </span>
+
+              <strong>—</strong>
+            </div>
+
+            <div className="status-total">
+              <span>Total</span>
+              <strong>—</strong>
+            </div>
+          </div>
+        </article>
+      </section>
+    </>
   );
 }

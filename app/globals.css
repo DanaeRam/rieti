@@ -249,25 +249,7 @@ body {
 
 /* SECCIÓN ADMINS */
 
-/* DASHBOARD */
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-.rieti-layout {
-  display: flex;
-  min-height: 100vh;
-  background: var(--rieti-background);
-}
-
+/* HEADER Y SIDEBAR */
 .rieti-sidebar {
   position: fixed;
   top: 0;
@@ -490,6 +472,33 @@ button {
   color: var(--rieti-muted);
 }
 
+
+
+/* DASHBOARD */
+
+button,
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+.rieti-layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--rieti-background);
+}
+
+.rieti-main {
+  width: calc(100% - 260px);
+  margin-left: 260px;
+  min-width: 0;
+}
+
 .rieti-content {
   width: 100%;
   max-width: 1600px;
@@ -625,48 +634,12 @@ button {
   gap: 24px;
 }
 
-.rieti-panel {
-  min-width: 0;
-  overflow: hidden;
-  background: #ffffff;
-  border: 1px solid var(--rieti-border);
-  border-radius: 22px;
-  box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
-}
-
-.rieti-panel-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 25px 26px 5px;
-}
-
-.rieti-panel-header span {
-  display: block;
-  color: var(--rieti-turquoise);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-}
-
-.rieti-panel-header h3 {
-  margin: 5px 0 0;
-  color: var(--rieti-purple);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.rieti-panel-header button {
-  border: 0;
-  background: transparent;
-  color: #98a2b3;
-  font-size: 22px;
-}
-
 .rieti-chart {
   width: 100%;
   padding: 5px 20px 15px;
 }
+
+
 
 .rieti-status-list {
   padding: 15px 28px 30px;
@@ -738,54 +711,7 @@ button {
   }
 }
 
-@media (max-width: 900px) {
-  .rieti-sidebar {
-    transform: translateX(-100%);
-  }
-
-  .rieti-sidebar.open {
-    transform: translateX(0);
-  }
-
-  .rieti-main {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .rieti-menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .rieti-overlay {
-    position: fixed;
-    inset: 0;
-    z-index: 95;
-    display: block;
-    border: 0;
-    background: rgba(16, 24, 40, 0.35);
-  }
-}
-
 @media (max-width: 700px) {
-  .rieti-header {
-    padding: 12px 18px;
-  }
-
-  .rieti-header-label {
-    font-size: 9px;
-  }
-
-  .rieti-header-left h1 {
-    font-size: 18px;
-  }
-
-  .rieti-profile-info,
-  .rieti-profile-arrow {
-    display: none;
-  }
-
   .rieti-content {
     padding: 20px 15px;
   }
