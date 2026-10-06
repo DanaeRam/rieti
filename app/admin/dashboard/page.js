@@ -157,7 +157,6 @@ export default function Dashboard() {
   return (
     <>
       <div className="rieti-page-title">
-        <span>RIETI · ADMINISTRACIÓN</span>
         <h2>Dashboard</h2>
         <p>
           Resumen general de los reportes registrados

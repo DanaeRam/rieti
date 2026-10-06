@@ -5,7 +5,6 @@ import { useState } from "react";
 export default function Reportes() {
   const [municipio, setMunicipio] = useState("");
   const [estado, setEstado] = useState("");
-  const [prioridad, setPrioridad] = useState("");
   const [fecha, setFecha] = useState("");
 
   function buscarReportes(event) {
@@ -15,25 +14,25 @@ export default function Reportes() {
   function limpiarFiltros() {
     setMunicipio("");
     setEstado("");
-    setPrioridad("");
     setFecha("");
   }
 
   return (
-    <div>
-      <div>
+    <div className="reportes-page">
+      <div className="rieti-page-title">
         <h2>Bandeja de reportes</h2>
-        <p>Consulta y gestión de los reportes recibidos.</p>
       </div>
 
-      <section>
-        <div>
-          <span>CONSULTA</span>
-          <h3>Filtrar reportes</h3>
+      <section className="reportes-panel">
+        <div className="reportes-panel-header">
+          <div>
+            <span>CONSULTA</span>
+            <h3>Filtrar reportes</h3>
+          </div>
         </div>
 
-        <form onSubmit={buscarReportes}>
-          <div>
+        <form onSubmit={buscarReportes} className="reportes-filtros">
+          <div className="reporte-filtro">
             <label htmlFor="municipio">Municipio</label>
             <select
               id="municipio"
@@ -44,7 +43,7 @@ export default function Reportes() {
             </select>
           </div>
 
-          <div>
+          <div className="reporte-filtro">
             <label htmlFor="estado">Estado</label>
             <select
               id="estado"
@@ -55,19 +54,7 @@ export default function Reportes() {
             </select>
           </div>
 
-          <div>
-            <label htmlFor="prioridad">Prioridad</label>
-            <select
-              id="prioridad"
-              value={prioridad}
-              onChange={(e) => setPrioridad(e.target.value)}
-            >
-              <option value="">Todas las prioridades</option>
-            </select>
-          </div>
-
-          <div>
-
+          <div className="reporte-filtro">
             <label htmlFor="fecha">Fecha</label>
             <input
               id="fecha"
@@ -77,50 +64,53 @@ export default function Reportes() {
             />
           </div>
 
-          <div>
+          <div className="reportes-filtro-actions">
             <button
               type="button"
+              className="reportes-button secondary"
               onClick={limpiarFiltros}
             >
               Limpiar
             </button>
 
-            <button type="submit">
+            <button
+              type="submit"
+              className="reportes-button primary"
+            >
               Buscar
-
             </button>
           </div>
         </form>
+
       </section>
 
-      <section>
-        <div>
-          <span>REPORTES</span>
-          <h3>Reportes recibidos</h3>
-          <span>0 reportes</span>
+      <section className="reportes-panel">
+        <div className="reportes-panel-header reportes-list-header">
+          <div>
+            <span>REPORTES</span>
+            <h3>Reportes recibidos</h3>
+          </div>
+
+          <span className="reportes-count">
+            0 reportes
+          </span>
         </div>
 
-        <div>
-          <table>
+        <div className="reportes-table-container">
+          <table className="reportes-table">
             <thead>
               <tr>
                 <th>Folio</th>
                 <th>Fecha</th>
                 <th>Municipio</th>
                 <th>Estado</th>
-                <th>Prioridad</th>
                 <th>Acciones</th>
-
               </tr>
             </thead>
-
-            <tbody>
-              <tr></tr>
-            </tbody>
+            
           </table>
         </div>
       </section>
-      
     </div>
   );
 }
