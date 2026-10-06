@@ -41,8 +41,8 @@ export default function Reportes() {
         <h2>Bandeja de reportes</h2>
       </div>
 
-      <section className="reportes-panel">
-        <div className="reportes-panel-header">
+      <section className="rieti-panel">
+        <div className="rieti-panel-header">
           <div>
             <span>CONSULTA</span>
             <h3>Filtrar reportes</h3>
@@ -111,8 +111,8 @@ export default function Reportes() {
 
       </section>
 
-      <section className="reportes-panel">
-        <div className="reportes-panel-header reportes-list-header">
+      <section className="rieti-panel">
+        <div className="rieti-panel-header reportes-list-header">
           <div>
             <span>REPORTES</span>
             <h3>Reportes recibidos</h3>
