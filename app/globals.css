@@ -648,20 +648,56 @@ button {
   font-size: 13px;
 }
 
+.rieti-metric {
+  min-height: 184px;
+  padding: 30px;
+  border-radius: 22px;
+  color: #ffffff;
+  box-shadow: 0 8px 25px rgba(62, 56, 105, 0.08);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
 .rieti-metric.purple {
-  background: var(--rieti-purple);
+  background: linear-gradient(
+    110deg,
+    #3e3869 0%,
+    #6254a8 50%,
+    #a875e8 100%
+  );
 }
 
 .rieti-metric.pink {
-  background: var(--rieti-pink);
+  background: linear-gradient(
+    110deg,
+    #c54f82 0%,
+    #df6b91 50%,
+    #eb4093 100%
+  );
 }
 
 .rieti-metric.blue {
-  background: var(--rieti-blue);
+  background: linear-gradient(
+    110deg,
+    #3f5fa3 0%,
+    #477fc2 50%,
+    #55b9d1 100%
+  );
 }
 
 .rieti-metric.turquoise {
-  background: var(--rieti-turquoise);
+  background: linear-gradient(
+    110deg,
+    #35a99a 0%,
+    #6fcfc8 50%,
+    #3ac6bf 100%
+  );
+}
+
+.rieti-metric:hover {
+  transform: scale(1.03);
+  box-shadow: 0 14px 30px rgba(62, 56, 105, 0.18);
+  position: relative;
+  z-index: 2;
 }
 
 .rieti-mini-metrics {
