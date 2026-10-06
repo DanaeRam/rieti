@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+
 
 export default function Sidebar({ abierto }) {
-  const [esAdministrador, setEsAdministrador] = useState(false);
+  const pathname = usePathname();
+  const [esAdministrador, setEsAdministrador] = useState(true);
 
   useEffect(() => {
     const usuarioGuardado = localStorage.getItem("usuario");
@@ -28,22 +31,42 @@ export default function Sidebar({ abierto }) {
       </div>
 
       <nav className="rieti-menu">
-        <Link href="/admin/dashboard" className="rieti-menu-item">
+        <Link
+          href="/admin/dashboard"
+          className={`rieti-menu-item ${
+            pathname == "/admin/dashboard" ? "active" : ""
+          }`}
+        >
           {abierto && <strong>Dashboard</strong>}
         </Link>
 
-        <Link href="/admin/reportes" className="rieti-menu-item">
+        <Link
+          href="/admin/reportes"
+          className={`rieti-menu-item ${
+            pathname == "/admin/reportes" ? "active" : ""
+          }`}
+        >
           {abierto && <strong>Bandeja de reportes</strong>}
         </Link>
 
-        <Link href="/admin/estadisticas" className="rieti-menu-item">
+        <Link
+          href="/admin/estadisticas"
+          className={`rieti-menu-item ${
+            pathname == "/admin/estadisticas" ? "active" : ""
+          }`}
+        >
           {abierto && <strong>Estadísticas y analítica</strong>}
         </Link>
 
         {esAdministrador && (
-          <Link href="/admin/usuarios" className="rieti-menu-item">
-            {abierto && <strong>Administración de usuarios</strong>}
-          </Link>
+          <Link
+          href="/admin/usuarios"
+          className={`rieti-menu-item ${
+            pathname == "/admin/usuarios" ? "active" : ""
+          }`}
+        >
+          {abierto && <strong>Administración de usuarios</strong>}
+        </Link>
         )}
       </nav>
 

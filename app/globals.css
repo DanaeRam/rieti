@@ -326,7 +326,7 @@ body {
 }
 
 .rieti-logo img {
-  width: 145px;
+  width: 185px;
   height: auto;
   object-fit: contain;
 }
@@ -367,12 +367,19 @@ body {
 }
 
 .rieti-menu-item.active {
-  color: var(--rieti-purple);
-  background: #eeedf7;
+  color: #ffffff;
+  background: linear-gradient(
+    90deg,
+    #37306f 0%,
+    #3f5fa3 50%,
+    #35a9c4 100%
+  );
+  border-radius: 10px;
+  box-shadow: 0 6px 16px rgba(62, 56, 105, 0.20);
 }
 
 .rieti-menu-item.active span {
-  color: var(--rieti-purple);
+  color: #ffffff;
 }
 
 .rieti-menu-item.active strong {
