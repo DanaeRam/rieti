@@ -1,11 +1,29 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Reportes() {
   const [municipio, setMunicipio] = useState("");
   const [estado, setEstado] = useState("");
   const [fecha, setFecha] = useState("");
+  const [municipios, setMunicipios] = useState([]);
+
+    useEffect(() => {
+    async function cargarMunicipios() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios"
+        );
+
+        const datos = await respuesta.json();
+        setMunicipios(datos);
+      } catch {
+        setMunicipios([]);
+      }
+    }
+
+    cargarMunicipios();
+  }, []);
 
   function buscarReportes(event) {
     event.preventDefault();
@@ -40,6 +58,15 @@ export default function Reportes() {
               onChange={(e) => setMunicipio(e.target.value)}
             >
               <option value="">Todos los municipios</option>
+
+              {municipios.map((municipio) => (
+                <option
+                  key={municipio.idMunicipio}
+                  value={municipio.idMunicipio}
+                >
+                  {municipio.nombre}
+                </option>
+              ))}
             </select>
           </div>
 
@@ -107,7 +134,7 @@ export default function Reportes() {
                 <th>Acciones</th>
               </tr>
             </thead>
-            
+
           </table>
         </div>
       </section>
