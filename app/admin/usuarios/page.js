@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Usuarios() {
   const [nombre, setNombre] = useState("");
@@ -8,6 +8,24 @@ export default function Usuarios() {
   const [contrasena, setContrasena] = useState("");
   const [rol, setRol] = useState("");
   const [municipio, setMunicipio] = useState("");
+  const [municipios, setMunicipios] = useState([]);
+
+  useEffect(() => {
+    async function cargarMunicipios() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios"
+        );
+
+        const datos = await respuesta.json();
+        setMunicipios(datos);
+      } catch {
+        setMunicipios([]);
+      }
+    }
+
+    cargarMunicipios();
+  }, []);
 
   function crearUsuario(event) {
     event.preventDefault();
@@ -89,6 +107,14 @@ export default function Usuarios() {
               required
             >
               <option value="">Seleccionar municipio</option>
+              {municipios.map((municipio) => (
+                <option
+                  key={municipio.idMunicipio}
+                  value={municipio.idMunicipio}
+                >
+                  {municipio.nombre}
+                </option>
+              ))}
             </select>
           </div>
 
