@@ -2,6 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import {
+  Bell,
+  ChevronDown,
+  UserLock,
+  UserRoundPen,
+  UserRound,
+} from "lucide-react";
 
 export default function Header({ setSidebarAbierto }) {
   const [usuario, setUsuario] = useState(null);
@@ -64,7 +71,7 @@ export default function Header({ setSidebarAbierto }) {
 
       <div className="rieti-header-right">
         <button className="rieti-notification" aria-label="Notificaciones">
-          🔔
+          <Bell size={22} />
         </button>
 
         <div className="rieti-profile-wrapper" ref={perfilRef}>
@@ -74,7 +81,9 @@ export default function Header({ setSidebarAbierto }) {
             aria-expanded={perfilAbierto}
             aria-label="Abrir menú de perfil"
           >
-            <div className="rieti-profile-avatar">-</div>
+            <div className="rieti-profile-avatar">
+              <UserRound size={22} />
+            </div>
 
             <div className="rieti-profile-info">
               <strong>{nombre}</strong>
@@ -84,14 +93,16 @@ export default function Header({ setSidebarAbierto }) {
             <span
               className={`rieti-profile-arrow ${perfilAbierto ? "open" : ""}`}
             >
-              ⌄
+              <ChevronDown size={22} />
             </span>
           </button>
 
           {perfilAbierto && (
             <div className="rieti-profile-menu">
               <div className="rieti-profile-menu-header">
-                <div className="rieti-profile-menu-avatar">-</div>
+                <div className="rieti-profile-menu-avatar">
+                  <UserRound size={22} />
+                </div>
 
                 <div>
                   <strong>{nombre}</strong>
@@ -110,7 +121,9 @@ export default function Header({ setSidebarAbierto }) {
                 className="rieti-profile-option"
                 onClick={() => setPerfilAbierto(false)}
               >
-                <span className="rieti-profile-option-icon">-</span>
+                <span className="rieti-profile-option-icon">
+                  <UserRoundPen size={22} />
+                </span>
 
                 <div>
                   <strong>Mi perfil</strong>
@@ -123,7 +136,9 @@ export default function Header({ setSidebarAbierto }) {
                 className="rieti-profile-option"
                 onClick={() => setPerfilAbierto(false)}
               >
-                <span className="rieti-profile-option-icon">-</span>
+                <span className="rieti-profile-option-icon">
+                  <UserLock size={22} />
+                </span>
 
                 <div>
                   <strong>Seguridad</strong>
@@ -136,7 +151,6 @@ export default function Header({ setSidebarAbierto }) {
               <button className="rieti-profile-logout" onClick={cerrarSesion}>
                 Cerrar sesión
               </button>
-              
             </div>
           )}
         </div>

@@ -468,8 +468,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px;
-  height: 42px;
+  width: 50px;
+  height: 50px;
   border: 1px solid var(--rieti-border);
   border-radius: 50%;
   background: #ffffff;
@@ -528,8 +528,8 @@ body {
 }
 
 .rieti-profile-menu-avatar {
-  width: 48px;
-  height: 48px;
+  width: 50px;
+  height: 50px;
 }
 
 .rieti-profile-info {
