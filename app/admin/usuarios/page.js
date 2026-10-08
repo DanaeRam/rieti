@@ -9,14 +9,22 @@ export default function Usuarios() {
   const [password, setPassword] = useState("");
   const [idMunicipio, setIdMunicipio] = useState("");
   const [municipios, setMunicipios] = useState([]);
+
   const [usuarios, setUsuarios] = useState([]);
   const [totalUsuarios, setTotalUsuarios] = useState(0);
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
+
   const [cargando, setCargando] = useState(false);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
   const [errorUsuarios, setErrorUsuarios] = useState("");
+
+  const [usuarioEditar, setUsuarioEditar] = useState(null);
+  const [editNombre, setEditNombre] = useState("");
+  const [editTelefono, setEditTelefono] = useState("");
+  const [editMunicipio, setEditMunicipio] = useState("");
+  const [guardandoEdicion, setGuardandoEdicion] = useState(false);
 
   useEffect(() => {
     async function cargarMunicipios() {
@@ -26,6 +34,7 @@ export default function Usuarios() {
         );
 
         const datos = await respuesta.json();
+
         setMunicipios(datos);
       } catch {
         setMunicipios([]);
@@ -56,9 +65,7 @@ export default function Usuarios() {
 
       if (!respuesta.ok) {
         throw new Error(
-          datos.message ||
-            datos.error ||
-            "No se pudieron cargar los alimentadores",
+          datos.message || datos.error || "No se pudieron cargar los alimentadores",
         );
       }
 
@@ -66,6 +73,7 @@ export default function Usuarios() {
       setTotalUsuarios(datos.total || 0);
     } catch (error) {
       console.error("Error al cargar alimentadores:", error);
+
       setErrorUsuarios(
         error.message || "No se pudieron cargar los alimentadores",
       );
@@ -87,7 +95,6 @@ export default function Usuarios() {
 
     try {
       const token = localStorage.getItem("token");
-      console.log("Token:", token);
 
       const datosUsuario = {
         nombre,
@@ -139,6 +146,77 @@ export default function Usuarios() {
       setTipoMensaje("error");
     } finally {
       setCargando(false);
+    }
+  }
+
+  function abrirEditar(usuario) {
+    setUsuarioEditar(usuario);
+
+    setEditNombre(usuario.nombre || "");
+    setEditTelefono(usuario.telefono || "");
+    setEditMunicipio(String(usuario.idMunicipio || ""));
+  }
+
+  function cerrarEditar() {
+    setUsuarioEditar(null);
+    setEditNombre("");
+    setEditTelefono("");
+    setEditMunicipio("");
+  }
+
+  async function guardarEdicion(event) {
+    event.preventDefault();
+
+    if (!usuarioEditar) {
+      return;
+    }
+
+    setGuardandoEdicion(true);
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const datosActualizados = {
+        nombre: editNombre,
+        telefono: editTelefono,
+        idMunicipio: Number(editMunicipio),
+      };
+
+      const respuesta = await fetch(
+        `https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/usuarios/${usuarioEditar.idUsuario}`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(datosActualizados),
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            datos.error ||
+            "No se pudo actualizar el alimentador",
+        );
+      }
+
+      setMensaje("El alimentador fue actualizado correctamente.");
+      setTipoMensaje("success");
+      cerrarEditar();
+
+      await cargarUsuarios();
+    } catch (error) {
+      console.error("Error al editar alimentador:", error);
+
+      setMensaje(error.message || "No se pudo actualizar el alimentador.");
+
+      setTipoMensaje("error");
+    } finally {
+      setGuardandoEdicion(false);
     }
   }
 
@@ -214,6 +292,7 @@ export default function Usuarios() {
               required
             >
               <option value="">Seleccionar municipio</option>
+
               {municipios.map((municipio) => (
                 <option
                   key={municipio.idMunicipio}
@@ -288,22 +367,103 @@ export default function Usuarios() {
                 usuarios.map((usuario) => (
                   <tr key={usuario.idUsuario}>
                     <td>{usuario.nombre}</td>
-
                     <td>{usuario.correo_institucional}</td>
-
                     <td>{usuario.telefono || "—"}</td>
-
                     <td>{usuario.municipio}</td>
 
-                    <td>{usuario.activo === 1 ? "Activo" : "Inactivo"}</td>
-
-                    <td>{/* Aquí después agregaremos las acciones */}</td>
+                    <td>
+                      <div>
+                        <button
+                          type="button"
+                          onClick={() => abrirEditar(usuario)}
+                        >
+                          Editar
+                        </button>
+                      </div>
+                    </td>
                   </tr>
                 ))}
             </tbody>
           </table>
         </div>
       </section>
+
+      {usuarioEditar && (
+        <div>
+          <div>
+            <h2>Editar alimentador</h2>
+
+            <button type="button" onClick={cerrarEditar}>
+              ×
+            </button>
+          </div>
+
+          <div>
+            <p>Correo institucional: {usuarioEditar.correo_institucional}</p>
+
+            <form onSubmit={guardarEdicion}>
+              <div>
+                <label htmlFor="editNombre">Nombre</label>
+
+                <input
+                  id="editNombre"
+                  type="text"
+                  value={editNombre}
+                  onChange={(e) => setEditNombre(e.target.value)}
+                  required
+                />
+              </div>
+
+              <div>
+                <label htmlFor="editTelefono">Teléfono</label>
+
+                <input
+                  id="editTelefono"
+                  type="tel"
+                  value={editTelefono}
+                  onChange={(e) => setEditTelefono(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="editMunicipio">Municipio</label>
+
+                <select
+                  id="editMunicipio"
+                  value={editMunicipio}
+                  onChange={(e) => setEditMunicipio(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccionar municipio</option>
+
+                  {municipios.map((municipio) => (
+                    <option
+                      key={municipio.idMunicipio}
+                      value={municipio.idMunicipio}
+                    >
+                      {municipio.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <button
+                  type="button"
+                  onClick={cerrarEditar}
+                  disabled={guardandoEdicion}
+                >
+                  Cancelar
+                </button>
+
+                <button type="submit" disabled={guardandoEdicion}>
+                  {guardandoEdicion ? "Guardando..." : "Guardar cambios"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
 }
