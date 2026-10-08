@@ -9,10 +9,14 @@ export default function Usuarios() {
   const [password, setPassword] = useState("");
   const [idMunicipio, setIdMunicipio] = useState("");
   const [municipios, setMunicipios] = useState([]);
+  const [usuarios, setUsuarios] = useState([]);
+  const [totalUsuarios, setTotalUsuarios] = useState(0);
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
   const [cargando, setCargando] = useState(false);
+  const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
+  const [errorUsuarios, setErrorUsuarios] = useState("");
 
   useEffect(() => {
     async function cargarMunicipios() {
@@ -29,6 +33,49 @@ export default function Usuarios() {
     }
 
     cargarMunicipios();
+  }, []);
+
+  async function cargarUsuarios() {
+    setCargandoUsuarios(true);
+    setErrorUsuarios("");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/usuarios?idRol=2",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            datos.error ||
+            "No se pudieron cargar los alimentadores",
+        );
+      }
+
+      setUsuarios(datos.usuarios || []);
+      setTotalUsuarios(datos.total || 0);
+    } catch (error) {
+      console.error("Error al cargar alimentadores:", error);
+      setErrorUsuarios(
+        error.message || "No se pudieron cargar los alimentadores",
+      );
+    } finally {
+      setCargandoUsuarios(false);
+    }
+  }
+
+  useEffect(() => {
+    cargarUsuarios();
   }, []);
 
   async function crearUsuario(event) {
@@ -82,6 +129,8 @@ export default function Usuarios() {
       setTelefono("");
       setPassword("");
       setIdMunicipio("");
+
+      await cargarUsuarios();
     } catch (error) {
       console.error("Error al crear alimentador:", error);
 
@@ -196,10 +245,10 @@ export default function Usuarios() {
         <div className="rieti-panel-header usuarios-list-header">
           <div>
             <span>USUARIOS</span>
-            <h3>Usuarios registrados</h3>
+            <h3>Alimentadores registrados</h3>
           </div>
 
-          <span className="reportes-count">0 usuarios</span>
+          <span className="reportes-count">{totalUsuarios} alimentadores</span>
         </div>
 
         <div className="reportes-table-container usuarios-table-container">
@@ -215,7 +264,43 @@ export default function Usuarios() {
               </tr>
             </thead>
 
-            <tbody></tbody>
+            <tbody>
+              {cargandoUsuarios && (
+                <tr>
+                  <td colSpan="6">Cargando alimentadores...</td>
+                </tr>
+              )}
+
+              {!cargandoUsuarios && errorUsuarios && (
+                <tr>
+                  <td colSpan="6">{errorUsuarios}</td>
+                </tr>
+              )}
+
+              {!cargandoUsuarios && !errorUsuarios && usuarios.length === 0 && (
+                <tr>
+                  <td colSpan="6">No hay alimentadores registrados.</td>
+                </tr>
+              )}
+
+              {!cargandoUsuarios &&
+                !errorUsuarios &&
+                usuarios.map((usuario) => (
+                  <tr key={usuario.idUsuario}>
+                    <td>{usuario.nombre}</td>
+
+                    <td>{usuario.correo_institucional}</td>
+
+                    <td>{usuario.telefono || "—"}</td>
+
+                    <td>{usuario.municipio}</td>
+
+                    <td>{usuario.activo === 1 ? "Activo" : "Inactivo"}</td>
+
+                    <td>{/* Aquí después agregaremos las acciones */}</td>
+                  </tr>
+                ))}
+            </tbody>
           </table>
         </div>
       </section>
