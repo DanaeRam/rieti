@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 
 export default function Usuarios() {
   const [nombre, setNombre] = useState("");
-  const [correo, setCorreo] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [rol, setRol] = useState("");
-  const [municipio, setMunicipio] = useState("");
+  const [correoInstitucional, setCorreoInstitucional] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [password, setPassword] = useState("");
+  const [idMunicipio, setIdMunicipio] = useState("");
   const [municipios, setMunicipios] = useState([]);
+
+  const [mensaje, setMensaje] = useState("");
+  const [tipoMensaje, setTipoMensaje] = useState("");
+  const [cargando, setCargando] = useState(false);
 
   useEffect(() => {
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
-          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios"
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios",
         );
 
         const datos = await respuesta.json();
@@ -27,8 +31,66 @@ export default function Usuarios() {
     cargarMunicipios();
   }, []);
 
-  function crearUsuario(event) {
+  async function crearUsuario(event) {
     event.preventDefault();
+
+    setMensaje("");
+    setTipoMensaje("");
+    setCargando(true);
+
+    try {
+      const token = localStorage.getItem("token");
+      console.log("Token:", token);
+
+      const datosUsuario = {
+        nombre,
+        correo_institucional: correoInstitucional,
+        telefono,
+        password,
+        idRol: 2,
+        idMunicipio: Number(idMunicipio),
+      };
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/usuarios",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(datosUsuario),
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            datos.error ||
+            JSON.stringify(datos) ||
+            "No se pudo crear el usuario",
+        );
+      }
+
+      setMensaje("El alimentador fue creado correctamente.");
+      setTipoMensaje("success");
+
+      setNombre("");
+      setCorreoInstitucional("");
+      setTelefono("");
+      setPassword("");
+      setIdMunicipio("");
+    } catch (error) {
+      console.error("Error al crear alimentador:", error);
+
+      setMensaje(error.message || "No se pudo crear el alimentador.");
+
+      setTipoMensaje("error");
+    } finally {
+      setCargando(false);
+    }
   }
 
   return (
@@ -40,8 +102,8 @@ export default function Usuarios() {
       <section className="rieti-panel">
         <div className="rieti-panel-header">
           <div>
-            <span>NUEVO USUARIO</span>
-            <h3>Crear funcionario</h3>
+            <span>NUEVO ALIMENTADOR</span>
+            <h3>Crear alimentador</h3>
           </div>
         </div>
 
@@ -59,51 +121,47 @@ export default function Usuarios() {
           </div>
 
           <div className="usuario-filtro">
-            <label htmlFor="correo">Correo institucional</label>
+            <label htmlFor="correoInstitucional">Correo institucional</label>
 
             <input
-              id="correo"
+              id="correoInstitucional"
               type="email"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
+              value={correoInstitucional}
+              onChange={(e) => setCorreoInstitucional(e.target.value)}
               required
             />
           </div>
 
           <div className="usuario-filtro">
-            <label htmlFor="contrasena">Contraseña</label>
+            <label htmlFor="telefono">Teléfono</label>
 
             <input
-              id="contrasena"
+              id="telefono"
+              type="tel"
+              value={telefono}
+              onChange={(e) => setTelefono(e.target.value)}
+            />
+          </div>
+
+          <div className="usuario-filtro">
+            <label htmlFor="password">Contraseña</label>
+
+            <input
+              id="password"
               type="password"
-              value={contrasena}
-              onChange={(e) => setContrasena(e.target.value)}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
           <div className="usuario-filtro">
-            <label htmlFor="rol">Rol</label>
+            <label htmlFor="idMunicipio">Municipio</label>
 
             <select
-              id="rol"
-              value={rol}
-              onChange={(e) => setRol(e.target.value)}
-              required
-            >
-              <option value="">Seleccionar rol</option>
-              <option value="administrador">Administrador</option>
-              <option value="alimentador">Alimentador</option>
-            </select>
-          </div>
-
-          <div className="usuario-filtro">
-            <label htmlFor="municipio">Municipio</label>
-
-            <select
-              id="municipio"
-              value={municipio}
-              onChange={(e) => setMunicipio(e.target.value)}
+              id="idMunicipio"
+              value={idMunicipio}
+              onChange={(e) => setIdMunicipio(e.target.value)}
               required
             >
               <option value="">Seleccionar municipio</option>
@@ -119,10 +177,18 @@ export default function Usuarios() {
           </div>
 
           <div className="usuarios-form-actions">
-            <button type="submit" className="usuarios-button">
-              Crear usuario
+            <button
+              type="submit"
+              className="usuarios-button"
+              disabled={cargando}
+            >
+              {cargando ? "Cargando..." : "Crear alimentador"}
             </button>
           </div>
+
+          {mensaje && (
+            <div className={`usuarios-mensaje ${tipoMensaje}`}>{mensaje}</div>
+          )}
         </form>
       </section>
 
@@ -142,7 +208,7 @@ export default function Usuarios() {
               <tr>
                 <th>Nombre</th>
                 <th>Correo</th>
-                <th>Rol</th>
+                <th>Teléfono</th>
                 <th>Municipio</th>
                 <th>Estado</th>
                 <th>Acciones</th>

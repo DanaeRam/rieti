@@ -1341,6 +1341,34 @@ button {
   margin-bottom: 24px;
 }
 
+.usuarios-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.usuarios-mensaje {
+  width: 100%;
+  margin-top: 12px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.usuarios-mensaje.success {
+  color: #3f9b73;
+}
+
+.usuarios-mensaje.error {
+  color: var(--rieti-pink);
+}
+
+.usuarios-button:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
 @media (max-width: 768px) {
   .usuarios-form {
     grid-template-columns: 1fr;

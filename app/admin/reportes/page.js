@@ -7,6 +7,7 @@ export default function Reportes() {
   const [estado, setEstado] = useState("");
   const [fecha, setFecha] = useState("");
   const [municipios, setMunicipios] = useState([]);
+  
 
     useEffect(() => {
     async function cargarMunicipios() {
