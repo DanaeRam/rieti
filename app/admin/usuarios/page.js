@@ -447,7 +447,16 @@ export default function Usuarios() {
                     <td>{usuario.correo_institucional}</td>
                     <td>{usuario.telefono || "—"}</td>
                     <td>{usuario.municipio}</td>
-                    <td>{usuario.activo === 1 ? "Activo" : "Inactivo"}</td>
+                    <td>
+                      <span
+                        className={`usuario-estado ${
+                          usuario.activo === 1 ? "activo" : "inactivo"
+                        }`}
+                      >
+                        <span className="usuario-estado-punto"></span>
+                        {usuario.activo === 1 ? "Activo" : "Inactivo"}
+                      </span>
+                    </td>
 
                     <td>
                       <div>
@@ -474,104 +483,123 @@ export default function Usuarios() {
       </section>
 
       {usuarioEditar && (
-        <div>
-          <div>
-            <h2>Editar alimentador</h2>
-
-            <button type="button" onClick={cerrarEditar}>
-              ×
-            </button>
-          </div>
-
-          <div>
-            <p>Correo institucional: {usuarioEditar.correo_institucional}</p>
-
-            <form onSubmit={guardarEdicion}>
+        <div className="usuarios-modal-overlay">
+          <div className="usuarios-modal">
+            <div className="usuarios-modal-header">
               <div>
-                <label htmlFor="editNombre">Nombre</label>
-
-                <input
-                  id="editNombre"
-                  type="text"
-                  value={editNombre}
-                  onChange={(e) => setEditNombre(e.target.value)}
-                  required
-                />
+                <span>EDITAR USUARIO</span>
+                <h2>Editar alimentador</h2>
               </div>
 
-              <div>
-                <label htmlFor="editTelefono">Teléfono</label>
+              <button
+                type="button"
+                className="usuarios-modal-close"
+                onClick={cerrarEditar}
+              >
+                ×
+              </button>
+            </div>
 
-                <input
-                  id="editTelefono"
-                  type="tel"
-                  value={editTelefono}
-                  onChange={(e) => setEditTelefono(e.target.value)}
-                />
-              </div>
+            <div className="usuarios-modal-content">
+              <p>Correo institucional: {usuarioEditar.correo_institucional}</p>
 
-              <div>
-                <label htmlFor="editMunicipio">Municipio</label>
+              <form onSubmit={guardarEdicion}>
+                <div>
+                  <label htmlFor="editNombre">Nombre</label>
 
-                <select
-                  id="editMunicipio"
-                  value={editMunicipio}
-                  onChange={(e) => setEditMunicipio(e.target.value)}
-                  required
-                >
-                  <option value="">Seleccionar municipio</option>
+                  <input
+                    id="editNombre"
+                    type="text"
+                    value={editNombre}
+                    onChange={(e) => setEditNombre(e.target.value)}
+                    required
+                  />
+                </div>
 
-                  {municipios.map((municipio) => (
-                    <option
-                      key={municipio.idMunicipio}
-                      value={municipio.idMunicipio}
-                    >
-                      {municipio.nombre}
-                    </option>
-                  ))}
-                </select>
-              </div>
+                <div>
+                  <label htmlFor="editTelefono">Teléfono</label>
 
-              <div>
-                <button
-                  type="button"
-                  onClick={cerrarEditar}
-                  disabled={guardandoEdicion}
-                >
-                  Cancelar
-                </button>
+                  <input
+                    id="editTelefono"
+                    type="tel"
+                    value={editTelefono}
+                    onChange={(e) => setEditTelefono(e.target.value)}
+                  />
+                </div>
 
-                <button type="submit" disabled={guardandoEdicion}>
-                  {guardandoEdicion ? "Guardando..." : "Guardar cambios"}
-                </button>
-              </div>
-            </form>
+                <div>
+                  <label htmlFor="editMunicipio">Municipio</label>
+
+                  <select
+                    id="editMunicipio"
+                    value={editMunicipio}
+                    onChange={(e) => setEditMunicipio(e.target.value)}
+                    required
+                  >
+                    <option value="">Seleccionar municipio</option>
+
+                    {municipios.map((municipio) => (
+                      <option
+                        key={municipio.idMunicipio}
+                        value={municipio.idMunicipio}
+                      >
+                        {municipio.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="usuarios-modal-actions">
+                  <button
+                    type="button"
+                    className="usuarios-modal-button secondary"
+                    onClick={cerrarEditar}
+                    disabled={guardandoEdicion}
+                  >
+                    Cancelar
+                  </button>
+
+                  <button
+                    type="submit"
+                    className="usuarios-modal-button primary"
+                    disabled={guardandoEdicion}
+                  >
+                    {guardandoEdicion ? "Guardando..." : "Guardar cambios"}
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       )}
 
       {usuarioEstado && (
-        <div>
-          <div>
-            <h2>
+        <div className="usuarios-modal-overlay">
+          <div className="usuarios-confirmacion">
+            <div className="usuarios-confirmacion-header">
+              <span>CAMBIO DE ESTADO</span>
+
+              <h2>
+                {accionEstado === "desactivar"
+                  ? "¿Desactivar alimentador?"
+                  : "¿Activar alimentador?"}
+              </h2>
+            </div>
+
+            <p className="usuarios-confirmacion-nombre">
+              {usuarioEstado.nombre}
+            </p>
+
+            <p className="usuarios-confirmacion-texto">
               {accionEstado === "desactivar"
-                ? "¿Desactivar alimentador?"
-                : "¿Activar alimentador?"}
-            </h2>
+                ? `${usuarioEstado.nombre} dejará de tener acceso al sistema.`
+                : `${usuarioEstado.nombre} podrá volver a iniciar sesión en RIETI.`}
+            </p>
 
-            <p>{usuarioEstado.nombre}</p>
-
-            {accionEstado === "desactivar" ? (
-              <p>{usuarioEstado.nombre} dejará de tener acceso al sistema.</p>
-            ) : (
-              <p>
-                {usuarioEstado.nombre} podrá volver a iniciar sesión en RIETI.
-              </p>
-            )}
-
-            <div>
+            <div className="usuarios-modal-actions">
               <button
                 type="button"
+                className="usuarios-modal-button secondary"
                 onClick={cerrarCambioEstado}
                 disabled={cambiandoEstado}
               >
@@ -580,6 +608,9 @@ export default function Usuarios() {
 
               <button
                 type="button"
+                className={`usuarios-modal-button ${
+                  accionEstado === "desactivar" ? "danger" : "success"
+                }`}
                 onClick={cambiarEstado}
                 disabled={cambiandoEstado}
               >

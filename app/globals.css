@@ -29,7 +29,6 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-
 /* PÁGINA LOGIN */
 .loginPage {
   min-height: 100vh;
@@ -59,7 +58,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  background:white;
+  background: white;
 }
 
 .loginBack {
@@ -90,11 +89,7 @@ body {
 
 .loginHeader h1 {
   margin: 0 0 10px;
-  background: linear-gradient(
-    90deg,
-    #3e3869,
-    #496a9f
-  );
+  background: linear-gradient(90deg, #3e3869, #496a9f);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-size: 40px;
@@ -184,19 +179,13 @@ body {
   margin-top: 8px;
   border: none;
   border-radius: 11px;
-  background: linear-gradient(
-    100deg,
-    #3e3869 0%,
-    #496a9f 55%,
-    #55afc1 100%
-  );
+  background: linear-gradient(100deg, #3e3869 0%, #496a9f 55%, #55afc1 100%);
   color: white;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   overflow: hidden;
-  box-shadow:
-    0 8px 20px rgba(62, 56, 105, 0.22);
+  box-shadow: 0 8px 20px rgba(62, 56, 105, 0.22);
   transition:
     transform 0.2s,
     box-shadow 0.2s;
@@ -204,8 +193,7 @@ body {
 
 .loginButton:hover {
   transform: translateY(-2px);
-  box-shadow:
-    0 12px 25px rgba(62, 56, 105, 0.28);
+  box-shadow: 0 12px 25px rgba(62, 56, 105, 0.28);
 }
 
 .loginButton:active {
@@ -279,7 +267,6 @@ body {
   border-radius: 22px;
   box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
 }
-
 
 /* HEADER Y SIDEBAR */
 .rieti-layout {
@@ -368,14 +355,9 @@ body {
 
 .rieti-menu-item.active {
   color: #ffffff;
-  background: linear-gradient(
-    90deg,
-    #37306f 0%,
-    #3f5fa3 50%,
-    #35a9c4 100%
-  );
+  background: linear-gradient(90deg, #37306f 0%, #3f5fa3 50%, #35a9c4 100%);
   border-radius: 10px;
-  box-shadow: 0 6px 16px rgba(62, 56, 105, 0.20);
+  box-shadow: 0 6px 16px rgba(62, 56, 105, 0.2);
 }
 
 .rieti-menu-item.active span {
@@ -514,11 +496,7 @@ body {
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--rieti-purple),
-    var(--rieti-blue)
-  );
+  background: linear-gradient(135deg, var(--rieti-purple), var(--rieti-blue));
   color: #ffffff;
 }
 
@@ -824,7 +802,6 @@ body {
   }
 }
 
-
 /* DASHBOARD */
 
 button,
@@ -880,43 +857,25 @@ button {
   border-radius: 22px;
   color: #ffffff;
   box-shadow: 0 8px 25px rgba(62, 56, 105, 0.08);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .rieti-metric.purple {
-  background: linear-gradient(
-    110deg,
-    #3e3869 0%,
-    #6254a8 50%,
-    #a875e8 100%
-  );
+  background: linear-gradient(110deg, #3e3869 0%, #6254a8 50%, #a875e8 100%);
 }
 
 .rieti-metric.pink {
-  background: linear-gradient(
-    110deg,
-    #c54f82 0%,
-    #df6b91 50%,
-    #eb4093 100%
-  );
+  background: linear-gradient(110deg, #c54f82 0%, #df6b91 50%, #eb4093 100%);
 }
 
 .rieti-metric.blue {
-  background: linear-gradient(
-    110deg,
-    #3f5fa3 0%,
-    #477fc2 50%,
-    #55b9d1 100%
-  );
+  background: linear-gradient(110deg, #3f5fa3 0%, #477fc2 50%, #55b9d1 100%);
 }
 
 .rieti-metric.turquoise {
-  background: linear-gradient(
-    110deg,
-    #35a99a 0%,
-    #6fcfc8 50%,
-    #3ac6bf 100%
-  );
+  background: linear-gradient(110deg, #35a99a 0%, #6fcfc8 50%, #3ac6bf 100%);
 }
 
 .rieti-metric:hover {
@@ -1011,7 +970,6 @@ button {
   color: #98a2b3;
   font-size: 22px;
 }
-
 
 .rieti-status-list {
   padding: 15px 28px 30px;
@@ -1369,6 +1327,304 @@ button {
   cursor: not-allowed;
 }
 
+.usuarios-table-container .reportes-table td:last-child > div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.usuarios-table-container .reportes-table td:last-child button {
+  width: 100px;
+  min-height: 32px;
+  padding: 6px 10px;
+  border: 1px solid var(--rieti-border);
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--rieti-purple);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* estado del usuario (columna estado)*/
+.usuario-estado {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.usuario-estado-punto {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.usuario-estado.activo {
+  background: #edf8f4;
+  color: #277a5d;
+}
+
+.usuario-estado.activo .usuario-estado-punto {
+  background: #3ba879;
+}
+
+.usuario-estado.inactivo {
+  background: #fdf1f5;
+  color: var(--rieti-pink);
+}
+
+.usuario-estado.inactivo .usuario-estado-punto {
+  background: var(--rieti-pink);
+}
+
+.usuarios-table-container
+  .reportes-table
+  td:last-child
+  button:first-child:hover {
+  border-color: var(--rieti-purple);
+  background: #f3f1fa;
+}
+
+.usuarios-table-container .reportes-table td:last-child button:last-child {
+  color: var(--rieti-pink);
+}
+
+.usuarios-table-container
+  .reportes-table
+  td:last-child
+  button:last-child:hover {
+  border-color: var(--rieti-pink);
+  background: #fdf3f7;
+}
+
+.usuarios-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(41, 38, 61, 0.45);
+  overflow-y: auto;
+}
+
+/* modal Editar */
+.usuarios-modal {
+  width: min(500px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding: 22px;
+  background: #ffffff;
+  border: 1px solid var(--rieti-border);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.18);
+}
+
+.usuarios-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--rieti-border);
+}
+
+.usuarios-modal-header span,
+.usuarios-confirmacion-header span {
+  color: var(--rieti-purple);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.usuarios-modal-header h2,
+.usuarios-confirmacion-header h2 {
+  margin: 5px 0 0;
+  color: var(--rieti-text);
+  font-size: 20px;
+  font-weight: 700;
+}
+
+/* boton cerrar */
+.usuarios-modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  flex-shrink: 0;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--rieti-muted);
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.usuarios-modal-close:hover {
+  background: #f4f3f8;
+  color: var(--rieti-text);
+}
+
+.usuarios-modal-content {
+  padding-top: 18px;
+}
+
+.usuarios-modal-content > p {
+  margin: 0 0 20px;
+  color: var(--rieti-muted);
+  font-size: 12px;
+}
+
+.usuarios-modal-content form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.usuarios-modal-content form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.usuarios-modal-content label {
+  color: var(--rieti-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.usuarios-modal-content input,
+.usuarios-modal-content select {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid var(--rieti-border);
+  border-radius: 9px;
+  outline: none;
+  background: #ffffff;
+  color: var(--rieti-text);
+  font-size: 13px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.usuarios-modal-content input:focus,
+.usuarios-modal-content select:focus {
+  border-color: var(--rieti-purple);
+  box-shadow: 0 0 0 3px rgba(62, 56, 105, 0.08);
+}
+
+/* botnes modal */
+.usuarios-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  padding-top: 16px;
+  border-top: 1px solid var(--rieti-border);
+}
+
+.usuarios-modal-button {
+  min-width: 120px;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 9px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.usuarios-modal-button.secondary {
+  border: 1px solid var(--rieti-border);
+  background: #ffffff;
+  color: var(--rieti-text);
+}
+
+.usuarios-modal-button.secondary:hover {
+  background: #f5f4f8;
+}
+
+.usuarios-modal-button.primary {
+  border: 1px solid var(--rieti-purple);
+  background: linear-gradient(135deg, var(--rieti-purple), var(--rieti-blue));
+  color: #ffffff;
+}
+
+.usuarios-modal-button.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(62, 56, 105, 0.18);
+}
+
+.usuarios-modal-button.danger {
+  border: 1px solid var(--rieti-pink);
+  background: var(--rieti-pink);
+  color: #ffffff;
+}
+
+.usuarios-modal-button.danger:hover {
+  background: #bd5c89;
+}
+
+.usuarios-modal-button.success {
+  border: 1px solid #3ba879;
+
+  background: #3ba879;
+  color: #ffffff;
+}
+
+.usuarios-modal-button.success:hover {
+  background: #328f69;
+}
+
+.usuarios-modal-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.usuarios-confirmacion {
+  width: min(430px, 100%);
+  padding: 24px;
+  background: #ffffff;
+  border: 1px solid var(--rieti-border);
+  border-radius: 18px;
+  box-shadow: 0 18px 50px rgba(16, 24, 40, 0.18);
+}
+
+.usuarios-confirmacion-header {
+  padding-bottom: 14px;
+}
+
+.usuarios-confirmacion-nombre {
+  margin: 4px 0 8px;
+  color: var(--rieti-text);
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.usuarios-confirmacion-texto {
+  margin: 0;
+  color: var(--rieti-muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
 @media (max-width: 768px) {
   .usuarios-form {
     grid-template-columns: 1fr;
@@ -1385,9 +1641,39 @@ button {
 
   .usuarios-table-container {
     margin: 0 18px 18px;
+    overflow-x: auto;
+  }
+
+  .usuarios-table-container .reportes-table {
+    min-width: 800px;
   }
 
   .usuarios-list-header {
     margin-bottom: 15px;
+  }
+
+  .usuarios-modal-overlay {
+    align-items: flex-start;
+    padding: 16px;
+  }
+
+  .usuarios-modal {
+    margin-top: 20px;
+    padding: 18px;
+    border-radius: 15px;
+  }
+
+  .usuarios-confirmacion {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .usuarios-modal-actions {
+    flex-direction: column-reverse;
+  }
+
+  .usuarios-modal-button {
+    width: 100%;
   }
 }
