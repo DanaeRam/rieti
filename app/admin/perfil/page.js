@@ -6,19 +6,41 @@ export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
-    const usuarioGuardado = localStorage.getItem("usuario");
+  async function cargarUsuario() {
+    const token = localStorage.getItem("token");
 
-    if (usuarioGuardado) {
-      try {
-        setUsuario(JSON.parse(usuarioGuardado));
-      } catch {
-        setUsuario(null);
-      }
+    if (!token) {
+      return;
     }
-  }, []);
+
+    try {
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/auth/me",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(datos.error || "No se pudo obtener el usuario");
+      }
+
+      setUsuario(datos.usuario);
+    } catch (error) {
+      console.error("Error al obtener el usuario:", error);
+    }
+  }
+
+  cargarUsuario();
+}, []);
 
   const nombre = usuario?.nombre || "—";
-  const correo = usuario?.correo_institucional || "—";
+  const correo = usuario?.correo || "—";
   const rol = usuario?.rol || "—";
   const municipio = usuario?.municipio || "—";
 

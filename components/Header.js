@@ -48,9 +48,7 @@ export default function Header({ setSidebarAbierto }) {
   }
 
   const nombre = usuario?.nombre || "Usuario";
-  const correo = usuario?.correo_institucional || "—";
   const rol = usuario?.rol || "—";
-  const municipio = usuario?.municipio || "—";
 
   return (
     <header className="rieti-header">
@@ -106,11 +104,7 @@ export default function Header({ setSidebarAbierto }) {
 
                 <div>
                   <strong>{nombre}</strong>
-                  <span>{correo}</span>
-                  <small>
-                    {rol}
-                    {municipio !== "—" && ` · ${municipio}`}
-                  </small>
+                  <small>{rol}</small>
                 </div>
               </div>
 
