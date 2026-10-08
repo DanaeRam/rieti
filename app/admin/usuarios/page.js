@@ -26,6 +26,10 @@ export default function Usuarios() {
   const [editMunicipio, setEditMunicipio] = useState("");
   const [guardandoEdicion, setGuardandoEdicion] = useState(false);
 
+  const [usuarioEstado, setUsuarioEstado] = useState(null);
+  const [accionEstado, setAccionEstado] = useState("");
+  const [cambiandoEstado, setCambiandoEstado] = useState(false);
+
   useEffect(() => {
     async function cargarMunicipios() {
       try {
@@ -65,7 +69,9 @@ export default function Usuarios() {
 
       if (!respuesta.ok) {
         throw new Error(
-          datos.message || datos.error || "No se pudieron cargar los alimentadores",
+          datos.message ||
+            datos.error ||
+            "No se pudieron cargar los alimentadores",
         );
       }
 
@@ -206,6 +212,7 @@ export default function Usuarios() {
 
       setMensaje("El alimentador fue actualizado correctamente.");
       setTipoMensaje("success");
+
       cerrarEditar();
 
       await cargarUsuarios();
@@ -217,6 +224,79 @@ export default function Usuarios() {
       setTipoMensaje("error");
     } finally {
       setGuardandoEdicion(false);
+    }
+  }
+
+  function abrirCambioEstado(usuario) {
+    setUsuarioEstado(usuario);
+
+    if (usuario.activo === 1) {
+      setAccionEstado("desactivar");
+    } else {
+      setAccionEstado("activar");
+    }
+  }
+
+  function cerrarCambioEstado() {
+    setUsuarioEstado(null);
+    setAccionEstado("");
+  }
+
+  async function cambiarEstado() {
+    if (!usuarioEstado) {
+      return;
+    }
+    setCambiandoEstado(true);
+
+    const nuevoEstado = accionEstado === "activar";
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const respuesta = await fetch(
+        `https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/usuarios/${usuarioEstado.idUsuario}/estado`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            activo: nuevoEstado,
+          }),
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            datos.error ||
+            "No se pudo cambiar el estado del alimentador",
+        );
+      }
+
+      if (nuevoEstado) {
+        setMensaje("El alimentador fue activado correctamente.");
+      } else {
+        setMensaje("El alimentador fue desactivado correctamente.");
+      }
+
+      setTipoMensaje("success");
+      cerrarCambioEstado();
+
+      await cargarUsuarios();
+    } catch (error) {
+      console.error("Error al cambiar estado:", error);
+
+      setMensaje(
+        error.message || "No se pudo cambiar el estado del alimentador.",
+      );
+
+      setTipoMensaje("error");
+    } finally {
+      setCambiandoEstado(false);
     }
   }
 
@@ -261,7 +341,6 @@ export default function Usuarios() {
 
           <div className="usuario-filtro">
             <label htmlFor="telefono">Teléfono</label>
-
             <input
               id="telefono"
               type="tel"
@@ -272,7 +351,6 @@ export default function Usuarios() {
 
           <div className="usuario-filtro">
             <label htmlFor="password">Contraseña</label>
-
             <input
               id="password"
               type="password"
@@ -284,7 +362,6 @@ export default function Usuarios() {
 
           <div className="usuario-filtro">
             <label htmlFor="idMunicipio">Municipio</label>
-
             <select
               id="idMunicipio"
               value={idMunicipio}
@@ -370,6 +447,7 @@ export default function Usuarios() {
                     <td>{usuario.correo_institucional}</td>
                     <td>{usuario.telefono || "—"}</td>
                     <td>{usuario.municipio}</td>
+                    <td>{usuario.activo === 1 ? "Activo" : "Inactivo"}</td>
 
                     <td>
                       <div>
@@ -378,6 +456,13 @@ export default function Usuarios() {
                           onClick={() => abrirEditar(usuario)}
                         >
                           Editar
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => abrirCambioEstado(usuario)}
+                        >
+                          {usuario.activo === 1 ? "Desactivar" : "Activar"}
                         </button>
                       </div>
                     </td>
@@ -461,6 +546,50 @@ export default function Usuarios() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {usuarioEstado && (
+        <div>
+          <div>
+            <h2>
+              {accionEstado === "desactivar"
+                ? "¿Desactivar alimentador?"
+                : "¿Activar alimentador?"}
+            </h2>
+
+            <p>{usuarioEstado.nombre}</p>
+
+            {accionEstado === "desactivar" ? (
+              <p>{usuarioEstado.nombre} dejará de tener acceso al sistema.</p>
+            ) : (
+              <p>
+                {usuarioEstado.nombre} podrá volver a iniciar sesión en RIETI.
+              </p>
+            )}
+
+            <div>
+              <button
+                type="button"
+                onClick={cerrarCambioEstado}
+                disabled={cambiandoEstado}
+              >
+                Cancelar
+              </button>
+
+              <button
+                type="button"
+                onClick={cambiarEstado}
+                disabled={cambiandoEstado}
+              >
+                {cambiandoEstado
+                  ? "Procesando..."
+                  : accionEstado === "desactivar"
+                    ? "Desactivar"
+                    : "Activar"}
+              </button>
+            </div>
           </div>
         </div>
       )}
