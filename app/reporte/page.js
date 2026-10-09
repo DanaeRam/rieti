@@ -21,6 +21,8 @@ export default function Reporte() {
   const [colonia, setColonia] = useState("");
   const [referencias, setReferencias] = useState("");
 
+  const [aceptoAviso, setAceptoAviso] = useState(false);
+
   function siguiente() {
     setPaso(paso + 1);
   }
@@ -46,15 +48,12 @@ export default function Reporte() {
             >
               <h2>Reporte anónimo</h2>
               <p>
-                No se solicitará información de contacto ni se generará un
-                folio de seguimiento.
+                No se solicitará información de contacto ni se generará un folio
+                de seguimiento.
               </p>
             </button>
 
-            <button
-              type="button"
-              onClick={() => setModalidad("SEGUIMIENTO")}
-            >
+            <button type="button" onClick={() => setModalidad("SEGUIMIENTO")}>
               <h2>Reporte con seguimiento</h2>
               <p>
                 Proporciona un correo para recibir tu folio y consultar los
@@ -65,9 +64,7 @@ export default function Reporte() {
 
           {modalidad === "SEGUIMIENTO" && (
             <div>
-              <label htmlFor="correoContacto">
-                Correo electrónico *
-              </label>
+              <label htmlFor="correoContacto">Correo electrónico *</label>
 
               <input
                 id="correoContacto"
@@ -100,9 +97,7 @@ export default function Reporte() {
           <h1>Cuéntanos qué ocurrió</h1>
           <p>Describe únicamente lo que observaste.</p>
           <div>
-            <label htmlFor="numMenores">
-              Número de menores *
-            </label>
+            <label htmlFor="numMenores">Número de menores *</label>
 
             <select
               id="numMenores"
@@ -120,9 +115,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="rangoEdad">
-              Rango de edad *
-            </label>
+            <label htmlFor="rangoEdad">Rango de edad *</label>
 
             <select
               id="rangoEdad"
@@ -135,16 +128,12 @@ export default function Reporte() {
               <option value="6-11">6 a 11 años</option>
               <option value="12-14">12 a 14 años</option>
               <option value="15-17">15 a 17 años</option>
-              <option value="NO_ESPECIFICADO">
-                No especificado
-              </option>
+              <option value="NO_ESPECIFICADO">No especificado</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="generoObservado">
-              Género observado *
-            </label>
+            <label htmlFor="generoObservado">Género observado *</label>
 
             <select
               id="generoObservado"
@@ -156,16 +145,12 @@ export default function Reporte() {
               <option value="MASCULINO">Masculino</option>
               <option value="FEMENINO">Femenino</option>
               <option value="MIXTO">Mixto</option>
-              <option value="NO_ESPECIFICADO">
-                No sé
-              </option>
+              <option value="NO_ESPECIFICADO">No sé</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="actividad">
-              Tipo de actividad *
-            </label>
+            <label htmlFor="actividad">Tipo de actividad *</label>
 
             <select
               id="actividad"
@@ -174,28 +159,18 @@ export default function Reporte() {
               required
             >
               <option value="">Selecciona una opción</option>
-              <option value="1">
-                Venta de productos en vía pública
-              </option>
+              <option value="1">Venta de productos en vía pública</option>
               <option value="2">Mendicidad</option>
-              <option value="3">
-                Trabajo en comercio local
-              </option>
+              <option value="3">Trabajo en comercio local</option>
               <option value="4">Construcción</option>
-              <option value="5">
-                Limpieza de parabrisas
-              </option>
-              <option value="6">
-                Actividades agrícolas
-              </option>
+              <option value="5">Limpieza de parabrisas</option>
+              <option value="6">Actividades agrícolas</option>
               <option value="7">Otra actividad</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="horaObservada">
-              Horario observado
-            </label>
+            <label htmlFor="horaObservada">Horario observado</label>
 
             <input
               id="horaObservada"
@@ -206,9 +181,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="descripcion">
-              ¿Qué observaste? *
-            </label>
+            <label htmlFor="descripcion">¿Qué observaste? *</label>
 
             <textarea
               id="descripcion"
@@ -238,7 +211,6 @@ export default function Reporte() {
           <button type="button" onClick={regresar}>
             Regresar
           </button>
-
           <button type="button" onClick={siguiente}>
             Continuar
           </button>
@@ -250,9 +222,7 @@ export default function Reporte() {
           <span>03</span>
           <h1>Indica dónde ocurrió</h1>
           <div>
-            <label htmlFor="municipio">
-              Municipio *
-            </label>
+            <label htmlFor="municipio">Municipio *</label>
 
             <select
               id="municipio"
@@ -260,16 +230,12 @@ export default function Reporte() {
               onChange={(e) => setMunicipio(e.target.value)}
               required
             >
-              <option value="">
-                Selecciona un municipio
-              </option>
+              <option value="">Selecciona un municipio</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="calle">
-              Calle *
-            </label>
+            <label htmlFor="calle">Calle *</label>
 
             <input
               id="calle"
@@ -282,9 +248,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="colonia">
-              Colonia *
-            </label>
+            <label htmlFor="colonia">Colonia *</label>
 
             <input
               id="colonia"
@@ -297,9 +261,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="referencias">
-              Referencias del lugar *
-            </label>
+            <label htmlFor="referencias">Referencias del lugar *</label>
 
             <textarea
               id="referencias"
@@ -317,9 +279,7 @@ export default function Reporte() {
               donde observaste la situación.
             </p>
 
-            <button type="button">
-              Usar mi ubicación
-            </button>
+            <button type="button">Usar mi ubicación</button>
           </div>
 
           <button type="button" onClick={regresar}>
@@ -328,6 +288,74 @@ export default function Reporte() {
 
           <button type="button" onClick={siguiente}>
             Continuar
+          </button>
+        </section>
+      )}
+
+      {paso === 4 && (
+        <section>
+          <span>04</span>
+          <h1>Verifica tu reporte</h1>
+          <p>
+            Revisa que la información sea correcta antes de enviar el reporte.
+          </p>
+
+          <div>
+            <h2>Tipo de reporte</h2>
+            <p>
+              {modalidad === "ANONIMO"
+                ? "Reporte anónimo"
+                : "Reporte con seguimiento"}
+            </p>
+
+            {modalidad === "SEGUIMIENTO" && <p>Correo: {correoContacto}</p>}
+          </div>
+
+          <div>
+            <h2>Situación observada</h2>
+
+            <p>Número de menores: {numMenores}</p>
+            <p>Rango de edad: {rangoEdad}</p>
+            <p>Género observado: {generoObservado}</p>
+            <p>Tipo de actividad: {actividad}</p>
+            <p>Horario observado: {horaObservada || "No especificado"}</p>
+            <p>Descripción: {descripcion}</p>
+            <p>
+              Situación de riesgo:{" "}
+              {situacionRiesgo === "true"
+                ? "Sí"
+                : situacionRiesgo === "false"
+                  ? "No"
+                  : "No especificado"}
+            </p>
+          </div>
+
+          <div>
+            <h2>Ubicación</h2>
+            <p>Municipio: {municipio}</p>
+            <p>Calle: {calle}</p>
+            <p>Colonia: {colonia}</p>
+            <p>Referencias: {referencias}</p>
+          </div>
+
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={aceptoAviso}
+                onChange={(e) => setAceptoAviso(e.target.checked)}
+              />
+              Acepto el aviso de privacidad y autorizo el envío de la
+              información proporcionada.
+            </label>
+          </div>
+
+          <button type="button" onClick={regresar}>
+            Regresar
+          </button>
+
+          <button type="button" disabled={!aceptoAviso}>
+            Enviar reporte
           </button>
         </section>
       )}
