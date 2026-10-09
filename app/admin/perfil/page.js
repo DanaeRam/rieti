@@ -48,7 +48,6 @@ export default function Perfil() {
     <>
       <div className="rieti-page-title">
         <h2>Mi perfil</h2>
-        <p>Información del funcionario</p>
       </div>
 
       <section className="rieti-panel">
@@ -81,22 +80,6 @@ export default function Perfil() {
               <strong>{municipio}</strong>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="rieti-panel perfil-cuenta">
-        <div className="rieti-panel-header">
-          <div>
-            <span>CUENTA</span>
-            <h3>Información de acceso</h3>
-          </div>
-        </div>
-
-        <div className="perfil-cuenta-contenido">
-          <p>
-            La información mostrada corresponde a los datos registrados para el
-            funcionario en el sistema RIETI.
-          </p>
         </div>
       </section>
     </>
