@@ -4,11 +4,24 @@ import { useState } from "react";
 
 export default function Reporte() {
   const [paso, setPaso] = useState(1);
+
   const [modalidad, setModalidad] = useState("SEGUIMIENTO");
   const [correoContacto, setCorreoContacto] = useState("");
 
+  const [numMenores, setNumMenores] = useState("");
+  const [rangoEdad, setRangoEdad] = useState("");
+  const [generoObservado, setGeneroObservado] = useState("");
+  const [actividad, setActividad] = useState("");
+  const [horaObservada, setHoraObservada] = useState("");
+  const [descripcion, setDescripcion] = useState("");
+  const [situacionRiesgo, setSituacionRiesgo] = useState("");
+
   function siguiente() {
     setPaso(paso + 1);
+  }
+
+  function regresar() {
+    setPaso(paso - 1);
   }
 
   return (
@@ -18,7 +31,6 @@ export default function Reporte() {
           <span>01</span>
           <h1>¿Cómo deseas realizar tu reporte?</h1>
           <p>Selecciona la opción que prefieras.</p>
-
           <div>
             <button
               type="button"
@@ -36,7 +48,6 @@ export default function Reporte() {
 
             <button type="button" onClick={() => setModalidad("SEGUIMIENTO")}>
               <h2>Reporte con seguimiento</h2>
-
               <p>
                 Proporciona un correo para recibir tu folio y consultar los
                 avances del reporte.
@@ -61,7 +72,6 @@ export default function Reporte() {
 
           <div>
             <strong>Tu información está protegida</strong>
-
             <p>
               Los datos proporcionados serán utilizados únicamente para la
               atención y seguimiento del reporte.
@@ -69,10 +79,134 @@ export default function Reporte() {
           </div>
 
           <button type="button" onClick={siguiente}>
-            Continur
+            Continuar
           </button>
+        </section>
+      )}
 
+      {paso === 2 && (
+        <section>
+          <span>02</span>
+          <h1>Cuéntanos qué ocurrió</h1>
+          <p>Describe únicamente lo que observaste.</p>
+          <div>
+            <label htmlFor="numMenores">Número de menores *</label>
 
+            <select
+              id="numMenores"
+              value={numMenores}
+              onChange={(e) => setNumMenores(e.target.value)}
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="1">1 menor</option>
+              <option value="2">2 menores</option>
+              <option value="3">3 menores</option>
+              <option value="4">4 menores</option>
+              <option value="5">5 o más menores</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="rangoEdad">Rango de edad *</label>
+
+            <select
+              id="rangoEdad"
+              value={rangoEdad}
+              onChange={(e) => setRangoEdad(e.target.value)}
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="0-5">0 a 5 años</option>
+              <option value="6-11">6 a 11 años</option>
+              <option value="12-14">12 a 14 años</option>
+              <option value="15-17">15 a 17 años</option>
+              <option value="NO_ESPECIFICADO">No especificado</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="generoObservado">Género observado *</label>
+
+            <select
+              id="generoObservado"
+              value={generoObservado}
+              onChange={(e) => setGeneroObservado(e.target.value)}
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="MASCULINO">Masculino</option>
+              <option value="FEMENINO">Femenino</option>
+              <option value="MIXTO">Mixto</option>
+              <option value="NO_ESPECIFICADO">No sé</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="actividad">Tipo de actividad *</label>
+
+            <select
+              id="actividad"
+              value={actividad}
+              onChange={(e) => setActividad(e.target.value)}
+              required
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="1"> Venta de productos en via publica</option>
+              <option value="2">Mendicidad</option>
+              <option value="3"> Trabajo en comercio local</option>
+              <option value="4">Cosntrucción</option>
+              <option value="5">Limpieza de parabrisas</option>
+              <option value="6">Actividades agrícolas</option>
+              <option value="7">Otra actividad</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="horaObservada">Horario observado</label>
+
+            <input
+              id="horaObservada"
+              type="time"
+              value={horaObservada}
+              onChange={(e) => setHoraObservada(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label htmlFor="descripcion">¿Qué observaste? *</label>
+
+            <textarea
+              id="descripcion"
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+              placeholder="Describe brevemente la situación..."
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="situacionRiesgo">
+              ¿Observaste una situación de riesgo?
+            </label>
+
+            <select
+              id="situacionRiesgo"
+              value={situacionRiesgo}
+              onChange={(e) => setSituacionRiesgo(e.target.value)}
+            >
+              <option value="">Selecciona una opción</option>
+              <option value="true">Sí</option>
+              <option value="false">No</option>
+            </select>
+          </div>
+
+          <button type="button" onClick={regresar}>
+            Regresar
+          </button>
+          <button type="button" onClick={siguiente}>
+            Continuar
+          </button>
         </section>
       )}
     </main>
