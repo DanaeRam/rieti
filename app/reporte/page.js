@@ -29,6 +29,10 @@ export default function Reporte() {
   const [estatus, setEstatus] = useState("");
   const [errorEnvio, setErrorEnvio] = useState("");
 
+  const [reportes, setReportes] = useState([]);
+  const [cargandoReportes, setCargandoReportes] = useState(false);
+  const [errorReportes, setErrorReportes] = useState("");
+
   useEffect(() => {
     async function cargarActividades() {
       try {
@@ -137,6 +141,44 @@ export default function Reporte() {
       setEnviando(false);
     }
   }
+
+  async function cargarReportes() {
+    setCargandoReportes(true);
+    setErrorReportes("");
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/reportes",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudieron cargar los reportes",
+        );
+      }
+
+      setReportes(datos.reportes || []);
+    } catch (error) {
+      console.error("Error al cargar reportes:", error);
+      setErrorReportes(error.message || "No se pudieron cargar los reportes");
+    } finally {
+      setCargandoReportes(false);
+    }
+  }
+
+  useEffect(() => {
+    cargarReportes();
+  }, []);
 
   function siguiente() {
     setPaso(paso + 1);
