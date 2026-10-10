@@ -7,7 +7,8 @@ export default function Reportes() {
   const [estado, setEstado] = useState("");
   const [fecha, setFecha] = useState("");
   const [municipios, setMunicipios] = useState([]);
-  
+  const [actividad, setActividad] = useState("");
+  const [actividades, setActividades] = useState([]);
 
     useEffect(() => {
     async function cargarMunicipios() {
@@ -26,6 +27,23 @@ export default function Reportes() {
     cargarMunicipios();
   }, []);
 
+  useEffect(() => {
+  async function cargarActividades() {
+    try {
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades"
+      );
+
+      const datos = await respuesta.json();
+      setActividades(datos);
+    } catch {
+      setActividades([]);
+    }
+  }
+
+  cargarActividades();
+}, []);
+
   function buscarReportes(event) {
     event.preventDefault();
   }
@@ -34,6 +52,7 @@ export default function Reportes() {
     setMunicipio("");
     setEstado("");
     setFecha("");
+    setActividad("");
   }
 
   return (
@@ -70,6 +89,26 @@ export default function Reportes() {
               ))}
             </select>
           </div>
+
+          <div className="reporte-filtro">
+  <label htmlFor="actividad">Actividad</label>
+  <select
+    id="actividad"
+    value={actividad}
+    onChange={(e) => setActividad(e.target.value)}
+  >
+    <option value="">Todas las actividades</option>
+
+    {actividades.map((actividad) => (
+      <option
+        key={actividad.idCatalogoActividad}
+        value={actividad.idCatalogoActividad}
+      >
+        {actividad.nombre}
+      </option>
+    ))}
+  </select>
+</div>
 
           <div className="reporte-filtro">
             <label htmlFor="estado">Estado</label>
@@ -131,6 +170,7 @@ export default function Reportes() {
                 <th>Folio</th>
                 <th>Fecha</th>
                 <th>Municipio</th>
+                <th>Actividad</th>
                 <th>Estado</th>
                 <th>Acciones</th>
               </tr>
