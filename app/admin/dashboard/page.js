@@ -13,6 +13,8 @@ export default function Dashboard() {
   const [resumen, setResumen] = useState(null);
   const [cargandoResumen, setCargandoResumen] = useState(true);
   const [errorResumen, setErrorResumen] = useState("");
+  const [estadisticas, setEstadisticas] = useState(null);
+  const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
 
   async function cargarResumen() {
     try {
@@ -49,9 +51,46 @@ export default function Dashboard() {
     }
   }
 
+  async function cargarEstadisticas() {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No hay una sesión activa.");
+      }
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/dashboard/estadisticas?dias=30",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message ||
+            datos.error ||
+            "No se pudieron obtener los datos",
+        );
+      }
+
+      setEstadisticas(datos);
+    } catch (error) {
+      console.error("Error :( al cargar datos:", error);
+    } finally {
+      setCargandoEstadisticas(false);
+    }
+  }
+
   useEffect(() => {
-        cargarResumen();
-      }, []);
+    cargarResumen();
+    cargarEstadisticas();
+  }, []);
 
   const graficaMensual = {
     series: [
