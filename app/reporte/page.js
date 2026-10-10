@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Reporte() {
   const [paso, setPaso] = useState(1);
@@ -8,10 +8,11 @@ export default function Reporte() {
   const [modalidad, setModalidad] = useState("SEGUIMIENTO");
   const [correoContacto, setCorreoContacto] = useState("");
 
-  const [numMenores, setNumMenores] = useState("");
+  const [numNinos, setNumNinos] = useState("");
   const [rangoEdad, setRangoEdad] = useState("");
   const [generoObservado, setGeneroObservado] = useState("");
   const [actividad, setActividad] = useState("");
+  const [actividades, setActividades] = useState("");
   const [horaObservada, setHoraObservada] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [situacionRiesgo, setSituacionRiesgo] = useState("");
@@ -22,6 +23,29 @@ export default function Reporte() {
   const [referencias, setReferencias] = useState("");
 
   const [aceptoAviso, setAceptoAviso] = useState(false);
+
+  useEffect(() => {
+    async function cargarActividades() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
+        );
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error("No se pudieron cargar las actividades");
+        }
+
+        setActividades(datos);
+      } catch (error) {
+        console.error("Error al cargar actividades:", error);
+        setActividades([]);
+      }
+    }
+
+    cargarActividades();
+  }, []);
 
   function siguiente() {
     setPaso(paso + 1);
@@ -52,15 +76,12 @@ export default function Reporte() {
               <h2>Reporte anónimo</h2>
 
               <p>
-                No se solicitará información de contacto ni se generará un
-                folio de seguimiento.
+                No se solicitará información de contacto ni se generará un folio
+                de seguimiento.
               </p>
             </button>
 
-            <button
-              type="button"
-              onClick={() => setModalidad("SEGUIMIENTO")}
-            >
+            <button type="button" onClick={() => setModalidad("SEGUIMIENTO")}>
               <h2>Reporte con seguimiento</h2>
 
               <p>
@@ -72,9 +93,7 @@ export default function Reporte() {
 
           {modalidad === "SEGUIMIENTO" && (
             <div>
-              <label htmlFor="correoContacto">
-                Correo electrónico *
-              </label>
+              <label htmlFor="correoContacto">Correo electrónico *</label>
 
               <input
                 id="correoContacto"
@@ -115,29 +134,25 @@ export default function Reporte() {
           <p>Describe únicamente lo que observaste.</p>
 
           <div>
-            <label htmlFor="numMenores">
-              Número de menores *
-            </label>
+            <label htmlFor="numNinos">Número de niños *</label>
 
             <select
-              id="numMenores"
-              value={numMenores}
-              onChange={(e) => setNumMenores(e.target.value)}
+              id="numNinos"
+              value={numNinos}
+              onChange={(e) => setNumNinos(e.target.value)}
               required
             >
               <option value="">Selecciona una opción</option>
-              <option value="1">1 menor</option>
-              <option value="2">2 menores</option>
-              <option value="3">3 menores</option>
-              <option value="4">4 menores</option>
-              <option value="5">5 o más menores</option>
+              <option value="1">1</option>
+              <option value="2">2</option>
+              <option value="3"></option>
+              <option value="4">4</option>
+              <option value="5">5</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="rangoEdad">
-              Rango de edad *
-            </label>
+            <label htmlFor="rangoEdad">Rango de edad *</label>
 
             <select
               id="rangoEdad"
@@ -150,16 +165,12 @@ export default function Reporte() {
               <option value="6-11">6 a 11 años</option>
               <option value="12-14">12 a 14 años</option>
               <option value="15-17">15 a 17 años</option>
-              <option value="NO_ESPECIFICADO">
-                No especificado
-              </option>
+              <option value="NO_ESPECIFICADO">No especificado</option>
             </select>
           </div>
 
           <div>
-            <label htmlFor="generoObservado">
-              Género observado *
-            </label>
+            <label htmlFor="generoObservado">Género observado *</label>
 
             <select
               id="generoObservado"
@@ -176,10 +187,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="actividad">
-              Tipo de actividad *
-            </label>
-
+            <label htmlFor="actividad">Tipo de actividad *</label>
             <select
               id="actividad"
               value={actividad}
@@ -187,22 +195,20 @@ export default function Reporte() {
               required
             >
               <option value="">Selecciona una opción</option>
-              <option value="1">
-                Venta de productos en vía pública
-              </option>
-              <option value="2">Mendicidad</option>
-              <option value="3">Trabajo en comercio local</option>
-              <option value="4">Construcción</option>
-              <option value="5">Limpieza de parabrisas</option>
-              <option value="6">Actividades agrícolas</option>
-              <option value="7">Otra actividad</option>
+
+              {actividades.map((actividad) => (
+                <option
+                  key={actividad.idCatalogoActividad}
+                  value={actividad.idCatalogoActividad}
+                >
+                  {actividad.nombre}
+                </option>
+              ))}
             </select>
           </div>
 
           <div>
-            <label htmlFor="horaObservada">
-              Horario observado
-            </label>
+            <label htmlFor="horaObservada">Horario observado</label>
 
             <input
               id="horaObservada"
@@ -213,9 +219,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="descripcion">
-              ¿Qué observaste? *
-            </label>
+            <label htmlFor="descripcion">¿Qué observaste? *</label>
 
             <textarea
               id="descripcion"
@@ -263,9 +267,7 @@ export default function Reporte() {
           <p>Proporciona la ubicación donde observaste la situación.</p>
 
           <div>
-            <label htmlFor="municipio">
-              Municipio *
-            </label>
+            <label htmlFor="municipio">Municipio *</label>
 
             <select
               id="municipio"
@@ -278,9 +280,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="calle">
-              Calle *
-            </label>
+            <label htmlFor="calle">Calle *</label>
 
             <input
               id="calle"
@@ -293,9 +293,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="colonia">
-              Colonia *
-            </label>
+            <label htmlFor="colonia">Colonia *</label>
 
             <input
               id="colonia"
@@ -308,9 +306,7 @@ export default function Reporte() {
           </div>
 
           <div>
-            <label htmlFor="referencias">
-              Referencias del lugar *
-            </label>
+            <label htmlFor="referencias">Referencias del lugar *</label>
 
             <textarea
               id="referencias"
@@ -329,9 +325,7 @@ export default function Reporte() {
               donde observaste la situación.
             </p>
 
-            <button type="button">
-              Usar mi ubicación
-            </button>
+            <button type="button">Usar mi ubicación</button>
           </div>
 
           <div className="reporte-botones">
@@ -365,22 +359,17 @@ export default function Reporte() {
                 : "Reporte con seguimiento"}
             </p>
 
-            {modalidad === "SEGUIMIENTO" && (
-              <p>Correo: {correoContacto}</p>
-            )}
+            {modalidad === "SEGUIMIENTO" && <p>Correo: {correoContacto}</p>}
           </div>
 
           <div className="reporte-resumen">
             <h2>Situación observada</h2>
 
-            <p>Número de menores: {numMenores}</p>
+            <p>Número de niños: {numNinos}</p>
             <p>Rango de edad: {rangoEdad}</p>
             <p>Género observado: {generoObservado}</p>
             <p>Tipo de actividad: {actividad}</p>
-            <p>
-              Horario observado:{" "}
-              {horaObservada || "No especificado"}
-            </p>
+            <p>Horario observado: {horaObservada || "No especificado"}</p>
             <p>Descripción: {descripcion}</p>
             <p>
               Situación de riesgo:{" "}
@@ -421,10 +410,7 @@ export default function Reporte() {
               Regresar
             </button>
 
-            <button
-              type="button"
-              disabled={!aceptoAviso}
-            >
+            <button type="button" disabled={!aceptoAviso}>
               Enviar reporte
             </button>
           </div>
