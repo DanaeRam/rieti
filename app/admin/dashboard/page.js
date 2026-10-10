@@ -32,9 +32,9 @@ export default function Dashboard() {
         },
       );
 
-    useEffect(() => {
-      cargarResumen();
-    }, []);
+      useEffect(() => {
+        cargarResumen();
+      }, []);
 
       const datos = await respuesta.json();
 
@@ -201,25 +201,31 @@ export default function Dashboard() {
       <section className="rieti-metrics">
         <article className="rieti-metric purple">
           <span>TOTAL DE REPORTES</span>
-          <strong>—</strong>
+          <strong>{cargandoResumen ? "..." : (resumen?.total ?? 0)}</strong>
           <small>Reportes registrados</small>
         </article>
 
         <article className="rieti-metric pink">
-          <span>REPORTES PENDIENTES</span>
-          <strong>—</strong>
-          <small>Requieren atención</small>
+          <span>EN REVISIÓN</span>
+          <strong>
+            {cargandoResumen ? "..." : (resumen?.en_revision ?? 0)}
+          </strong>
+          <small>Reportes en revisión</small>
         </article>
 
         <article className="rieti-metric blue">
-          <span>EN SEGUIMIENTO</span>
-          <strong>—</strong>
-          <small>Casos canalizados</small>
+          <span>EN PROCESO</span>
+          <strong>
+            {cargandoResumen ? "..." : (resumen?.en_proceso ?? 0)}
+          </strong>
+          <small>Reportes en proceso</small>
         </article>
 
         <article className="rieti-metric turquoise">
           <span>CONCLUIDOS</span>
-          <strong>—</strong>
+          <strong>
+            {cargandoResumen ? "..." : (resumen?.concluidos ?? 0)}
+          </strong>
           <small>Casos atendidos</small>
         </article>
       </section>
