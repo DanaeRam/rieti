@@ -10,11 +10,15 @@ export default function Reportes() {
   const [actividad, setActividad] = useState("");
   const [actividades, setActividades] = useState([]);
 
-    useEffect(() => {
+  const [reportes, setReportes] = useState([]);
+  const [cargandoReportes, setCargandoReportes] = useState(false);
+  const [errorReportes, setErrorReportes] = useState("");
+
+  useEffect(() => {
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
-          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios"
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios",
         );
 
         const datos = await respuesta.json();
@@ -28,21 +32,59 @@ export default function Reportes() {
   }, []);
 
   useEffect(() => {
-  async function cargarActividades() {
+    async function cargarActividades() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
+        );
+
+        const datos = await respuesta.json();
+        setActividades(datos);
+      } catch {
+        setActividades([]);
+      }
+    }
+
+    cargarActividades();
+  }, []);
+
+  async function cargarReportes() {
+    setCargandoReportes(true);
+    setErrorReportes("");
+
     try {
+      const token = localStorage.getItem("token");
+
       const respuesta = await fetch(
-        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades"
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/reportes",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
 
       const datos = await respuesta.json();
-      setActividades(datos);
-    } catch {
-      setActividades([]);
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudieron cargar los reportes",
+        );
+      }
+
+      setReportes(datos.reportes || []);
+    } catch (error) {
+      console.error("Error al cargar reportes:", error);
+      setErrorReportes(error.message || "No se pudieron cargar los reportes");
+    } finally {
+      setCargandoReportes(false);
     }
   }
 
-  cargarActividades();
-}, []);
+  useEffect(() => {
+    cargarReportes();
+  }, []);
 
   function buscarReportes(event) {
     event.preventDefault();
@@ -91,24 +133,24 @@ export default function Reportes() {
           </div>
 
           <div className="reporte-filtro">
-  <label htmlFor="actividad">Actividad</label>
-  <select
-    id="actividad"
-    value={actividad}
-    onChange={(e) => setActividad(e.target.value)}
-  >
-    <option value="">Todas las actividades</option>
+            <label htmlFor="actividad">Actividad</label>
+            <select
+              id="actividad"
+              value={actividad}
+              onChange={(e) => setActividad(e.target.value)}
+            >
+              <option value="">Todas las actividades</option>
 
-    {actividades.map((actividad) => (
-      <option
-        key={actividad.idCatalogoActividad}
-        value={actividad.idCatalogoActividad}
-      >
-        {actividad.nombre}
-      </option>
-    ))}
-  </select>
-</div>
+              {actividades.map((actividad) => (
+                <option
+                  key={actividad.idCatalogoActividad}
+                  value={actividad.idCatalogoActividad}
+                >
+                  {actividad.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
 
           <div className="reporte-filtro">
             <label htmlFor="estado">Estado</label>
@@ -140,15 +182,11 @@ export default function Reportes() {
               Limpiar
             </button>
 
-            <button
-              type="submit"
-              className="reportes-button primary"
-            >
+            <button type="submit" className="reportes-button primary">
               Buscar
             </button>
           </div>
         </form>
-
       </section>
 
       <section className="rieti-panel">
@@ -158,9 +196,7 @@ export default function Reportes() {
             <h3>Reportes recibidos</h3>
           </div>
 
-          <span className="reportes-count">
-            0 reportes
-          </span>
+          <span className="reportes-count">0 reportes</span>
         </div>
 
         <div className="reportes-table-container">
@@ -175,7 +211,6 @@ export default function Reportes() {
                 <th>Acciones</th>
               </tr>
             </thead>
-
           </table>
         </div>
       </section>
