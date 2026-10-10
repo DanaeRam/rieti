@@ -32,10 +32,6 @@ export default function Dashboard() {
         },
       );
 
-      useEffect(() => {
-        cargarResumen();
-      }, []);
-
       const datos = await respuesta.json();
 
       if (!respuesta.ok) {
@@ -52,6 +48,10 @@ export default function Dashboard() {
       setCargandoResumen(false);
     }
   }
+
+  useEffect(() => {
+        cargarResumen();
+      }, []);
 
   const graficaMensual = {
     series: [
