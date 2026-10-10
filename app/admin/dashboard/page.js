@@ -4,10 +4,6 @@ import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
-const meses = [];
-const reportesPorMes = [];
-const municipios = [];
-const reportesPorMunicipio = [];
 
 export default function Dashboard() {
   const [resumen, setResumen] = useState(null);
@@ -90,11 +86,21 @@ export default function Dashboard() {
     cargarEstadisticas();
   }, []);
 
-  const graficaMensual = {
+  let municipios = [];
+  let reportesPorMunicipio = [];
+
+  if (estadisticas) {
+    estadisticas.por_municipio.forEach((item) => {
+      municipios.push(item.municipio);
+      reportesPorMunicipio.push(item.total);
+    });
+  }
+
+  const graficaMunicipios = {
     series: [
       {
         name: "Reportes",
-        data: reportesPorMes,
+        data: reportesPorMunicipio,
       },
     ],
     options: {
@@ -108,31 +114,26 @@ export default function Dashboard() {
       colors: ["#3E3869"],
       plotOptions: {
         bar: {
-          borderRadius: 6,
-          columnWidth: "45%",
+          horizontal: true,
+          borderRadius: 5,
+          barHeight: "55%",
         },
       },
       dataLabels: {
         enabled: false,
       },
       xaxis: {
-        categories: meses,
+        categories: municipios,
         labels: {
           style: {
             colors: "#667085",
           },
         },
-        axisBorder: {
-          show: false,
-        },
-        axisTicks: {
-          show: false,
-        },
       },
       yaxis: {
         labels: {
           style: {
-            colors: "#667085",
+            colors: "#344054",
           },
         },
       },
@@ -145,7 +146,7 @@ export default function Dashboard() {
     },
   };
 
-  const graficaMunicipios = {
+  const grafica = {
     series: [
       {
         name: "Reportes",
@@ -242,6 +243,10 @@ export default function Dashboard() {
   inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1);
 
   porFecha.forEach((item) => {
+    const porMunicipio = estadisticas?.por_municipio || [];
+
+    const municipios = porMunicipio.map((item) => item.municipio);
+    const reportesPorMunicipio = porMunicipio.map((item) => item.total);
     const fecha = item.fecha.substring(0, 10);
 
     if (fecha === fechaHoy) {
@@ -322,8 +327,8 @@ export default function Dashboard() {
         <article className="rieti-panel large">
           <div className="rieti-panel-header">
             <div>
-              <span>ACTIVIDAD</span>
-              <h3>Reportes recibidos por mes</h3>
+              <span>MUNICIPIOS</span>
+              <h3>Reportes recibidos por municipio</h3>
             </div>
 
             <button>⋮</button>
@@ -331,8 +336,8 @@ export default function Dashboard() {
 
           <div className="rieti-chart">
             <Chart
-              options={graficaMensual.options}
-              series={graficaMensual.series}
+              options={graficaMunicipios.options}
+              series={graficaMunicipios.series}
               type="bar"
               height={320}
             />
