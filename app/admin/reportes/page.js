@@ -196,7 +196,7 @@ export default function Reportes() {
             <h3>Reportes recibidos</h3>
           </div>
 
-          <span className="reportes-count">0 reportes</span>
+          <span className="reportes-count">{reportes.length} reportes</span>
         </div>
 
         <div className="reportes-table-container">
