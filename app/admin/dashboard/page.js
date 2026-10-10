@@ -261,8 +261,8 @@ export default function Dashboard() {
   inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1);
 
   porFecha.forEach((item) => {
-    const porMunicipio = estadisticas?.por_municipio || [];
-
+    const fecha = item.fecha.substring(0, 10);
+    
     if (fecha === fechaHoy) {
       reporteHoy += item.total;
     }
