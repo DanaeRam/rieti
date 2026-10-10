@@ -933,6 +933,86 @@ body {
   }
 }
 
+/* SEGURIDAD */
+
+.seguridad-form {
+  max-width: 520px;
+}
+
+.seguridad-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-bottom: 18px;
+}
+
+.seguridad-dato label {
+  color: var(--rieti-text);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.seguridad-dato input {
+  width: 100%;
+  height: 42px;
+  padding: 0 12px;
+  box-sizing: border-box;
+  border: 1px solid var(--rieti-border);
+  border-radius: 9px;
+  outline: none;
+  color: var(--rieti-text);
+  background: #fff;
+  font-size: 13px;
+}
+
+.seguridad-dato input:focus {
+  border-color: var(--rieti-purple);
+  box-shadow: 0 0 0 3px rgba(62, 56, 105, 0.08);
+}
+
+.seguridad-dato small {
+  color: var(--rieti-muted);
+  font-size: 11px;
+}
+
+.seguridad-acciones {
+  margin-top: 25px;
+}
+
+.seguridad-button {
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 9px;
+  background: linear-gradient(
+    135deg,
+    var(--rieti-purple),
+    var(--rieti-blue)
+  );
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.seguridad-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.seguridad-mensaje {
+  margin: 5px 0 0;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.seguridad-mensaje.success {
+  color: #277a5d;
+}
+
+.seguridad-mensaje.error {
+  color: var(--rieti-pink);
+}
+
 /* DASHBOARD */
 
 button,
