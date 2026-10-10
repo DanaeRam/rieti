@@ -1,17 +1,58 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useEffect, useState } from "react";
 
-const Chart = dynamic(() => import("react-apexcharts"), {
-  ssr: false,
-});
-
+const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 const meses = [];
 const reportesPorMes = [];
 const municipios = [];
 const reportesPorMunicipio = [];
 
 export default function Dashboard() {
+  const [resumen, setResumen] = useState(null);
+  const [cargandoResumen, setCargandoResumen] = useState(true);
+  const [errorResumen, setErrorResumen] = useState("");
+
+  async function cargarResumen() {
+    try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No hay una sesión activa.");
+      }
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/dashboard/resumen",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+    useEffect(() => {
+      cargarResumen();
+    }, []);
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudo obtener el resumen",
+        );
+      }
+
+      setResumen(datos);
+    } catch (error) {
+      console.error("Error al cargar resumen:", error);
+      setErrorResumen(error.message);
+    } finally {
+      setCargandoResumen(false);
+    }
+  }
+
   const graficaMensual = {
     series: [
       {
@@ -125,11 +166,7 @@ export default function Dashboard() {
         fontFamily: "Arial, sans-serif",
       },
       colors: ["#D16C9A", "#496A9F", "#55AFC1"],
-      labels: [
-        "Pendientes",
-        "En seguimiento",
-        "Concluidos",
-      ],
+      labels: ["Pendientes", "En seguimiento", "Concluidos"],
       legend: {
         position: "bottom",
         fontSize: "13px",
@@ -158,9 +195,7 @@ export default function Dashboard() {
     <>
       <div className="rieti-page-title">
         <h2>Dashboard</h2>
-        <p>
-          Resumen general de los reportes registrados
-        </p>
+        <p>Resumen general de los reportes registrados</p>
       </div>
 
       <section className="rieti-metrics">
