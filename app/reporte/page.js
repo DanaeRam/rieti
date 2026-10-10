@@ -12,7 +12,7 @@ export default function Reporte() {
   const [rangoEdad, setRangoEdad] = useState("");
   const [generoObservado, setGeneroObservado] = useState("");
   const [actividad, setActividad] = useState("");
-  const [actividades, setActividades] = useState("");
+  const [actividades, setActividades] = useState([]);
   const [horaObservada, setHoraObservada] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [situacionRiesgo, setSituacionRiesgo] = useState("");
@@ -24,6 +24,10 @@ export default function Reporte() {
   const [referencias, setReferencias] = useState("");
 
   const [aceptoAviso, setAceptoAviso] = useState(false);
+  const [enviando, setEnviando] = useState(false);
+  const [folio, setFolio] = useState("");
+  const [estatus, setEstatus] = useState("");
+  const [errorEnvio, setErrorEnvio] = useState("");
 
   useEffect(() => {
     async function cargarActividades() {
@@ -70,6 +74,69 @@ export default function Reporte() {
 
     cargarMunicipios();
   }, []);
+
+  async function enviarReporte() {
+    if (!aceptoAviso) {
+      return;
+    }
+
+    setEnviando(true);
+    setErrorEnvio("");
+
+    try {
+      const datosReporte = {
+        idMunicipio: Number(municipio),
+        idCatalogoActividad: Number(actividad),
+        modalidad,
+        correo_contacto: modalidad === "SEGUIMIENTO" ? correoContacto : null,
+        num_menores: Number(numNinos),
+        rango_edad: rangoEdad,
+        genero_observado: generoObservado,
+        hora_observada: horaObservada ? `${horaObservada}:00` : undefined,
+        descripcion,
+        situacion_riesgo:
+          situacionRiesgo === "true"
+            ? true
+            : situacionRiesgo === "false"
+              ? false
+              : null,
+        latitud: 0,
+        longitud: 0,
+        calle,
+        colonia,
+        cp: null,
+        referencias,
+        acepto_aviso: true,
+      };
+
+      const respuesta = await fetch(
+        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/reportes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosReporte),
+        },
+      );
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudo enviar el reporte.",
+        );
+      }
+
+      setFolio(datos.folio);
+      setEstatus(datos.estatus);
+    } catch (error) {
+      console.error("Error al enviar reporte:", error);
+      setErrorEnvio(error.message || "No se pudo enviar el reporte.");
+    } finally {
+      setEnviando(false);
+    }
+  }
 
   function siguiente() {
     setPaso(paso + 1);
@@ -442,9 +509,14 @@ export default function Reporte() {
               Regresar
             </button>
 
-            <button type="button" disabled={!aceptoAviso}>
-              Enviar reporte
+            <button
+              type="button"
+              disabled={!aceptoAviso || enviando}
+              onClick={enviarReporte}
+            >
+              {enviando ? "Enviando..." : "Enviar reporte"}
             </button>
+
           </div>
         </section>
       )}
