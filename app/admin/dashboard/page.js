@@ -196,15 +196,33 @@ export default function Dashboard() {
     },
   };
 
+  let estados = [];
+  let reportesPorEstado = [];
+
+  if (estadisticas) {
+    estadisticas.por_estatus.forEach((item) => {
+      estados.push(item.estatus);
+      reportesPorEstado.push(item.total);
+    });
+  }
+
   const graficaEstados = {
-    series: [],
+    series: reportesPorEstado,
     options: {
       chart: {
         type: "donut",
         fontFamily: "Arial, sans-serif",
       },
-      colors: ["#D16C9A", "#496A9F", "#55AFC1"],
-      labels: ["Pendientes", "En seguimiento", "Concluidos"],
+      colors: [
+        "#D16C9A",
+        "#496A9F",
+        "#55AFC1",
+        "#3E3869",
+        "#D16C9A",
+        "#496A9F",
+        "#55AFC1",
+      ],
+      labels: estados,
       legend: {
         position: "bottom",
         fontSize: "13px",
@@ -244,10 +262,6 @@ export default function Dashboard() {
 
   porFecha.forEach((item) => {
     const porMunicipio = estadisticas?.por_municipio || [];
-
-    const municipios = porMunicipio.map((item) => item.municipio);
-    const reportesPorMunicipio = porMunicipio.map((item) => item.total);
-    const fecha = item.fecha.substring(0, 10);
 
     if (fecha === fechaHoy) {
       reporteHoy += item.total;
