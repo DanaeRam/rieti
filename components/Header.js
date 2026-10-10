@@ -44,7 +44,7 @@ export default function Header({ setSidebarAbierto }) {
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
-    window.location.href = "/admin";
+    window.location.href = "/";
   }
 
   const nombre = usuario?.nombre || "Usuario";
