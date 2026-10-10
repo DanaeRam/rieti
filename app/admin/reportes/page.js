@@ -211,6 +211,38 @@ export default function Reportes() {
                 <th>Acciones</th>
               </tr>
             </thead>
+            <tbody>
+              {cargandoReportes && (
+                <tr>
+                  <td colSpan="6">Cargando reportes...</td>
+                </tr>
+              )}
+
+              {!cargandoReportes && errorReportes && (
+                <tr>
+                  <td colSpan="6">{errorReportes}</td>
+                </tr>
+              )}
+
+              {!cargandoReportes && !errorReportes && reportes.length === 0 && (
+                <tr>
+                  <td colSpan="6">No hay reportes registrados</td>
+                </tr>
+              )}
+
+              {!cargandoReportes &&
+                !errorReportes &&
+                reportes.map((reporte) => (
+                  <tr key={reporte.folio}>
+                    <td>{reporte.folio}</td>
+                    <td>{reporte.fecha_registro}</td>
+                    <td>{reporte.municipio}</td>
+                    <td>{reporte.actividad}</td>
+                    <td>{reporte.estatus}</td>
+                    <td></td>
+                  </tr>
+                ))}
+            </tbody>
           </table>
         </div>
       </section>
