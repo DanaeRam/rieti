@@ -18,6 +18,7 @@ export default function Reporte() {
   const [situacionRiesgo, setSituacionRiesgo] = useState("");
 
   const [municipio, setMunicipio] = useState("");
+  const [municipios, setMunicipios] = useState([]);
   const [calle, setCalle] = useState("");
   const [colonia, setColonia] = useState("");
   const [referencias, setReferencias] = useState("");
@@ -45,6 +46,29 @@ export default function Reporte() {
     }
 
     cargarActividades();
+  }, []);
+
+  useEffect(() => {
+    async function cargarMunicipios() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/municipios",
+        );
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error("No se pudieron cargar los municipios");
+        }
+
+        setMunicipios(datos);
+      } catch (error) {
+        console.error("Error al cargar municipios:", error);
+        setMunicipios([]);
+      }
+    }
+
+    cargarMunicipios();
   }, []);
 
   function siguiente() {
@@ -145,9 +169,9 @@ export default function Reporte() {
               <option value="">Selecciona una opción</option>
               <option value="1">1</option>
               <option value="2">2</option>
-              <option value="3"></option>
+              <option value="3">3</option>
               <option value="4">4</option>
-              <option value="5">5</option>
+              <option value="5">5 o más</option>
             </select>
           </div>
 
@@ -276,6 +300,14 @@ export default function Reporte() {
               required
             >
               <option value="">Selecciona un municipio</option>
+              {municipios.map((municipio) => (
+                <option
+                  key={municipio.idMunicipio}
+                  value={municipio.idMunicipio}
+                >
+                  {municipio.nombre}
+                </option>
+              ))}
             </select>
           </div>
 
