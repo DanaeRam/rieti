@@ -6,17 +6,25 @@ export default function Seguimiento() {
   const [folio, setFolio] = useState("");
 
   return (
-    <main>
+    <>
       <div>
-        <h1>Seguimiento de reporte</h1>
-        <p>Consulta el estado de tu reporte ingresando tu folio</p>
+        <h2>Seguimiento de reporte</h2>
+        <p>Consulta el estado de tu reporte ingresando tu folio.</p>
       </div>
 
-      <section>
-        <h2>Consultar reporte</h2>
-
-        <form>
+      <section
+        className="rieti-panel"
+        style={{ maxWidth: "600px", margin: "0 auto" }}
+      >
+        <div className="rieti-panel-header">
           <div>
+            <span>SEGUIMIENTO</span>
+            <h3>Consultar reporte</h3>
+          </div>
+        </div>
+
+        <form className="usuarios-form">
+          <div className="usuario-filtro">
             <label htmlFor="folio">Folio del reporte</label>
 
             <input
@@ -28,40 +36,23 @@ export default function Seguimiento() {
             />
           </div>
 
-          <button type="submit">Consultar reporte</button>
+          <div className="usuarios-form-actions">
+            <button type="submit" className="usuarios-button">
+              Consultar reporte
+            </button>
+          </div>
         </form>
       </section>
 
       <section>
         <h2>Información del reporte</h2>
 
-        <div>
-          <div>
-            <span>Folio</span>
-            <strong>—</strong>
-          </div>
-
-          <div>
-            <span>Estatus</span>
-            <strong>—</strong>
-          </div>
-
-          <div>
-            <span>Fecha de registro</span>
-            <strong>—</strong>
-          </div>
-
-          <div>
-            <span>Última atención</span>
-            <strong>—</strong>
-          </div>
-
-          <div>
-            <span>Municipio</span>
-            <strong>—</strong>
-          </div>
-        </div>
+        <p>Folio: —</p>
+        <p>Estatus: —</p>
+        <p>Fecha de registro: —</p>
+        <p>Última atención: —</p>
+        <p>Municipio: —</p>
       </section>
-    </main>
+    </>
   );
 }
