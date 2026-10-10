@@ -516,7 +516,19 @@ export default function Reporte() {
             >
               {enviando ? "Enviando..." : "Enviar reporte"}
             </button>
+            {folio && (
+              <div>
+                <h2>Reporte enviado correctamente</h2>
+                <p>Folio: {folio}</p>
+                <p>Estado: {estatus}</p>
+              </div>
+            )}
 
+            {errorEnvio && (
+              <div>
+                <p>{errorEnvio}</p>
+              </div>
+            )}
           </div>
         </section>
       )}
