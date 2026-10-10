@@ -73,9 +73,7 @@ export default function Dashboard() {
 
       if (!respuesta.ok) {
         throw new Error(
-          datos.message ||
-            datos.error ||
-            "No se pudieron obtener los datos",
+          datos.message || datos.error || "No se pudieron obtener los datos",
         );
       }
 
@@ -230,6 +228,37 @@ export default function Dashboard() {
     },
   };
 
+  const porFecha = estadisticas?.por_fecha || [];
+
+  const hoy = new Date();
+  const fechaHoy = hoy.toISOString().substring(0, 10);
+  const mesActual = fechaHoy.substring(0, 7);
+
+  let reporteHoy = 0;
+  let reportesEsteMes = 0;
+  let reportesEstaSemana = 0;
+
+  const inicioSemana = new Date(hoy);
+  inicioSemana.setDate(hoy.getDate() - hoy.getDay() + 1);
+
+  porFecha.forEach((item) => {
+    const fecha = item.fecha.substring(0, 10);
+
+    if (fecha === fechaHoy) {
+      reporteHoy += item.total;
+    }
+
+    if (fecha.startsWith(mesActual)) {
+      reportesEsteMes += item.total;
+    }
+
+    const fechaReporte = new Date(item.fecha);
+
+    if (fechaReporte >= inicioSemana && fechaReporte <= hoy) {
+      reportesEstaSemana += item.total;
+    }
+  });
+
   return (
     <>
       <div className="rieti-page-title">
@@ -272,19 +301,19 @@ export default function Dashboard() {
       <section className="rieti-mini-metrics">
         <article>
           <span>ESTE MES</span>
-          <strong>—</strong>
+          <strong>{cargandoEstadisticas ? "..." : reportesEsteMes}</strong>
           <small>Reportes recibidos</small>
         </article>
 
         <article>
           <span>ESTA SEMANA</span>
-          <strong>—</strong>
+          <strong>{cargandoEstadisticas ? "..." : reportesEstaSemana}</strong>
           <small>Reportes recibidos</small>
         </article>
 
         <article>
           <span>HOY</span>
-          <strong>—</strong>
+          <strong>{cargandoEstadisticas ? "..." : reporteHoy}</strong>
           <small>Reportes recibidos</small>
         </article>
       </section>
