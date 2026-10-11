@@ -1,3 +1,9 @@
+/**
+ * Dashboard administrativo de RIETI.
+ * Presenta métricas y gráficas de los reportes registrados.
+ *
+ * @module app/admin/dashboard/page
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -5,6 +11,11 @@ import { useEffect, useState } from "react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
+/**
+ * Muestra el resumen, las métricas y las gráficas de los reportes.
+ *
+ * @component
+ */
 export default function Dashboard() {
   const [resumen, setResumen] = useState(null);
   const [cargandoResumen, setCargandoResumen] = useState(true);
@@ -12,6 +23,9 @@ export default function Dashboard() {
   const [estadisticas, setEstadisticas] = useState(null);
   const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
 
+  /**
+   * Carga el resumen general de reportes del panel administrativo.
+   */
   async function cargarResumen() {
     try {
       const token = localStorage.getItem("token");
@@ -47,6 +61,9 @@ export default function Dashboard() {
     }
   }
 
+  /**
+   * Obtiene los datos estadísticos usados para las gráficas del dashboard.
+   */
   async function cargarEstadisticas() {
     try {
       const token = localStorage.getItem("token");

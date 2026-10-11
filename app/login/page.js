@@ -1,14 +1,29 @@
+/**
+ * Página de acceso para el personal administrativo de RIETI.
+ *
+ * @module app/login/page
+ */
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
 
+/**
+ * Presenta el formulario para iniciar sesión en el área administrativa.
+ *
+ * @component
+ */
 export default function Login() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const [cargando, setCargando] = useState(false);
 
+  /**
+   * Envía las credenciales y guarda la sesión si la autenticación es correcta.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   async function iniciarSesion(event) {
     event.preventDefault();
 

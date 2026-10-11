@@ -1,11 +1,24 @@
+/**
+ * Página del perfil del usuario administrativo autenticado.
+ *
+ * @module app/admin/perfil/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Muestra los datos personales y administrativos del funcionario autenticado.
+ *
+ * @component
+ */
 export default function Perfil() {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
+  /**
+   * Consulta la API y guarda los datos del usuario autenticado.
+   */
   async function cargarUsuario() {
     const token = localStorage.getItem("token");
 

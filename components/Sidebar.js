@@ -1,15 +1,31 @@
+/**
+ * Menú lateral del panel administrativo de RIETI.
+ * Muestra las principales rutas del sistema y oculta opciones
+ * según el rol del usuario autenticado.
+ *
+ * @module components/Sidebar
+ */
+
 "use client";
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
-
+/**
+ * Muestra la navegación principal del área administrativa.
+ *
+ * @param {{ abierto: boolean }} props - Indica si el menú está expandido o contraído.
+ * @component
+ * @example
+ * <Sidebar abierto={abierto} />
+ */
 export default function Sidebar({ abierto }) {
   const pathname = usePathname();
   const [esAdministrador, setEsAdministrador] = useState(true);
 
   useEffect(() => {
+    /** Verifica el rol guardado para mostrar la gestión de usuarios. */
     const usuarioGuardado = localStorage.getItem("usuario");
 
     if (usuarioGuardado) {
@@ -17,7 +33,6 @@ export default function Sidebar({ abierto }) {
 
       if (usuario.rol === "Administrador") {
         setEsAdministrador(true);
-        
       }
     }
   }, []);

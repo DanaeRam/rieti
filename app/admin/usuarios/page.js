@@ -1,7 +1,18 @@
+/**
+ * Administración de usuarios alimentadores de RIETI.
+ * Permite consultar, crear, editar y cambiar el estado de las cuentas.
+ *
+ * @module app/admin/usuarios/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Permite gestionar las cuentas de usuarios alimentadores.
+ *
+ * @component
+ */
 export default function Usuarios() {
   const [nombre, setNombre] = useState("");
   const [correoInstitucional, setCorreoInstitucional] = useState("");
@@ -31,6 +42,7 @@ export default function Usuarios() {
   const [cambiandoEstado, setCambiandoEstado] = useState(false);
 
   useEffect(() => {
+    /** Carga el catálogo de municipios para los formularios de usuario. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
@@ -48,6 +60,9 @@ export default function Usuarios() {
     cargarMunicipios();
   }, []);
 
+  /**
+   * Obtiene del servidor el listado actualizado de usuarios.
+   */
   async function cargarUsuarios() {
     setCargandoUsuarios(true);
     setErrorUsuarios("");
@@ -92,6 +107,11 @@ export default function Usuarios() {
     cargarUsuarios();
   }, []);
 
+  /**
+   * Crea una cuenta de usuario con los datos ingresados en el formulario.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   async function crearUsuario(event) {
     event.preventDefault();
 
@@ -155,6 +175,11 @@ export default function Usuarios() {
     }
   }
 
+  /**
+   * Abre el formulario de edición y carga los datos del usuario seleccionado.
+   *
+   * @param {Object} usuario - Usuario que se va a editar.
+   */
   function abrirEditar(usuario) {
     setUsuarioEditar(usuario);
 
@@ -163,6 +188,9 @@ export default function Usuarios() {
     setEditMunicipio(String(usuario.idMunicipio || ""));
   }
 
+  /**
+   * Cierra el formulario de edición y limpia sus valores.
+   */
   function cerrarEditar() {
     setUsuarioEditar(null);
     setEditNombre("");
@@ -170,6 +198,11 @@ export default function Usuarios() {
     setEditMunicipio("");
   }
 
+  /**
+   * Guarda en el servidor los cambios del usuario seleccionado.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   async function guardarEdicion(event) {
     event.preventDefault();
 
@@ -227,6 +260,11 @@ export default function Usuarios() {
     }
   }
 
+  /**
+   * Prepara la acción de activar o desactivar al usuario seleccionado.
+   *
+   * @param {Object} usuario - Usuario cuyo estado se cambiará.
+   */
   function abrirCambioEstado(usuario) {
     setUsuarioEstado(usuario);
 
@@ -237,11 +275,17 @@ export default function Usuarios() {
     }
   }
 
+  /**
+   * Cierra la confirmación de cambio de estado.
+   */
   function cerrarCambioEstado() {
     setUsuarioEstado(null);
     setAccionEstado("");
   }
 
+  /**
+   * Actualiza el estado activo de la cuenta seleccionada.
+   */
   async function cambiarEstado() {
     if (!usuarioEstado) {
       return;

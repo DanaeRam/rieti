@@ -1,7 +1,17 @@
+/**
+ * Bandeja administrativa para consultar y filtrar reportes recibidos.
+ *
+ * @module app/admin/reportes/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Permite consultar reportes mediante filtros y muestra los resultados.
+ *
+ * @component
+ */
 export default function Reportes() {
   const [municipio, setMunicipio] = useState("");
   const [estado, setEstado] = useState("");
@@ -15,6 +25,7 @@ export default function Reportes() {
   const [errorReportes, setErrorReportes] = useState("");
 
   useEffect(() => {
+    /** Carga el catálogo de municipios para el filtro de reportes. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
@@ -32,6 +43,7 @@ export default function Reportes() {
   }, []);
 
   useEffect(() => {
+    /** Carga el catálogo de actividades para el filtro de reportes. */
     async function cargarActividades() {
       try {
         const respuesta = await fetch(
@@ -48,6 +60,9 @@ export default function Reportes() {
     cargarActividades();
   }, []);
 
+  /**
+   * Obtiene el listado de reportes desde la API administrativa.
+   */
   async function cargarReportes() {
     setCargandoReportes(true);
     setErrorReportes("");
@@ -86,10 +101,18 @@ export default function Reportes() {
     cargarReportes();
   }, []);
 
+  /**
+   * Procesa el envío de los filtros de búsqueda.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   function buscarReportes(event) {
     event.preventDefault();
   }
 
+  /**
+   * Restablece los filtros de búsqueda a sus valores iniciales.
+   */
   function limpiarFiltros() {
     setMunicipio("");
     setEstado("");

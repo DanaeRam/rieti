@@ -1,3 +1,11 @@
+/**
+ * Encabezado principal del panel administrativo de RIETI.
+ * Muestra el menú lateral, la información del usuario autenticado,
+ * la disponibilidad del perfil y la opción para cerrar sesión.
+ *
+ * @module components/Header
+ */
+
 "use client";
 
 import Link from "next/link";
@@ -10,6 +18,14 @@ import {
   UserRound,
 } from "lucide-react";
 
+/**
+ * Muestra la navegación y la información del usuario autenticado.
+ *
+ * @param {{ setSidebarAbierto: React.Dispatch<React.SetStateAction<boolean>> }} props - Función que alterna el estado del menú lateral.
+ * @component
+ * @example
+ * <Header setSidebarAbierto={setSidebarAbierto} />
+ */
 export default function Header({ setSidebarAbierto }) {
   const [usuario, setUsuario] = useState(null);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
@@ -28,6 +44,11 @@ export default function Header({ setSidebarAbierto }) {
   }, []);
 
   useEffect(() => {
+    /**
+     * Cierra el menú de perfil cuando se hace clic fuera de este.
+     *
+     * @param {MouseEvent} event - Evento del clic detectado en el documento.
+     */
     function cerrarPerfil(event) {
       if (perfilRef.current && !perfilRef.current.contains(event.target)) {
         setPerfilAbierto(false);
@@ -41,6 +62,9 @@ export default function Header({ setSidebarAbierto }) {
     };
   }, []);
 
+  /**
+   * Cierra la sesión y redirige a la página principal.
+   */
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");

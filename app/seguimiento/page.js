@@ -1,13 +1,28 @@
+/**
+ * Página para consultar el estado de un reporte mediante su folio.
+ *
+ * @module app/seguimiento/page
+ */
 "use client";
 
 import { useState } from "react";
 
+/**
+ * Permite consultar un reporte y muestra el resultado del seguimiento.
+ *
+ * @component
+ */
 export default function Seguimiento() {
   const [folio, setFolio] = useState("");
   const [reporte, setReporte] = useState(null);
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
 
+  /**
+   * Consulta en la API el reporte correspondiente al folio ingresado.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
+   */
   async function consultarReporte(event) {
     event.preventDefault();
 

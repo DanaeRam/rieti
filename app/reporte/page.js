@@ -1,7 +1,20 @@
+/**
+ * Página de registro de reportes de RIETI.
+ * Permite completar un formulario por pasos para reportar
+ * una situación con o sin seguimiento por correo.
+ *
+ * @module app/reporte/page
+ */
+
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Guía a la persona usuaria por los pasos para enviar un reporte.
+ *
+ * @component
+ */
 export default function Reporte() {
   const [paso, setPaso] = useState(1);
 
@@ -30,6 +43,7 @@ export default function Reporte() {
   const [errorEnvio, setErrorEnvio] = useState("");
 
   useEffect(() => {
+    /** Carga el catálogo de actividades disponibles para el reporte. */
     async function cargarActividades() {
       try {
         const respuesta = await fetch(
@@ -53,6 +67,7 @@ export default function Reporte() {
   }, []);
 
   useEffect(() => {
+    /** Carga los municipios disponibles para indicar la ubicación del reporte. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
@@ -75,6 +90,10 @@ export default function Reporte() {
     cargarMunicipios();
   }, []);
 
+  /**
+   * Envía el reporte consolidado a la API del sistema.
+   * Valida que se haya aceptado el aviso de privacidad antes de enviar.
+   */
   async function enviarReporte() {
     if (!aceptoAviso) {
       return;
@@ -138,10 +157,16 @@ export default function Reporte() {
     }
   }
 
+  /**
+   * Avanza al siguiente paso del formulario de reporte.
+   */
   function siguiente() {
     setPaso(paso + 1);
   }
 
+  /**
+   * Regresa al paso anterior del formulario de reporte.
+   */
   function regresar() {
     setPaso(paso - 1);
   }

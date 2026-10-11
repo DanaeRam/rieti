@@ -1,5 +1,17 @@
+/**
+ * Página principal de RIETI.
+ * Muestra la presentación del sistema y las opciones
+ * principales para reportar un caso o hacer seguimiento.
+ *
+ * @module app/page
+ */
 import Link from "next/link";
 
+/**
+ * Presenta el sistema y permite acceder a sus funciones principales.
+ *
+ * @component
+ */
 export default function Home() {
   return (
     <main className="rieti-home">

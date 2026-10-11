@@ -1,12 +1,25 @@
+/**
+ * Página para actualizar la contraseña del usuario autenticado.
+ *
+ * @module app/admin/seguridad/page
+ */
 "use client";
 
 import { useState } from "react";
 
+/**
+ * Permite cambiar la contraseña de la cuenta autenticada.
+ *
+ * @component
+ */
 export default function Seguridad() {
   const [pwdActual, setPwdActual] = useState("");
   const [pwdNuevo, setPwdNuevo] = useState("");
   const [pwdConfirm, setPwdConfirm] = useState("");
 
+  /**
+   * Envía la contraseña actual y la nueva a la API para actualizar la cuenta.
+   */
   async function cambiarPwd() {
     try {
       const token = localStorage.getItem("token");

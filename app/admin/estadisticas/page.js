@@ -1,5 +1,16 @@
+/**
+ * Página de estadísticas y analítica de RIETI.
+ * Presenta los espacios destinados a gráficas e indicadores del sistema.
+ *
+ * @module app/admin/estadisticas/page
+ */
 "use client";
 
+/**
+ * Presenta los paneles de análisis estadístico del sistema.
+ *
+ * @component
+ */
 export default function Estadisticas() {
   return (
     <>
