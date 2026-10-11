@@ -6,12 +6,45 @@
  */
 "use client";
 
+import { useEffect, useRef } from "react";
+
 /**
- * Presenta los paneles de análisis estadístico del sistema.
+ * Presenta los paneles de análisis estadístico del sistema y el mapa de calor.
  *
  * @component
  */
 export default function Estadisticas() {
+  const mapaRef = useRef(null);
+
+  useEffect(() => {
+    let mapa;
+    let cancelado = false;
+
+    async function cargarMapa() {
+      const L = (await import("leaflet")).default;
+
+      if (cancelado || !mapaRef.current) {
+        return;
+      }
+
+      mapa = L.map(mapaRef.current).setView([19.4326, -99.1332], 10);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
+        mapa,
+      );
+    }
+
+    cargarMapa();
+
+    return () => {
+      cancelado = true;
+
+      if (mapa) {
+        mapa.remove();
+      }
+    };
+  }, []);
+
   return (
     <>
       <div className="rieti-page-title">
@@ -25,9 +58,13 @@ export default function Estadisticas() {
           </div>
         </div>
 
-        <div className="rieti-chart">
-          <p>Próximamente.</p>
-        </div>
+        <div
+          ref={mapaRef}
+          style={{
+            height: "400px",
+            width: "100%",
+          }}
+        ></div>
       </article>
 
       <section className="rieti-chart-grid">

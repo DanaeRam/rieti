@@ -6,6 +6,7 @@
  * @module app/layout
  */
 import "./globals.css";
+import "leaflet/dist/leaflet.css";
 
 /** Metadata general del sitio mostrada por el navegador. */
 export const metadata = {

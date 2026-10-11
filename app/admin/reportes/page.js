@@ -1,5 +1,5 @@
 /**
- * Bandeja administrativa para consultar y filtrar reportes recibidos.
+ * Bandeja de reportes para consultar y filtrar reportes recibidos.
  *
  * @module app/admin/reportes/page
  */
