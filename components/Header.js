@@ -84,10 +84,6 @@ export default function Header({ setSidebarAbierto }) {
         >
           ☰
         </button>
-
-        <div>
-          <h1>Panel administrativo</h1>
-        </div>
       </div>
 
       <div className="rieti-header-right">

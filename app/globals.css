@@ -402,7 +402,7 @@ body {
 /* SIDEBAR */
 
 /**
- * Estilos del menú lateral del panel administrativo de RIETI.
+ * Estilos del menú lateral del panel administrativo.
  *
  * Define la estructura, apariencia, navegación, estado activo,
  * pie del menú y comportamiento responsivo del Sidebar.
@@ -546,8 +546,8 @@ body {
 }
 
 .rieti-main {
-  width: calc(100% - 280px);
-  margin-left: 280px;
+  width: calc(100% - 250px);
+  margin-left: 250px;
   min-width: 0;
   flex: 1;
   transition: margin-left 0.3s ease;
@@ -560,8 +560,16 @@ body {
   box-sizing: border-box;
 }
 
-
 /* HEADER */
+
+/**
+ * Estilos del encabezado principal del panel administrativo.
+ *
+ * Define la estructura, navegación, notificaciones, perfil del usuario
+ * y comportamiento visual del encabezado.
+ *
+ * @author ChatGPT (OpenAI)
+ */
 
 .rieti-header {
   position: sticky;
@@ -571,30 +579,10 @@ body {
   align-items: center;
   justify-content: space-between;
   height: 80px;
-  min-height: 72px;
   padding: 0 28px;
   background: rgba(255, 255, 255, 0.94);
   border-bottom: 1px solid #eceaf3;
-  box-shadow: none;
   backdrop-filter: blur(10px);
-}
-
-.rieti-header-left {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.rieti-header-left h1 {
-  margin: 0;
-  color: #3e3869;
-  font-size: 19px;
-  font-weight: 600;
-  letter-spacing: -0.3px;
-}
-
-.rieti-header-label {
-  display: none;
 }
 
 .rieti-menu-button {
@@ -625,23 +613,6 @@ body {
   border-radius: 50%;
   background: #ffffff;
   color: #3e3869;
-  box-shadow: none;
-}
-
-.rieti-notification span {
-  position: absolute;
-  top: -4px;
-  right: -2px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  background: var(--rieti-pink);
-  color: #ffffff;
-  font-size: 10px;
-  font-weight: 700;
 }
 
 .rieti-profile-wrapper {
@@ -666,7 +637,11 @@ body {
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--rieti-purple), var(--rieti-blue));
+  background: linear-gradient(
+    135deg,
+    var(--rieti-purple),
+    var(--rieti-blue)
+  );
   color: #ffffff;
 }
 
