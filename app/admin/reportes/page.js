@@ -6,6 +6,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
 
 /**
  * Permite consultar reportes mediante filtros y muestra los resultados.
@@ -262,7 +263,19 @@ export default function Reportes() {
                     <td>{reporte.municipio}</td>
                     <td>{reporte.actividad}</td>
                     <td>{reporte.estatus}</td>
-                    <td></td>
+                    <td>
+                      <button type="button" title="Expediente digital">
+                        <FolderClosed size={18} />
+                      </button>
+
+                      <button type="button" title="Bitácora">
+                        <ClipboardList size={18} />
+                      </button>
+
+                      <button type="button" title="Historial de estatus">
+                        <FileClock size={18} />
+                      </button>
+                    </td>
                   </tr>
                 ))}
             </tbody>

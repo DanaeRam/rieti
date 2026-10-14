@@ -86,7 +86,6 @@ export default function Header({ setSidebarAbierto }) {
         </button>
 
         <div>
-          <span className="rieti-header-label">RIETI · ADMINISTRACIÓN</span>
           <h1>Panel administrativo</h1>
         </div>
       </div>
