@@ -25,6 +25,9 @@ export default function Reportes() {
   const [cargandoReportes, setCargandoReportes] = useState(false);
   const [errorReportes, setErrorReportes] = useState("");
 
+  const [expediente, setExpediente] = useState(null);
+  const [pestana, setPestana] = useState("encabezado");
+
   useEffect(() => {
     /** Carga el catálogo de municipios para el filtro de reportes. */
     async function cargarMunicipios() {
@@ -101,6 +104,15 @@ export default function Reportes() {
   useEffect(() => {
     cargarReportes();
   }, []);
+
+  function abrirExpediente(reporte) {
+    setExpediente(reporte);
+    setPestana("encabezado");
+  }
+
+  function cerrarExpediente() {
+    setExpediente(null);
+  }
 
   /**
    * Procesa el envío de los filtros de búsqueda.
@@ -264,7 +276,11 @@ export default function Reportes() {
                     <td>{reporte.actividad}</td>
                     <td>{reporte.estatus}</td>
                     <td>
-                      <button type="button" title="Expediente digital">
+                      <button
+                        type="button"
+                        title="Expediente digital"
+                        onClick={() => abrirExpediente(reporte)}
+                      >
                         <FolderClosed size={18} />
                       </button>
 
@@ -280,6 +296,97 @@ export default function Reportes() {
                 ))}
             </tbody>
           </table>
+          
+          {expediente && (
+            <div>
+              <div>
+                <div>
+                  <h2>Expediente digital</h2>
+
+                  <button type="button" onClick={cerrarExpediente}>
+                    ×
+                  </button>
+                </div>
+
+                <div>
+                  <button
+                    type="button"
+                    onClick={() => setPestana("encabezado")}
+                  >
+                    Encabezado
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPestana("informacion")}
+                  >
+                    Información
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPestana("geolocalizacion")}
+                  >
+                    Geolocalización
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setPestana("evidencias")}
+                  >
+                    Evidencias
+                  </button>
+                </div>
+
+                {pestana === "encabezado" && (
+                  <section>
+                    <h3>Encabezado</h3>
+
+                    <p>Folio: {expediente.folio}</p>
+                    <p>Municipio asignado: {expediente.municipio || "—"}</p>
+                    <p>Alimentador asignado: {expediente.alimentador || "—"}</p>
+                    <p>Estado: {expediente.estatus || "—"}</p>
+                    <p>Prioridad: {expediente.prioridad || "—"}</p>
+                  </section>
+                )}
+
+                {pestana === "informacion" && (
+                  <section>
+                    <h3>Información</h3>
+
+                    <p>Fecha: {expediente.fecha_registro || "—"}</p>
+                    <p>Municipio: {expediente.municipio || "—"}</p>
+                    <p>Tipo de actividad: {expediente.actividad || "—"}</p>
+                    <p>NNA aproximados: {expediente.num_menores || "—"}</p>
+                    <p>Nivel de riesgo: {expediente.prioridad || "—"}</p>
+                    <p>Descripción: {expediente.descripcion || "—"}</p>
+                  </section>
+                )}
+
+                {pestana === "geolocalizacion" && (
+                  <section>
+                    <h3>Geolocalización</h3>
+
+                    <p>Ubicación: —</p>
+                    <p>Latitud: {expediente.latitud || "—"}</p>
+                    <p>Longitud: {expediente.longitud || "—"}</p>
+                    <p>Calle: {expediente.calle || "—"}</p>
+                    <p>Colonia: {expediente.colonia || "—"}</p>
+                    <p>CP: {expediente.cp || "—"}</p>
+                    <p>Referencias: {expediente.referencias || "—"}</p>
+                  </section>
+                )}
+
+                {pestana === "evidencias" && (
+                  <section>
+                    <h3>Evidencias</h3>
+
+                    <p>No hay evidencias disponibles.</p>
+                  </section>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
     </div>
