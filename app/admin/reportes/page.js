@@ -16,15 +16,20 @@ import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
 export default function Reportes() {
   const [municipio, setMunicipio] = useState("");
   const [prioridad, setPrioridad] = useState("");
-  const [estado, setEstado] = useState("");
+  const [estatus, setEstatus] = useState("");
   const [fecha, setFecha] = useState("");
 
+  const [filtrosAvanzados, setFiltrosAvanzados] = useState(false);
+  const [nna, setNna] = useState("");
+  const [rangoEdad, setRangoEdad] = useState("");
+  const [genero, setGenero] = useState("");
+  const [actividad, setActividad] = useState("");
+  const [hora, setHora] = useState("");
   const [reportesFiltrados, setReportesFiltrados] = useState([]);
-
+  
   const [municipios, setMunicipios] = useState([]);
-
-
-  const [reportes, setReportes] = useState([]);
+  const [reportes, setReportes] = useState([])
+  const [actividades, setActividades] = useState([]);
   const [cargandoReportes, setCargandoReportes] = useState(false);
   const [errorReportes, setErrorReportes] = useState("");
 
@@ -49,23 +54,23 @@ export default function Reportes() {
     cargarMunicipios();
   }, []);
 
-  // useEffect(() => {
-  //   /** Carga el catálogo de actividades para el filtro de reportes. */
-  //   async function cargarActividades() {
-  //     try {
-  //       const respuesta = await fetch(
-  //         "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
-  //       );
+  useEffect(() => {
+    /** Carga el catálogo de actividades para el filtro de reportes. */
+    async function cargarActividades() {
+      try {
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
+        );
 
-  //       const datos = await respuesta.json();
-  //       setActividades(datos);
-  //     } catch {
-  //       setActividades([]);
-  //     }
-  //   }
+        const datos = await respuesta.json();
+        setActividades(datos);
+      } catch {
+        setActividades([]);
+      }
+    }
 
-  //   cargarActividades();
-  // }, []);
+    cargarActividades();
+  }, []);
 
   /**
    * Obtiene el listado de reportes desde la API administrativa.
@@ -116,7 +121,7 @@ export default function Reportes() {
   }
 
   function cerrarExpediente() {
-    setExpediente(null);
+    setExpediente(null); 
   }
 
   /**
@@ -124,51 +129,107 @@ export default function Reportes() {
    *
    * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
    */
+
   function buscarReportes(event) {
-  event.preventDefault();
+    event.preventDefault();
 
-  let resultados = reportes;
+    let resultados = reportes;
 
-  if (municipio) {
-    const municipioSeleccionado = municipios.find(
-      (item) => String(item.idMunicipio) === municipio
-    );
+    if (municipio) {
+      const municipioSeleccionado = municipios.find(
+        (item) => String(item.idMunicipio) === municipio
+      );
 
-    resultados = resultados.filter(
-      (reporte) => reporte.municipio === municipioSeleccionado?.nombre
-    );
-  }
+      resultados = resultados.filter(
+        (reporte) =>
+          reporte.municipio === municipioSeleccionado?.nombre
+      );
+    }
 
-  if (estado) {
-    resultados = resultados.filter(
-      (reporte) => reporte.estatus === estado
-    );
-  }
+    if (estatus) {
+      resultados = resultados.filter(
+        (reporte) => reporte.estatus === estatus
+      );
+    }
 
-  if (prioridad) {
-    resultados = resultados.filter(
-      (reporte) => reporte.prioridad === prioridad
-    );
-  }
+    if (prioridad) {
+      resultados = resultados.filter(
+        (reporte) => reporte.prioridad === prioridad
+      );
+    }
 
-  if (fecha) {
-    resultados = resultados.filter(
-      (reporte) => reporte.fecha_registro.startsWith(fecha)
-    );
-  }
+    if (fecha) {
+      resultados = resultados.filter(
+        (reporte) => reporte.fecha_registro.startsWith(fecha)
+      );
+    }
 
-  setReportesFiltrados(resultados);
+    if (nna) {
+      if (nna === "5") {
+        resultados = resultados.filter(
+          (reporte) => Number(reporte.num_menores) >= 5
+        );
+      } else {
+        resultados = resultados.filter(
+          (reporte) => String(reporte.num_menores) === nna
+        );
+      }
+    }
+
+    if (rangoEdad) {
+      resultados = resultados.filter(
+        (reporte) => reporte.rango_edad === rangoEdad
+      );
+    }
+
+    if (genero) {
+      resultados = resultados.filter(
+        (reporte) =>
+          reporte.genero_observado?.toLowerCase() ===
+          genero.toLowerCase()
+      );
+    }
+
+  if (actividad) {
+  const actividadSeleccionada = actividades.find(
+    (item) => String(item.idCatalogoActividad) === actividad
+  );
+
+  resultados = resultados.filter(
+    (reporte) =>
+      reporte.actividad === actividadSeleccionada?.nombre
+  );
 }
+
+    if (hora) {
+      resultados = resultados.filter(
+        (reporte) =>
+          reporte.hora_observada?.startsWith(hora)
+      );
+    }
+
+    setReportesFiltrados(resultados);
+  }
 
   /**
    * Restablece los filtros de búsqueda a sus valores iniciales.
    */
+
   function limpiarFiltros() {
     setMunicipio("");
-    setEstado("");
+    setEstatus("");
     setPrioridad("");
     setFecha("");
-    // setActividad("");
+
+    setNna("");
+    setRangoEdad("");
+    setGenero("");
+    setActividad("");
+    setHora("");
+
+    setFiltrosAvanzados(false);
+
+    setReportesFiltrados(reportes);
   }
 
   return (
@@ -207,14 +268,14 @@ export default function Reportes() {
           </div>
 
           <div className="reporte-filtro">
-            <label htmlFor="estado">Estado</label>
+            <label htmlFor="estatus">estatus</label>
 
             <select
-              id="estado"
-              value={estado}
-              onChange={(e) => setEstado(e.target.value)}
+              id="estatus"
+              value={estatus}
+              onChange={(e) => setEstatus(e.target.value)}
             >
-              <option value="">Todos los estados</option>
+              <option value="">Todos los estatus</option>
               <option value="Recibido">Recibido</option>
               <option value="En Revision">En Revisión</option>
               <option value="En Proceso">En Proceso</option>
@@ -251,6 +312,87 @@ export default function Reportes() {
             />
           </div>
 
+          <button
+            type="button"
+            className="reportes-filtros-avanzados-button"
+            onClick={() => setFiltrosAvanzados(!filtrosAvanzados)}
+          >
+            Filtros avanzados
+          </button>
+
+          {filtrosAvanzados && (
+            <div className="reportes-filtros-avanzados">
+              <div className="reporte-filtro">
+                <label htmlFor="nna">Número de niños</label>
+                <select value={nna} onChange={(e) => setNna(e.target.value)}>
+                  <option value="">Todos</option>
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                  <option value="5">5 o más</option>
+                </select>
+              </div>
+
+              <div className="reporte-filtro">
+                <label htmlFor="rangoEdad">Rango de edad</label>
+                <select
+                  value={rangoEdad}
+                  onChange={(e) => setRangoEdad(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="0-5">0 a 5 años</option>
+                  <option value="6-11">6 a 11 años</option>
+                  <option value="12-14">12 a 14 años</option>
+                  <option value="15-17">15 a 17 años</option>
+                </select>
+              </div>
+
+              <div className="reporte-filtro">
+                <label htmlFor="genero">Género</label>
+                <select
+                  value={genero}
+                  onChange={(e) => setGenero(e.target.value)}
+                >
+                  <option value="">Todos</option>
+                  <option value="masculino">Masculino</option>
+                  <option value="femenino">Femenino</option>
+                  <option value="mixto">Mixto</option>
+                </select>
+              </div>
+
+              <div className="reporte-filtro">
+                <label>Tipo de actividad</label>
+
+                <select
+                  value={actividad}
+                  onChange={(e) => setActividad(e.target.value)}
+                >
+                  <option value="">Todas</option>
+
+                  {actividades.map((item) => (
+                    <option
+                      key={item.idCatalogoActividad}
+                      value={item.idCatalogoActividad}
+                    >
+                      {item.nombre}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="reporte-filtro">
+                <label>Horario</label>
+
+                <input
+                  type="time"
+                  value={hora}
+                  onChange={(e) => setHora(e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+
           <div className="reportes-filtro-actions">
             <button
               type="button"
@@ -284,10 +426,10 @@ export default function Reportes() {
             <thead>
               <tr>
                 <th>Folio</th>
-                <th>Fecha</th>
                 <th>Municipio</th>
-                <th>Actividad</th>
-                <th>Estado</th>
+                <th>Estatus</th>
+                <th>Prioridad</th>
+                <th>Fecha</th>
                 <th>Acciones</th>
               </tr>
             </thead>
@@ -319,10 +461,10 @@ export default function Reportes() {
                 reportesFiltrados.map((reporte) => (
                   <tr key={reporte.folio}>
                     <td>{reporte.folio}</td>
-                    <td>{reporte.fecha_registro}</td>
                     <td>{reporte.municipio}</td>
-                    <td>{reporte.actividad}</td>
                     <td>{reporte.estatus}</td>
+                    <td>{reporte.prioridad}</td>
+                    <td>{reporte.fecha_registro}</td>
                     <td>
                       <button
                         type="button"
@@ -420,7 +562,7 @@ export default function Reportes() {
                         </div>
 
                         <div className="expediente-dato">
-                          <span>Estado</span>
+                          <span>Estatus</span>
                           <strong>{expediente.estatus || "—"}</strong>
                         </div>
 

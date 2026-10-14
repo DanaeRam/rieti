@@ -1601,6 +1601,102 @@ button {
   }
 }
 
+/* FILTROS AVANZADOS */
+
+.reportes-filtros-avanzados-button {
+  width: fit-content;
+  height: 40px;
+  padding: 0 16px;
+  margin-top: 8px;
+  border: 1px solid #ddd9ea;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #3e3869;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.reportes-filtros-avanzados-button:hover {
+  background: #f6f4fb;
+  border-color: #cfc9df;
+}
+
+.reportes-filtros-avanzados {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  width: 100%;
+  padding: 18px;
+  margin-top: 14px;
+  box-sizing: border-box;
+  border: 1px solid #ebe8f3;
+  border-radius: 12px;
+  background: #f9f8fc;
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+.reportes-filtros-avanzados .reporte-filtro {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.reportes-filtros-avanzados-button {
+  grid-column: 1 / -1;
+}
+
+.reportes-filtros-avanzados .reporte-filtro label {
+  color: #5f5b72;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.reportes-filtros-avanzados .reporte-filtro select,
+.reportes-filtros-avanzados .reporte-filtro input {
+  width: 100%;
+  height: 40px;
+  padding: 0 11px;
+  box-sizing: border-box;
+  border: 1px solid #dedbe8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #3e3869;
+  font-size: 12px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.reportes-filtros-avanzados .reporte-filtro select:focus,
+.reportes-filtros-avanzados .reporte-filtro input:focus {
+  border-color: #8f88b8;
+  box-shadow: 0 0 0 3px rgba(62, 56, 105, 0.08);
+}
+
+.reportes-filtros-avanzados .reporte-filtro select:hover,
+.reportes-filtros-avanzados .reporte-filtro input:hover {
+  border-color: #c9c4d8;
+}
+
+@media (max-width: 900px) {
+  .reportes-filtros-avanzados {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .reportes-filtros-avanzados {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .reportes-filtros-avanzados-button {
+    width: 100%;
+  }
+}
+
 /* ADMINISTRACIÓN DE USUARIOS */
 
 .usuarios-form {
