@@ -38,12 +38,10 @@ export default function Sidebar({ abierto }) {
   }, []);
 
   return (
-    <aside className={`rieti-sidebar ${abierto ? "open" : "closed"}`}>
-      <div className="rieti-sidebar-header">
+    <aside className={`rieti-sidebar ${abierto ? "open" : ""}`}>
         <Link href="/admin/dashboard" className="rieti-logo">
           <img src="/rieti_logo.png" alt="RIETI" />
         </Link>
-      </div>
 
       <nav className="rieti-menu">
         <Link
