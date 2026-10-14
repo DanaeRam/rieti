@@ -15,11 +15,14 @@ import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
  */
 export default function Reportes() {
   const [municipio, setMunicipio] = useState("");
+  const [prioridad, setPrioridad] = useState("");
   const [estado, setEstado] = useState("");
   const [fecha, setFecha] = useState("");
+
+  const [reportesFiltrados, setReportesFiltrados] = useState([]);
+
   const [municipios, setMunicipios] = useState([]);
-  const [actividad, setActividad] = useState("");
-  const [actividades, setActividades] = useState([]);
+
 
   const [reportes, setReportes] = useState([]);
   const [cargandoReportes, setCargandoReportes] = useState(false);
@@ -46,23 +49,23 @@ export default function Reportes() {
     cargarMunicipios();
   }, []);
 
-  useEffect(() => {
-    /** Carga el catálogo de actividades para el filtro de reportes. */
-    async function cargarActividades() {
-      try {
-        const respuesta = await fetch(
-          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
-        );
+  // useEffect(() => {
+  //   /** Carga el catálogo de actividades para el filtro de reportes. */
+  //   async function cargarActividades() {
+  //     try {
+  //       const respuesta = await fetch(
+  //         "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/catalogos/actividades",
+  //       );
 
-        const datos = await respuesta.json();
-        setActividades(datos);
-      } catch {
-        setActividades([]);
-      }
-    }
+  //       const datos = await respuesta.json();
+  //       setActividades(datos);
+  //     } catch {
+  //       setActividades([]);
+  //     }
+  //   }
 
-    cargarActividades();
-  }, []);
+  //   cargarActividades();
+  // }, []);
 
   /**
    * Obtiene el listado de reportes desde la API administrativa.
@@ -93,6 +96,8 @@ export default function Reportes() {
       }
 
       setReportes(datos.reportes || []);
+      setReportesFiltrados(datos.reportes || []);
+
     } catch (error) {
       console.error("Error al cargar reportes:", error);
       setErrorReportes(error.message || "No se pudieron cargar los reportes");
@@ -120,8 +125,40 @@ export default function Reportes() {
    * @param {import("react").FormEvent<HTMLFormElement>} event - Evento de envío del formulario.
    */
   function buscarReportes(event) {
-    event.preventDefault();
+  event.preventDefault();
+
+  let resultados = reportes;
+
+  if (municipio) {
+    const municipioSeleccionado = municipios.find(
+      (item) => String(item.idMunicipio) === municipio
+    );
+
+    resultados = resultados.filter(
+      (reporte) => reporte.municipio === municipioSeleccionado?.nombre
+    );
   }
+
+  if (estado) {
+    resultados = resultados.filter(
+      (reporte) => reporte.estatus === estado
+    );
+  }
+
+  if (prioridad) {
+    resultados = resultados.filter(
+      (reporte) => reporte.prioridad === prioridad
+    );
+  }
+
+  if (fecha) {
+    resultados = resultados.filter(
+      (reporte) => reporte.fecha_registro.startsWith(fecha)
+    );
+  }
+
+  setReportesFiltrados(resultados);
+}
 
   /**
    * Restablece los filtros de búsqueda a sus valores iniciales.
@@ -129,8 +166,9 @@ export default function Reportes() {
   function limpiarFiltros() {
     setMunicipio("");
     setEstado("");
+    setPrioridad("");
     setFecha("");
-    setActividad("");
+    // setActividad("");
   }
 
   return (
@@ -169,38 +207,42 @@ export default function Reportes() {
           </div>
 
           <div className="reporte-filtro">
-            <label htmlFor="actividad">Actividad</label>
-            <select
-              id="actividad"
-              value={actividad}
-              onChange={(e) => setActividad(e.target.value)}
-            >
-              <option value="">Todas las actividades</option>
-
-              {actividades.map((actividad) => (
-                <option
-                  key={actividad.idCatalogoActividad}
-                  value={actividad.idCatalogoActividad}
-                >
-                  {actividad.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="reporte-filtro">
             <label htmlFor="estado">Estado</label>
+
             <select
               id="estado"
               value={estado}
               onChange={(e) => setEstado(e.target.value)}
             >
               <option value="">Todos los estados</option>
+              <option value="Recibido">Recibido</option>
+              <option value="En Revision">En Revisión</option>
+              <option value="En Proceso">En Proceso</option>
+              <option value="Canalizado">Canalizado</option>
+              <option value="Cancelado">Cancelado</option>
+              <option value="Concluido">Concluido</option>
+              <option value="Reincidencia">Reincidencia</option>
+            </select>
+          </div>
+
+          <div className="reporte-filtro">
+            <label htmlFor="prioridad">Prioridad</label>
+
+            <select
+              id="prioridad"
+              value={prioridad}
+              onChange={(e) => setPrioridad(e.target.value)}
+            >
+              <option value="">Todas las prioridades</option>
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
             </select>
           </div>
 
           <div className="reporte-filtro">
             <label htmlFor="fecha">Fecha</label>
+
             <input
               id="fecha"
               type="date"
@@ -232,7 +274,9 @@ export default function Reportes() {
             <h3>Reportes recibidos</h3>
           </div>
 
-          <span className="reportes-count">{reportes.length} reportes</span>
+          <span className="reportes-count">
+            {reportesFiltrados.length} reportes
+          </span>
         </div>
 
         <div className="reportes-table-container">
@@ -260,15 +304,19 @@ export default function Reportes() {
                 </tr>
               )}
 
-              {!cargandoReportes && !errorReportes && reportes.length === 0 && (
-                <tr>
-                  <td colSpan="6">No hay reportes registrados</td>
-                </tr>
-              )}
+              {!cargandoReportes &&
+                !errorReportes &&
+                reportesFiltrados.length === 0 && (
+                  <tr>
+                    <td colSpan="6">
+                      No se encontraron reportes con los filtros seleccionado
+                    </td>
+                  </tr>
+                )}
 
               {!cargandoReportes &&
                 !errorReportes &&
-                reportes.map((reporte) => (
+                reportesFiltrados.map((reporte) => (
                   <tr key={reporte.folio}>
                     <td>{reporte.folio}</td>
                     <td>{reporte.fecha_registro}</td>
