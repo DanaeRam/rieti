@@ -11,6 +11,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import { LayoutDashboard, FileText, BarChart3, Users } from "lucide-react";
 
 /**
  * Muestra la navegación principal del área administrativa.
@@ -39,9 +40,9 @@ export default function Sidebar({ abierto }) {
 
   return (
     <aside className={`rieti-sidebar ${abierto ? "open" : ""}`}>
-        <Link href="/admin/dashboard" className="rieti-logo">
-          <img src="/rieti_logo.png" alt="RIETI" />
-        </Link>
+      <Link href="/admin/dashboard" className="rieti-logo">
+        <img src="/rieti_logo.png" alt="RIETI" />
+      </Link>
 
       <nav className="rieti-menu">
         <Link
@@ -50,7 +51,15 @@ export default function Sidebar({ abierto }) {
             pathname == "/admin/dashboard" ? "active" : ""
           }`}
         >
-          {abierto && <strong>Dashboard</strong>}
+          {abierto && (
+            <>
+              <span className="rieti-menu-icon">
+                <LayoutDashboard size={18} />
+              </span>
+
+              <strong>Dashboard</strong>
+            </>
+          )}
         </Link>
 
         <Link
@@ -59,7 +68,15 @@ export default function Sidebar({ abierto }) {
             pathname == "/admin/reportes" ? "active" : ""
           }`}
         >
-          {abierto && <strong>Bandeja de reportes</strong>}
+          {abierto && (
+            <>
+              <span className="rieti-menu-icon">
+                <FileText size={18} />
+              </span>
+
+              <strong>Bandeja de reportes</strong>
+            </>
+          )}
         </Link>
 
         <Link
@@ -68,18 +85,34 @@ export default function Sidebar({ abierto }) {
             pathname == "/admin/estadisticas" ? "active" : ""
           }`}
         >
-          {abierto && <strong>Estadísticas y analítica</strong>}
+          {abierto && (
+            <>
+              <span className="rieti-menu-icon">
+                <BarChart3 size={18} />
+              </span>
+
+              <strong>Estadísticas y analítica</strong>
+            </>
+          )}
         </Link>
 
         {esAdministrador && (
           <Link
-          href="/admin/usuarios"
-          className={`rieti-menu-item ${
-            pathname == "/admin/usuarios" ? "active" : ""
-          }`}
-        >
-          {abierto && <strong>Administración de usuarios</strong>}
-        </Link>
+            href="/admin/usuarios"
+            className={`rieti-menu-item ${
+              pathname == "/admin/usuarios" ? "active" : ""
+            }`}
+          >
+            {abierto && (
+              <>
+                <span className="rieti-menu-icon">
+                  <Users size={18} />
+                </span>
+
+                <strong>Administración de usuarios</strong>
+              </>
+            )}
+          </Link>
         )}
       </nav>
 
