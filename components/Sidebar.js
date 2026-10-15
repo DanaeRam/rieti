@@ -11,7 +11,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, BarChart3, Users } from "lucide-react";
+import { LayoutDashboard, FileText, BarChart3, Users, LogOut } from "lucide-react";
 
 /**
  * Muestra la navegación principal del área administrativa.
@@ -37,6 +37,12 @@ export default function Sidebar({ abierto }) {
       }
     }
   }, []);
+
+  function cerrarSesion() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("usuario");
+    window.location.href = "/";
+  }
 
   return (
     <aside className={`rieti-sidebar ${abierto ? "open" : ""}`}>
@@ -118,10 +124,17 @@ export default function Sidebar({ abierto }) {
 
       {abierto && (
         <div className="rieti-sidebar-bottom">
-          <span>RIETI</span>
-          <small>Sistema de reportes</small>
+          <button
+            type="button"
+            className="rieti-sidebar-logout"
+            onClick={cerrarSesion}
+          >
+            <LogOut size={18} />
+            <span>Cerrar sesión</span>
+          </button>
         </div>
       )}
     </aside>
+    
   );
 }

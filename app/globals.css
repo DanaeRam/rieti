@@ -405,8 +405,8 @@ body {
 /**
  * Estilos del menú lateral del panel administrativo.
  *
- * Define la estructura, apariencia, navegación, estado activo,
- * iconos, pie del menú y comportamiento responsivo del Sidebar.
+ * Define la estructura, navegación, iconos, estado activo,
+ * cierre de sesión y comportamiento responsivo del Sidebar.
  *
  * @author ChatGPT (OpenAI)
  */
@@ -416,32 +416,24 @@ body {
   top: 0;
   left: 0;
   z-index: 100;
-
   display: flex;
   flex-direction: column;
-
   box-sizing: border-box;
   width: 250px;
   height: 100vh;
-
   background: #ffffff;
   border-right: 1px solid #ebe9f3;
-
   transition: transform 0.3s ease;
 }
-
-/* LOGO */
 
 .rieti-logo {
   display: flex;
   align-items: center;
   justify-content: center;
-
   box-sizing: border-box;
   height: 74px;
   padding: 20px 0;
   margin-bottom: 28px;
-
   border-bottom: 1px solid #f0eef5;
 }
 
@@ -450,74 +442,46 @@ body {
   height: auto;
 }
 
-/* MENÚ */
-
 .rieti-menu {
   display: flex;
   flex-direction: column;
-
   padding: 24px 15px;
 }
-
-/* OPCIONES */
 
 .rieti-menu-item {
   display: flex;
   align-items: center;
-
   align-self: center;
-
   box-sizing: border-box;
   width: 220px;
   height: 48px;
-
   padding: 0 16px;
   margin-bottom: 7px;
-
   border-radius: 11px;
-
-  color: #3e3869;
   background: transparent;
-
+  color: #3e3869;
   text-decoration: none;
-
   transition:
     background 0.2s ease,
     color 0.2s ease,
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
+    box-shadow 0.2s ease;
 }
-
-/* ICONOS */
-
-.rieti-menu-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  width: 22px;
-  min-width: 22px;
-  margin-right: 11px;
-
-  color: #77758a;
-
-  transition: color 0.2s ease;
-}
-
-.rieti-menu-icon svg {
-  width: 18px;
-  height: 18px;
-  stroke-width: 2;
-}
-
-/* TEXTO */
 
 .rieti-menu-item strong {
   font-size: 13px;
   font-weight: 500;
 }
 
-/* HOVER */
+.rieti-menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  min-width: 22px;
+  margin-right: 11px;
+  color: #77758a;
+  transition: color 0.2s ease;
+}
 
 .rieti-menu-item:hover {
   background: #faf7fc;
@@ -528,18 +492,14 @@ body {
   color: #d875b1;
 }
 
-/* OPCIÓN ACTIVA */
-
 .rieti-menu-item.active {
-  color: #ffffff;
-
   background: linear-gradient(
     90deg,
     #e989bd 0%,
     #b18de8 50%,
     #65b9df 100%
   );
-
+  color: #ffffff;
   box-shadow: 0 6px 16px rgba(142, 120, 190, 0.18);
 }
 
@@ -551,44 +511,52 @@ body {
   font-weight: 600;
 }
 
-/* PIE DEL SIDEBAR */
-
 .rieti-sidebar-bottom {
   margin-top: auto;
-
-  padding: 20px 24px;
-
+  padding: 18px 15px;
   border-top: 1px solid #f0eef5;
 }
 
-.rieti-sidebar-bottom span {
-  display: block;
-
-  margin-bottom: 3px;
-
+.rieti-sidebar-logout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  height: 42px;
+  padding: 0 16px;
+  border: 0;
+  border-radius: 10px;
+  background: transparent;
   color: #3e3869;
-
-  font-size: 12px;
-  font-weight: 700;
-
-  letter-spacing: 0.08em;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
 }
 
-.rieti-sidebar-bottom small {
-  color: #9895a5;
-  font-size: 10px;
+.rieti-sidebar-logout svg {
+  color: #77758a;
+
+  transition: color 0.2s ease;
 }
 
-/* OVERLAY RESPONSIVO */
+.rieti-sidebar-logout:hover {
+  background: #faf7fc;
+  color: #d875b1;
+}
+
+.rieti-sidebar-logout:hover svg {
+  color: #d875b1;
+}
 
 .rieti-overlay {
   display: none;
 }
 
-/* RESPONSIVE */
-
 @media (max-width: 768px) {
-
   .rieti-sidebar {
     width: 240px;
     transform: translateX(-100%);
@@ -604,20 +572,14 @@ body {
 
   .rieti-overlay {
     display: block;
-
     position: fixed;
     inset: 0;
     z-index: 90;
-
     width: 100%;
     height: 100%;
-
     padding: 0;
-
     border: 0;
-
     background: transparent;
-
     cursor: pointer;
   }
 }
@@ -625,24 +587,22 @@ body {
 /* LAYOUT */
 
 .rieti-layout {
-  min-height: 100vh;
-  width: 100%;
   display: flex;
+  width: 100%;
+  min-height: 100vh;
 }
 
 .rieti-main {
-  width: calc(100% - 250px);
-  margin-left: 250px;
-  min-width: 0;
   flex: 1;
+  min-width: 0;
+  margin-left: 250px;
   transition: margin-left 0.3s ease;
 }
 
 .rieti-content {
-  width: 100%;
-  max-width: 100%;
-  padding: 24px;
   box-sizing: border-box;
+  width: 100%;
+  padding: 24px;
 }
 
 /* HEADER */
