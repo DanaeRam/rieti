@@ -696,6 +696,17 @@ body {
   padding: 24px;
 }
 
+.rieti-content:has(> .rieti-dashboard) {
+  padding: 0;
+  background: transparent;
+}
+
+.rieti-content:has(> .rieti-dashboard) > .rieti-dashboard {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
 /* HEADER */
 /**
  * Estilos del encabezado principal del panel administrativo.
@@ -1168,605 +1179,379 @@ body {
 }
 
 /* DASHBOARD */
+/**
+ * Estilos del dashboard administrativo
+ *
+ * Define el fondo con degradado pastel, las tarjetas de
+ * métricas principales, indicadores temporales, paneles
+ * de gráficas y comportamiento responsivo.
+ *
+ *
+ * @@author ChatGPT (OpenAI)
+ */
 
-/* FONDO Y TIPOGRAFÍA */
-
-body {
-  background: #f3f0ff;
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+.rieti-dashboard {
+  min-height: calc(100dvh - 76px);
+  padding: 28px 30px 45px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #ffffff 0%, #f4f0fa 50%, #f1f7fd 100%);
 }
 
-.rieti-main,
-.rieti-main * {
-  font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+.rieti-dashboard .rieti-page-title {
+  margin-bottom: 24px;
 }
 
-.rieti-main {
-  background:
-    radial-gradient(
-      circle at 15% 5%,
-      #ffffff 0%,
-      transparent 32%
-    ),
-    linear-gradient(
-      135deg,
-      #f8f6ff 0%,
-      #f0ecff 50%,
-      #ebe7fa 100%
-    );
-}
-
-.rieti-content {
-  background: transparent;
-}
-
-
-/* TÍTULO */
-
-.rieti-page-title {
-  margin-bottom: 20px;
-}
-
-.rieti-page-title h2 {
-  margin-bottom: 4px;
-  color: #3e3869;
-  font-size: 27px;
-  font-weight: 650;
+.rieti-dashboard .rieti-page-title h2 {
+  margin: 0 0 8px;
+  color: #30295d;
+  font-size: 30px;
+  font-weight: 700;
   letter-spacing: -0.6px;
 }
 
-.rieti-page-title p {
-  margin-top: 0;
-  color: #7a7890;
-  font-size: 12px;
+.rieti-dashboard .rieti-page-title p {
+  margin: 0;
+  color: #8985a2;
+  font-size: 15px;
 }
 
-
-/* TARJETAS PRINCIPALES */
-
-.rieti-metrics {
+.rieti-dashboard .rieti-metrics,
+.rieti-dashboard .rieti-mini-metrics,
+.rieti-dashboard .rieti-chart-grid {
+  display: grid;
   gap: 18px;
-  margin-bottom: 20px;
 }
 
-.rieti-metric {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 145px;
-  padding: 20px 24px;
-  overflow: hidden;
-  border: 0;
-  border-radius: 20px;
-  box-shadow: 0 10px 25px rgba(62, 56, 105, 0.10);
-}
-
-.rieti-metric::after {
-  content: "";
-  position: absolute;
-  right: -35px;
-  bottom: -45px;
-  width: 110px;
-  height: 110px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.10);
-}
-
-.rieti-metric span {
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-}
-
-.rieti-metric strong {
-  margin: 4px 0;
-  font-size: 40px;
-  line-height: 1;
-  font-weight: 650;
-  letter-spacing: -1px;
-}
-
-.rieti-metric small {
-  font-size: 11px;
-  opacity: 0.92;
-}
-
-.rieti-metric.purple {
-  background: linear-gradient(
-    135deg,
-    #3e3869 0%,
-    #8f68d4 100%
-  );
-}
-
-.rieti-metric.pink {
-  background: linear-gradient(
-    135deg,
-    #c64f82 0%,
-    #ee3f91 100%
-  );
-}
-
-.rieti-metric.blue {
-  background: linear-gradient(
-    135deg,
-    #4167a6 0%,
-    #55afc1 100%
-  );
-}
-
-.rieti-metric.turquoise {
-  background: linear-gradient(
-    135deg,
-    #39a99e 0%,
-    #4bc8c3 100%
-  );
-}
-
-
-/* TARJETAS SECUNDARIAS */
-
-.rieti-mini-metrics {
-  gap: 16px;
-  margin-top: 0;
+.rieti-dashboard .rieti-metrics {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   margin-bottom: 22px;
 }
 
-.rieti-mini-metrics article {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 105px;
-  min-height: 105px;
-  padding: 14px 20px;
-  border: 1px solid #ebe8f3;
-  border-radius: 15px;
-  background: #ffffff;
-  box-shadow: 0 5px 18px rgba(62, 56, 105, 0.045);
-}
-
-.rieti-mini-metrics article span {
-  margin-bottom: 2px;
-  color: #77748b;
-  font-size: 9px;
-  font-weight: 600;
-  letter-spacing: 0.09em;
-}
-
-.rieti-mini-metrics article strong {
-  margin: 2px 0;
-  color: #3e3869;
-  font-size: 25px;
-  line-height: 1.1;
-  font-weight: 650;
-  letter-spacing: -0.5px;
-}
-
-.rieti-mini-metrics article small {
-  margin-top: 2px;
-  color: #9290a0;
-  font-size: 10px;
-}
-
-/* PERFIL */
-
-.perfil-panel {
-  margin-bottom: 24px;
-}
-
-.perfil-contenido {
-  padding: 30px;
-}
-
-.perfil-datos {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 24px 40px;
-}
-
-.perfil-dato {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid var(--rieti-border);
-}
-
-.perfil-dato span {
-  color: var(--rieti-muted);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.perfil-dato strong {
-  color: var(--rieti-text);
-  font-size: 15px;
-  font-weight: 600;
-  word-break: break-word;
-}
-
-.perfil-cuenta {
-  margin-bottom: 24px;
-}
-
-.perfil-cuenta-contenido {
-  padding: 5px 30px 25px;
-}
-
-.perfil-cuenta-contenido p {
-  margin: 10px 0;
-  color: var(--rieti-muted);
-  font-size: 13px;
-  line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-  .perfil-contenido {
-    padding: 25px 20px;
-  }
-
-  .perfil-datos {
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .perfil-cuenta-contenido {
-    padding: 5px 20px 20px;
-  }
-}
-
-/* SEGURIDAD */
-
-.seguridad-form {
-  max-width: 520px;
-}
-
-.seguridad-dato {
-  display: flex;
-  flex-direction: column;
-  gap: 7px;
-  margin-bottom: 18px;
-}
-
-.seguridad-dato label {
-  color: var(--rieti-text);
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.seguridad-dato input {
-  width: 100%;
-  height: 42px;
-  padding: 0 12px;
+.rieti-dashboard .rieti-metric {
+  position: relative;
   box-sizing: border-box;
-  border: 1px solid var(--rieti-border);
-  border-radius: 9px;
-  outline: none;
-  color: var(--rieti-text);
-  background: #fff;
-  font-size: 13px;
-}
-
-.seguridad-dato input:focus {
-  border-color: var(--rieti-purple);
-  box-shadow: 0 0 0 3px rgba(62, 56, 105, 0.08);
-}
-
-.seguridad-dato small {
-  color: var(--rieti-muted);
-  font-size: 11px;
-}
-
-.seguridad-acciones {
-  margin-top: 25px;
-}
-
-.seguridad-button {
-  padding: 11px 18px;
-  border: 0;
-  border-radius: 9px;
-  background: linear-gradient(
-    135deg,
-    var(--rieti-purple),
-    var(--rieti-blue)
-  );
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.seguridad-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-
-.seguridad-mensaje {
-  margin: 5px 0 0;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-.seguridad-mensaje.success {
-  color: #277a5d;
-}
-
-.seguridad-mensaje.error {
-  color: var(--rieti-pink);
-}
-
-/* DASHBOARD */
-
-button,
-input,
-select,
-textarea {
-  font-family: inherit;
-}
-
-button {
-  cursor: pointer;
-}
-
-.rieti-metrics {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.rieti-metric {
-  min-height: 184px;
-  padding: 30px;
+  min-width: 0;
+  min-height: 186px;
+  padding: 27px 25px;
+  overflow: hidden;
   border-radius: 22px;
   color: #ffffff;
-  box-shadow: 0 8px 25px rgba(62, 56, 105, 0.08);
+  box-shadow: 0 8px 25px rgba(62, 56, 105, 0.09);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-.rieti-metric span {
-  display: block;
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
+.rieti-dashboard .rieti-metric:hover {
+  z-index: 2;
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(62, 56, 105, 0.16);
 }
 
-.rieti-metric strong {
-  display: block;
-  margin-top: 25px;
-  font-size: 42px;
-  line-height: 1;
-  font-weight: 700;
+.rieti-dashboard .rieti-metric.purple {
+  background: linear-gradient(115deg, #51448d 0%, #7955c8 55%, #ae78ee 100%);
 }
 
-.rieti-metric small {
-  display: block;
-  margin-top: 15px;
-  font-size: 13px;
+.rieti-dashboard .rieti-metric.pink {
+  background: linear-gradient(115deg, #ea4f86 0%, #ed679f 52%, #eb65cb 100%);
 }
 
-.rieti-metric {
-  min-height: 184px;
-  padding: 30px;
-  border-radius: 22px;
-  color: #ffffff;
-  box-shadow: 0 8px 25px rgba(62, 56, 105, 0.08);
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease;
-}
-
-.rieti-metric.purple {
-  background: linear-gradient(110deg, #3e3869 0%, #6254a8 50%, #a875e8 100%);
-}
-
-.rieti-metric.pink {
-  background: linear-gradient(110deg, #c54f82 0%, #df6b91 50%, #eb4093 100%);
-}
-
-.rieti-metric.blue {
+.rieti-dashboard .rieti-metric.blue {
   background: linear-gradient(110deg, #3f5fa3 0%, #477fc2 50%, #55b9d1 100%);
 }
 
-.rieti-metric.turquoise {
-  background: linear-gradient(110deg, #35a99a 0%, #6fcfc8 50%, #3ac6bf 100%);
+.rieti-dashboard .rieti-metric.turquoise {
+  background: linear-gradient(115deg, #1fa7a2 0%, #43c7bb 55%, #59dce0 100%);
 }
 
-.rieti-metric:hover {
-  transform: scale(1.03);
-  box-shadow: 0 14px 30px rgba(62, 56, 105, 0.18);
-  position: relative;
-  z-index: 2;
+.rieti-dashboard .rieti-metric-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-.rieti-mini-metrics {
-  display: grid;
+.rieti-dashboard .rieti-metric-top span {
+  padding-top: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.rieti-dashboard .rieti-metric-icon,
+.rieti-dashboard .rieti-mini-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 50%;
+}
+
+.rieti-dashboard .rieti-metric-icon {
+  width: 55px;
+  height: 55px;
+  margin: -10px -7px 0 0;
+  background: rgba(255, 255, 255, 0.22);
+  color: #ffffff;
+}
+
+.rieti-dashboard .rieti-metric strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 44px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.rieti-dashboard .rieti-metric small {
+  display: block;
+  margin-top: 8px;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.rieti-dashboard .rieti-mini-metrics {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 24px;
+}
+
+.rieti-dashboard .rieti-mini-metric {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  box-sizing: border-box;
+  min-width: 0;
+  min-height: 128px;
+  padding: 22px 25px;
+  border: 1px solid rgba(255, 255, 255, 0.82);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.69);
+  box-shadow: 0 8px 28px rgba(78, 65, 131, 0.05);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rieti-dashboard .rieti-mini-metric:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(78, 65, 131, 0.1);
+}
+
+.rieti-dashboard .rieti-mini-icon {
+  width: 68px;
+  height: 68px;
+  box-shadow: 0 4px 15px rgba(122, 97, 184, 0.05);
+}
+
+.rieti-dashboard .rieti-mini-metric.month .rieti-mini-icon {
+  color: #eb5fa9;
+  background: linear-gradient(135deg, #ffffff, #ffeaf6);
+}
+
+.rieti-dashboard .rieti-mini-metric.week .rieti-mini-icon {
+  color: #8773e6;
+  background: linear-gradient(135deg, #ffffff, #f0eaff);
+}
+
+.rieti-dashboard .rieti-mini-metric.today .rieti-mini-icon {
+  color: #23afd0;
+  background: linear-gradient(135deg, #ffffff, #e8faff);
+}
+
+.rieti-dashboard .rieti-mini-info {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.rieti-dashboard .rieti-mini-info span {
+  color: #77749a;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.rieti-dashboard .rieti-mini-info strong {
+  margin-top: 5px;
+  color: #30295d;
+  font-size: 32px;
+  line-height: 1.1;
+  font-weight: 700;
+}
+
+.rieti-dashboard .rieti-mini-info small {
+  margin-top: 5px;
+  color: #8985a2;
+  font-size: 12px;
+}
+
+.rieti-dashboard .rieti-chart-grid {
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 20px;
   margin-bottom: 24px;
 }
 
-.rieti-mini-metrics article {
-  min-height: 145px;
-  padding: 28px 30px;
-  background: #ffffff;
-  border: 1px solid var(--rieti-border);
+.rieti-dashboard .rieti-panel {
+  min-width: 0;
+  padding-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.85);
   border-radius: 22px;
-  box-shadow: 0 4px 20px rgba(16, 24, 40, 0.03);
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 8px 30px rgba(78, 65, 131, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
-.rieti-mini-metrics span {
-  display: block;
-  color: var(--rieti-purple);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-}
-
-.rieti-mini-metrics strong {
-  display: block;
-  margin-top: 25px;
-  color: var(--rieti-purple);
-  font-size: 38px;
-  line-height: 1;
-}
-
-.rieti-mini-metrics small {
-  display: block;
-  margin-top: 14px;
-  color: var(--rieti-muted);
-  font-size: 13px;
-}
-
-.rieti-chart-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
-  gap: 24px;
-  margin-bottom: 24px;
-}
-
-.rieti-bottom-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 24px;
-}
-
-.rieti-chart {
-  width: 100%;
-  padding: 5px 20px 15px;
-}
-
-.rieti-panel-header {
+.rieti-dashboard .rieti-panel-header {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  padding: 25px 26px 5px;
+  padding: 25px 26px 8px;
 }
 
-.rieti-panel-header span {
+.rieti-dashboard .rieti-panel-header span {
   display: block;
-  color: var(--rieti-turquoise);
-  font-size: 10px;
+  color: #20a8c8;
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 1.3px;
+  letter-spacing: 1.1px;
 }
 
-.rieti-panel-header h3 {
-  margin: 5px 0 0;
-  color: var(--rieti-purple);
+.rieti-dashboard .rieti-panel-header h3 {
+  margin: 7px 0 0;
+  color: #30295d;
   font-size: 18px;
+  line-height: 1.35;
   font-weight: 700;
 }
 
-.rieti-panel-header button {
-  border: 0;
-  background: transparent;
-  color: #98a2b3;
-  font-size: 22px;
+.rieti-dashboard .rieti-chart {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 18px 14px;
 }
 
-.rieti-status-list {
-  padding: 15px 28px 30px;
-}
-
-.rieti-status-list > div {
+.rieti-dashboard .rieti-chart-placeholder {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 18px 0;
-  border-bottom: 1px solid var(--rieti-border);
+  justify-content: center;
+  min-height: 320px;
+  margin: 0;
+  color: #8985a2;
+  font-size: 13px;
+  text-align: center;
 }
 
-.rieti-status-list span {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--rieti-text);
-  font-size: 14px;
-}
-
-.rieti-status-list strong {
-  color: var(--rieti-purple);
-  font-size: 20px;
-}
-
-.status-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-}
-
-.status-dot.pink {
-  background: var(--rieti-pink);
-}
-
-.status-dot.blue {
-  background: var(--rieti-blue);
-}
-
-.status-dot.turquoise {
-  background: var(--rieti-turquoise);
-}
-
-.rieti-status-list .status-total {
-  padding-top: 22px;
-  border-bottom: 0;
-}
-
-.rieti-status-list .status-total strong {
-  font-size: 25px;
+.rieti-dashboard .rieti-dashboard-error {
+  margin-bottom: 20px;
+  padding: 13px 18px;
+  border: 1px solid #f4cbdc;
+  border-radius: 12px;
+  background: rgba(255, 240, 246, 0.86);
+  color: #9c315f;
+  font-size: 13px;
 }
 
 @media (max-width: 768px) {
-  .rieti-content {
-    padding: 20px 15px;
+  .rieti-dashboard {
+    min-height: calc(100dvh - 70px);
+    padding: 20px 14px 30px;
   }
 
-  .rieti-page-title h2 {
+  .rieti-dashboard .rieti-page-title h2 {
+    font-size: 26px;
+  }
+
+  .rieti-dashboard .rieti-page-title p {
+    font-size: 13px;
+  }
+
+  .rieti-dashboard .rieti-metrics {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .rieti-dashboard .rieti-metric {
+    min-height: 135px;
+    padding: 16px 14px;
+    border-radius: 17px;
+  }
+
+  .rieti-dashboard .rieti-metric-top span {
+    font-size: 10px;
+    letter-spacing: 0.2px;
+  }
+
+  .rieti-dashboard .rieti-metric-icon {
+    width: 36px;
+    height: 36px;
+    margin: -4px -3px 0 0;
+  }
+
+  .rieti-dashboard .rieti-metric-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+
+  .rieti-dashboard .rieti-metric strong {
+    margin-top: 8px;
+    font-size: 32px;
+  }
+
+  .rieti-dashboard .rieti-metric small {
+    margin-top: 6px;
+    font-size: 11px;
+  }
+
+  .rieti-dashboard .rieti-mini-metrics {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .rieti-dashboard .rieti-mini-metric {
+    min-height: 76px;
+    gap: 14px;
+    padding: 12px 16px;
+    border-radius: 16px;
+  }
+
+  .rieti-dashboard .rieti-mini-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .rieti-dashboard .rieti-mini-icon svg {
+    width: 21px;
+    height: 21px;
+  }
+
+  .rieti-dashboard .rieti-mini-info span {
+    font-size: 10px;
+  }
+
+  .rieti-dashboard .rieti-mini-info strong {
+    margin-top: 2px;
     font-size: 25px;
   }
 
-  .rieti-metrics {
+  .rieti-dashboard .rieti-mini-info small {
+    margin-top: 2px;
+    font-size: 11px;
+  }
+
+  .rieti-dashboard .rieti-chart-grid {
     grid-template-columns: 1fr;
-    gap: 14px;
+    gap: 16px;
   }
 
-  .rieti-metric {
-    min-height: 160px;
-    padding: 25px;
+  .rieti-dashboard .rieti-panel-header {
+    padding: 20px 18px 8px;
   }
 
-  .rieti-metric strong {
-    font-size: 36px;
-  }
-
-  .rieti-mini-metrics {
-    grid-template-columns: 1fr;
-    gap: 14px;
-  }
-
-  .rieti-mini-metrics article {
-    min-height: 125px;
-  }
-
-  .rieti-panel-header {
-    padding: 22px 20px 5px;
-  }
-
-  .rieti-chart {
-    padding: 5px 8px 12px;
-  }
-
-  .rieti-metrics {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .rieti-chart-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .rieti-bottom-grid {
-    grid-template-columns: 1fr;
+  .rieti-dashboard .rieti-chart {
+    padding: 8px 10px 12px;
   }
 }
 

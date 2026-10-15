@@ -1,252 +1,403 @@
-/**
- * Dashboard administrativo de RIETI.
- * Presenta métricas y gráficas de los reportes registrados.
- *
- * @module app/admin/dashboard/page
- */
+
 "use client";
 
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import {
+  ClipboardList,
+  Clock3,
+  Settings,
+  CircleCheck,
+  CalendarDays,
+  ChartNoAxesColumn,
+  TrendingUp,
+} from "lucide-react";
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-/**
- * Muestra el resumen, las métricas y las gráficas de los reportes.
- *
- * @component
- */
+function obtenerFechaLocal(valor) {
+  if (!valor) return null;
+
+  if (typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
+    const [anio, mes, dia] = valor.split("-").map(Number);
+    const fecha = new Date(anio, mes - 1, dia);
+    return fecha.getFullYear() === anio &&
+      fecha.getMonth() === mes - 1 &&
+      fecha.getDate() === dia
+      ? fecha
+      : null;
+  }
+
+  const fecha = new Date(valor);
+  return Number.isNaN(fecha.getTime()) ? null : fecha;
+}
+
+function calcularPeriodos(porFecha) {
+  const hoy = new Date();
+  hoy.setHours(0, 0, 0, 0);
+
+  const inicioSemana = new Date(hoy);
+  const diaSemana = (hoy.getDay() + 6) % 7;
+  inicioSemana.setDate(hoy.getDate() - diaSemana);
+
+  const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
+
+  const resultado = {
+    hoy: 0,
+    semana: 0,
+    mes: 0,
+  };
+
+  if (!Array.isArray(porFecha)) return resultado;
+
+  porFecha.forEach((item) => {
+    const fecha = obtenerFechaLocal(item.fecha);
+    const total = Number(item.total ?? 0);
+
+    if (!fecha || !Number.isFinite(total) || fecha > new Date()) return;
+
+    fecha.setHours(0, 0, 0, 0);
+
+    if (fecha.getTime() === hoy.getTime()) {
+      resultado.hoy += total;
+    }
+
+    if (fecha >= inicioSemana) {
+      resultado.semana += total;
+    }
+
+    if (fecha >= inicioMes) {
+      resultado.mes += total;
+    }
+  });
+
+  return resultado;
+}
+
 export default function Dashboard() {
   const [resumen, setResumen] = useState(null);
   const [cargandoResumen, setCargandoResumen] = useState(true);
   const [errorResumen, setErrorResumen] = useState("");
   const [estadisticas, setEstadisticas] = useState(null);
   const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
-
-  /**
-   * Carga el resumen general de reportes del panel administrativo.
-   */
-  async function cargarResumen() {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No hay una sesión activa.");
-      }
-
-      const respuesta = await fetch(
-        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/dashboard/resumen",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const datos = await respuesta.json();
-
-      if (!respuesta.ok) {
-        throw new Error(
-          datos.message || datos.error || "No se pudo obtener el resumen",
-        );
-      }
-
-      setResumen(datos);
-    } catch (error) {
-      console.error("Error al cargar resumen:", error);
-      setErrorResumen(error.message);
-    } finally {
-      setCargandoResumen(false);
-    }
-  }
-
-  /**
-   * Obtiene los datos estadísticos usados para las gráficas del dashboard.
-   */
-  async function cargarEstadisticas() {
-    try {
-      const token = localStorage.getItem("token");
-
-      if (!token) {
-        throw new Error("No hay una sesión activa.");
-      }
-
-      const respuesta = await fetch(
-        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/dashboard/estadisticas?dias=30",
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
-
-      const datos = await respuesta.json();
-
-      if (!respuesta.ok) {
-        throw new Error(
-          datos.message || datos.error || "No se pudieron obtener los datos",
-        );
-      }
-
-      setEstadisticas(datos);
-    } catch (error) {
-      console.error("Error :( al cargar datos:", error);
-    } finally {
-      setCargandoEstadisticas(false);
-    }
-  }
+  const [errorEstadisticas, setErrorEstadisticas] = useState("");
 
   useEffect(() => {
+    const controlador = new AbortController();
+    const baseURL =
+      "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
+
+    async function obtenerDatos(ruta) {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No hay una sesión activa.");
+      }
+
+      const respuesta = await fetch(`${baseURL}${ruta}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: controlador.signal,
+      });
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudieron obtener los datos"
+        );
+      }
+
+      return datos;
+    }
+
+    async function cargarResumen() {
+      try {
+        const datos = await obtenerDatos("/api/v1/admin/dashboard/resumen");
+        setResumen(datos);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error al cargar resumen:", error);
+          setErrorResumen(error.message);
+        }
+      } finally {
+        if (!controlador.signal.aborted) setCargandoResumen(false);
+      }
+    }
+
+    async function cargarEstadisticas() {
+      try {
+        const datos = await obtenerDatos(
+          "/api/v1/admin/dashboard/estadisticas?dias=30"
+        );
+        setEstadisticas(datos);
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error al cargar estadísticas:", error);
+          setErrorEstadisticas(error.message);
+        }
+      } finally {
+        if (!controlador.signal.aborted) setCargandoEstadisticas(false);
+      }
+    }
+
     cargarResumen();
     cargarEstadisticas();
+
+    return () => controlador.abort();
   }, []);
 
-  let municipios = [];
-  let reportesPorMunicipio = [];
+  const porMunicipio = Array.isArray(estadisticas?.por_municipio)
+    ? estadisticas.por_municipio
+    : [];
 
-  if (estadisticas) {
-    estadisticas.por_municipio.forEach((item) => {
-      municipios.push(item.municipio);
-      reportesPorMunicipio.push(item.total);
-    });
-  }
+  const municipios = porMunicipio.map((item) => item.municipio);
+  const reportesPorMunicipio = porMunicipio.map((item) => Number(item.total) || 0);
+
+  const periodos = calcularPeriodos(estadisticas?.por_fecha);
+
+  const valorResumen = (campo) => {
+    if (cargandoResumen) return "...";
+    if (errorResumen) return "—";
+    return resumen?.[campo] ?? 0;
+  };
+
+  const valorPeriodo = (campo) => {
+    if (cargandoEstadisticas) return "...";
+    if (errorEstadisticas) return "—";
+    return periodos[campo];
+  };
+
+  const opcionesBase = {
+    chart: {
+      type: "bar",
+      toolbar: { show: false },
+      fontFamily: "inherit",
+      background: "transparent",
+      foreColor: "#77749a",
+      animations: { enabled: true, speed: 600 },
+    },
+    colors: ["#a879da"],
+    fill: {
+      type: "solid",
+      opacity: 1,
+    },
+    plotOptions: {
+      bar: {
+        horizontal: true,
+        borderRadius: 6,
+        barHeight: "50%",
+      },
+    },
+    dataLabels: { enabled: false },
+    stroke: { show: false },
+    grid: {
+      borderColor: "#eae7f7",
+      strokeDashArray: 4,
+      xaxis: { lines: { show: true } },
+      yaxis: { lines: { show: false } },
+    },
+    xaxis: {
+      categories: municipios,
+      labels: {
+        style: { colors: "#8985a2", fontSize: "11px" },
+      },
+      axisBorder: { show: false },
+      axisTicks: { show: false },
+    },
+    yaxis: {
+      labels: {
+        style: { colors: "#3e3869", fontSize: "11px" },
+        maxWidth: 150,
+      },
+    },
+    tooltip: { theme: "light" },
+    legend: { show: false },
+    noData: { text: "No hay reportes registrados" },
+  };
 
   const graficaMunicipios = {
-    series: [
-      {
-        name: "Reportes",
-        data: reportesPorMunicipio,
-      },
-    ],
+    series: [{ name: "Reportes", data: reportesPorMunicipio }],
+    options: opcionesBase,
+  };
+
+  const graficaCobertura = {
+    series: [{
+      name: "Reportes",
+      data: reportesPorMunicipio,
+    }],
     options: {
-      chart: {
-        type: "bar",
-        toolbar: {
-          show: false,
-        },
-        fontFamily: "Arial, sans-serif",
-      },
-      colors: ["#3E3869"],
+      ...opcionesBase,
+      colors: ["#e989bd"],
       plotOptions: {
         bar: {
-          horizontal: true,
-          borderRadius: 5,
-          barHeight: "55%",
+          horizontal: false,
+          borderRadius: 6,
+          columnWidth: "48%",
         },
-      },
-      dataLabels: {
-        enabled: false,
       },
       xaxis: {
-        categories: municipios,
+        ...opcionesBase.xaxis,
         labels: {
-          style: {
-            colors: "#667085",
-          },
+          rotate: -45,
+          hideOverlappingLabels: true,
+          style: { colors: "#8985a2", fontSize: "10px" },
         },
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: "#344054",
-          },
-        },
-      },
-      grid: {
-        borderColor: "#EAECF0",
-      },
-      tooltip: {
-        theme: "light",
       },
     },
   };
 
-  const porFecha = estadisticas?.por_fecha || [];
+  const metricas = [
+    {
+      titulo: "TOTAL DE REPORTES",
+      valor: valorResumen("total"),
+      descripcion: "Reportes registrados",
+      clase: "purple",
+      icono: ClipboardList,
+    },
+    {
+      titulo: "EN REVISIÓN",
+      valor: valorResumen("en_revision"),
+      descripcion: "Reportes en revisión",
+      clase: "pink",
+      icono: Clock3,
+    },
+    {
+      titulo: "EN PROCESO",
+      valor: valorResumen("en_proceso"),
+      descripcion: "Reportes en proceso",
+      clase: "blue",
+      icono: Settings,
+    },
+    {
+      titulo: "CONCLUIDOS",
+      valor: valorResumen("concluidos"),
+      descripcion: "Casos atendidos",
+      clase: "turquoise",
+      icono: CircleCheck,
+    },
+  ];
 
+  const metricasPeriodo = [
+    {
+      titulo: "ESTE MES",
+      valor: valorPeriodo("mes"),
+      icono: CalendarDays,
+      clase: "month",
+    },
+    {
+      titulo: "ESTA SEMANA",
+      valor: valorPeriodo("semana"),
+      icono: ChartNoAxesColumn,
+      clase: "week",
+    },
+    {
+      titulo: "HOY",
+      valor: valorPeriodo("hoy"),
+      icono: TrendingUp,
+      clase: "today",
+    },
+  ];
 
-  let reporteHoy = 0;
-  let reportesEsteMes = 0;
-  let reportesEstaSemana = 0;
+  const mostrarGrafica =
+    !cargandoEstadisticas &&
+    !errorEstadisticas &&
+    porMunicipio.length > 0;
 
   return (
-    <>
+    <div className="rieti-dashboard">
       <div className="rieti-page-title">
         <h2>Dashboard</h2>
         <p>Resumen general de los reportes registrados</p>
       </div>
 
-      <section className="rieti-metrics">
-        <article className="rieti-metric purple">
-          <span>TOTAL DE REPORTES</span>
-          <strong>{cargandoResumen ? "..." : (resumen?.total ?? 0)}</strong>
-          <small>Reportes registrados</small>
-        </article>
+      {errorResumen && (
+        <div className="rieti-dashboard-error" role="alert">
+          No se pudo cargar el resumen: {errorResumen}
+        </div>
+      )}
 
-        <article className="rieti-metric pink">
-          <span>EN REVISIÓN</span>
-          <strong>
-            {cargandoResumen ? "..." : (resumen?.en_revision ?? 0)}
-          </strong>
-          <small>Reportes en revisión</small>
-        </article>
+      <section className="rieti-metrics" aria-label="Resumen de reportes">
+        {metricas.map((metrica) => {
+          const Icono = metrica.icono;
 
-        <article className="rieti-metric blue">
-          <span>EN PROCESO</span>
-          <strong>
-            {cargandoResumen ? "..." : (resumen?.en_proceso ?? 0)}
-          </strong>
-          <small>Reportes en proceso</small>
-        </article>
+          return (
+            <article
+              key={metrica.clase}
+              className={`rieti-metric ${metrica.clase}`}
+            >
+              <div className="rieti-metric-top">
+                <span>{metrica.titulo}</span>
+                <div className="rieti-metric-icon">
+                  <Icono size={26} strokeWidth={2.2} />
+                </div>
+              </div>
 
-        <article className="rieti-metric turquoise">
-          <span>CONCLUIDOS</span>
-          <strong>
-            {cargandoResumen ? "..." : (resumen?.concluidos ?? 0)}
-          </strong>
-          <small>Casos atendidos</small>
-        </article>
+              <strong>{metrica.valor}</strong>
+              <small>{metrica.descripcion}</small>
+            </article>
+          );
+        })}
       </section>
 
-      <section className="rieti-mini-metrics">
-        <article>
-          <span>ESTE MES</span>
-          <strong>{cargandoEstadisticas ? "..." : reportesEsteMes}</strong>
-          <small>Reportes recibidos</small>
-        </article>
+      <section className="rieti-mini-metrics" aria-label="Reportes recientes">
+        {metricasPeriodo.map((metrica) => {
+          const Icono = metrica.icono;
 
-        <article>
-          <span>ESTA SEMANA</span>
-          <strong>{cargandoEstadisticas ? "..." : reportesEstaSemana}</strong>
-          <small>Reportes recibidos</small>
-        </article>
+          return (
+            <article
+              key={metrica.clase}
+              className={`rieti-mini-metric ${metrica.clase}`}
+            >
+              <div className="rieti-mini-icon">
+                <Icono size={27} strokeWidth={2.1} />
+              </div>
 
-        <article>
-          <span>HOY</span>
-          <strong>{cargandoEstadisticas ? "..." : reporteHoy}</strong>
-          <small>Reportes recibidos</small>
-        </article>
+              <div className="rieti-mini-info">
+                <span>{metrica.titulo}</span>
+                <strong>{metrica.valor}</strong>
+                <small>Reportes recibidos</small>
+              </div>
+            </article>
+          );
+        })}
       </section>
 
-      <section className="rieti-chart-grid">
+      {errorEstadisticas && (
+        <div className="rieti-dashboard-error" role="alert">
+          No se pudieron cargar las estadísticas: {errorEstadisticas}
+        </div>
+      )}
+
+      <section className="rieti-chart-grid" aria-label="Gráficas de reportes">
         <article className="rieti-panel large">
           <div className="rieti-panel-header">
             <div>
               <span>MUNICIPIOS</span>
               <h3>Reportes recibidos por municipio</h3>
             </div>
-
-            <button>⋮</button>
           </div>
 
           <div className="rieti-chart">
-            <Chart
-              options={graficaMunicipios.options}
-              series={graficaMunicipios.series}
-              type="bar"
-              height={320}
-            />
+            {cargandoEstadisticas ? (
+              <p className="rieti-chart-placeholder">Cargando gráfica...</p>
+            ) : mostrarGrafica ? (
+              <Chart
+                options={graficaMunicipios.options}
+                series={graficaMunicipios.series}
+                type="bar"
+                height={320}
+                width="100%"
+              />
+            ) : (
+              <p className="rieti-chart-placeholder">
+                {errorEstadisticas
+                  ? "No se pudo cargar la gráfica."
+                  : "No hay datos disponibles."}
+              </p>
+            )}
           </div>
         </article>
 
@@ -256,20 +407,29 @@ export default function Dashboard() {
               <span>COBERTURA</span>
               <h3>Reportes por municipio</h3>
             </div>
-
-            <button>⋮</button>
           </div>
 
           <div className="rieti-chart">
-            <Chart
-              options={graficaMunicipios.options}
-              series={graficaMunicipios.series}
-              type="bar"
-              height={320}
-            />
+            {cargandoEstadisticas ? (
+              <p className="rieti-chart-placeholder">Cargando gráfica...</p>
+            ) : mostrarGrafica ? (
+              <Chart
+                options={graficaCobertura.options}
+                series={graficaCobertura.series}
+                type="bar"
+                height={320}
+                width="100%"
+              />
+            ) : (
+              <p className="rieti-chart-placeholder">
+                {errorEstadisticas
+                  ? "No se pudo cargar la gráfica."
+                  : "No hay datos disponibles."}
+              </p>
+            )}
           </div>
         </article>
       </section>
-    </>
+    </div>
   );
 }

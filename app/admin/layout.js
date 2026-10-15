@@ -23,11 +23,11 @@ export default function AdminLayout({ children }) {
     <div className="rieti-layout">
       <Sidebar
         abierto={sidebarAbierto}
-        setAbierto={setSidebarAbierto}
       />
 
       {sidebarAbierto && (
       <button
+        type="button"
         className="rieti-overlay"
         onClick={() => setSidebarAbierto(false)}
         aria-label="Cerrar menú"
