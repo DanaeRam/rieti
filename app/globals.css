@@ -420,10 +420,19 @@ body {
   flex-direction: column;
   box-sizing: border-box;
   width: 250px;
-  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   background: #ffffff;
   border-right: 1px solid #ebe9f3;
-  transition: transform 0.3s ease;
+  transition: width 0.3s ease, transform 0.3s ease;
+}
+
+.rieti-sidebar.open {
+  width: 250px;
+}
+
+.rieti-sidebar.closed {
+  width: 76px;
 }
 
 .rieti-logo {
@@ -431,6 +440,7 @@ body {
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
+  flex-shrink: 0;
   height: 74px;
   padding: 20px 0;
   margin-bottom: 28px;
@@ -440,6 +450,11 @@ body {
 .rieti-logo img {
   width: 185px;
   height: auto;
+  transition: width 0.3s ease;
+}
+
+.rieti-sidebar.closed .rieti-logo img {
+  width: 52px;
 }
 
 .rieti-menu {
@@ -453,6 +468,7 @@ body {
   align-items: center;
   align-self: center;
   box-sizing: border-box;
+  flex-shrink: 0;
   width: 220px;
   height: 48px;
   padding: 0 16px;
@@ -461,10 +477,8 @@ body {
   background: transparent;
   color: #3e3869;
   text-decoration: none;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease,
-    box-shadow 0.2s ease;
+  white-space: nowrap;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .rieti-menu-item strong {
@@ -476,6 +490,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   width: 22px;
   min-width: 22px;
   margin-right: 11px;
@@ -493,22 +508,32 @@ body {
 }
 
 .rieti-menu-item.active {
-  background: linear-gradient(
-    90deg,
-    #e989bd 0%,
-    #b18de8 50%,
-    #65b9df 100%
-  );
+  background: linear-gradient(90deg, #e989bd 0%, #b18de8 50%, #65b9df 100%);
   color: #ffffff;
   box-shadow: 0 6px 16px rgba(142, 120, 190, 0.18);
 }
 
-.rieti-menu-item.active .rieti-menu-icon {
+.rieti-menu-item.active .rieti-menu-icon,
+.rieti-menu-item.active:hover .rieti-menu-icon {
   color: #ffffff;
 }
 
 .rieti-menu-item.active strong {
   font-weight: 600;
+}
+
+.rieti-sidebar.closed .rieti-menu {
+  padding: 24px 10px;
+}
+
+.rieti-sidebar.closed .rieti-menu-item {
+  justify-content: center;
+  width: 56px;
+  padding: 0;
+}
+
+.rieti-sidebar.closed .rieti-menu-icon {
+  margin-right: 0;
 }
 
 .rieti-sidebar-bottom {
@@ -529,17 +554,17 @@ body {
   border-radius: 10px;
   background: transparent;
   color: #3e3869;
+  font-family: inherit;
   font-size: 13px;
   font-weight: 500;
+  white-space: nowrap;
   cursor: pointer;
-  transition:
-    background 0.2s ease,
-    color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .rieti-sidebar-logout svg {
+  flex-shrink: 0;
   color: #77758a;
-
   transition: color 0.2s ease;
 }
 
@@ -552,18 +577,57 @@ body {
   color: #d875b1;
 }
 
+.rieti-sidebar.closed .rieti-sidebar-bottom {
+  padding: 18px 10px;
+}
+
+.rieti-sidebar.closed .rieti-sidebar-logout {
+  width: 56px;
+  padding: 0;
+  gap: 0;
+}
+
 .rieti-overlay {
   display: none;
 }
 
 @media (max-width: 768px) {
-  .rieti-sidebar {
+  .rieti-sidebar,
+  .rieti-sidebar.open,
+  .rieti-sidebar.closed {
     width: 240px;
+  }
+
+  .rieti-sidebar {
     transform: translateX(-100%);
   }
 
   .rieti-sidebar.open {
     transform: translateX(0);
+  }
+
+  .rieti-sidebar.closed .rieti-menu {
+    padding: 24px 15px;
+  }
+
+  .rieti-sidebar.closed .rieti-menu-item {
+    width: 210px;
+    justify-content: flex-start;
+    padding: 0 16px;
+  }
+
+  .rieti-sidebar.closed .rieti-menu-icon {
+    margin-right: 11px;
+  }
+
+  .rieti-sidebar.closed .rieti-sidebar-bottom {
+    padding: 18px 15px;
+  }
+
+  .rieti-sidebar.closed .rieti-sidebar-logout {
+    width: 100%;
+    justify-content: center;
+    padding: 0 16px;
   }
 
   .rieti-menu-item {
@@ -579,25 +643,52 @@ body {
     height: 100%;
     padding: 0;
     border: 0;
-    background: transparent;
+    background: rgba(25, 20, 48, 0.3);
     cursor: pointer;
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .rieti-sidebar,
+  .rieti-logo img {
+    transition: none;
+  }
+}
+
+
 /* LAYOUT */
 
 .rieti-layout {
-  display: flex;
-  width: 100%;
-  min-height: 100vh;
+  min-height: 100dvh;
 }
 
 .rieti-main {
-  flex: 1;
   min-width: 0;
-  margin-left: 250px;
+  min-height: 100dvh;
   transition: margin-left 0.3s ease;
 }
+
+.rieti-main.sidebar-abierto {
+  margin-left: 250px;
+}
+
+.rieti-main.sidebar-cerrado {
+  margin-left: 76px;
+}
+
+@media (max-width: 768px) {
+  .rieti-main.sidebar-abierto,
+  .rieti-main.sidebar-cerrado {
+    margin-left: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rieti-main {
+    transition: none;
+  }
+}
+
 
 .rieti-content {
   box-sizing: border-box;

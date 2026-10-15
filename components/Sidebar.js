@@ -1,3 +1,4 @@
+
 /**
  * Menú lateral del panel administrativo de RIETI.
  * Muestra las principales rutas del sistema y oculta opciones
@@ -11,30 +12,28 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, FileText, BarChart3, Users, LogOut } from "lucide-react";
+import {
+  LayoutDashboard,
+  FileText,
+  BarChart3,
+  Users,
+  LogOut,
+} from "lucide-react";
 
-/**
- * Muestra la navegación principal del área administrativa.
- *
- * @param {{ abierto: boolean }} props - Indica si el menú está expandido o contraído.
- * @component
- * @example
- * <Sidebar abierto={abierto} />
- */
 export default function Sidebar({ abierto }) {
   const pathname = usePathname();
-  const [esAdministrador, setEsAdministrador] = useState(true);
+  const [esAdministrador, setEsAdministrador] = useState(false);
 
   useEffect(() => {
-    /** Verifica el rol guardado para mostrar la gestión de usuarios. */
     const usuarioGuardado = localStorage.getItem("usuario");
 
-    if (usuarioGuardado) {
-      const usuario = JSON.parse(usuarioGuardado);
-
-      if (usuario.rol === "Administrador") {
-        setEsAdministrador(true);
+    try {
+      if (usuarioGuardado) {
+        const usuario = JSON.parse(usuarioGuardado);
+        setEsAdministrador(usuario.rol === "Administrador");
       }
+    } catch {
+      setEsAdministrador(false);
     }
   }, []);
 
@@ -45,7 +44,7 @@ export default function Sidebar({ abierto }) {
   }
 
   return (
-    <aside className={`rieti-sidebar ${abierto ? "open" : ""}`}>
+    <aside className={`rieti-sidebar ${abierto ? "open" : "closed"}`}>
       <Link href="/admin/dashboard" className="rieti-logo">
         <img src="/rieti_logo.png" alt="RIETI" />
       </Link>
@@ -54,87 +53,74 @@ export default function Sidebar({ abierto }) {
         <Link
           href="/admin/dashboard"
           className={`rieti-menu-item ${
-            pathname == "/admin/dashboard" ? "active" : ""
+            pathname === "/admin/dashboard" ? "active" : ""
           }`}
+          title={!abierto ? "Dashboard" : undefined}
+          aria-label="Dashboard"
         >
-          {abierto && (
-            <>
-              <span className="rieti-menu-icon">
-                <LayoutDashboard size={18} />
-              </span>
-
-              <strong>Dashboard</strong>
-            </>
-          )}
+          <span className="rieti-menu-icon">
+            <LayoutDashboard size={18} />
+          </span>
+          {abierto && <strong>Dashboard</strong>}
         </Link>
 
         <Link
           href="/admin/reportes"
           className={`rieti-menu-item ${
-            pathname == "/admin/reportes" ? "active" : ""
+            pathname === "/admin/reportes" ? "active" : ""
           }`}
+          title={!abierto ? "Bandeja de reportes" : undefined}
+          aria-label="Bandeja de reportes"
         >
-          {abierto && (
-            <>
-              <span className="rieti-menu-icon">
-                <FileText size={18} />
-              </span>
-
-              <strong>Bandeja de reportes</strong>
-            </>
-          )}
+          <span className="rieti-menu-icon">
+            <FileText size={18} />
+          </span>
+          {abierto && <strong>Bandeja de reportes</strong>}
         </Link>
 
         <Link
           href="/admin/estadisticas"
           className={`rieti-menu-item ${
-            pathname == "/admin/estadisticas" ? "active" : ""
+            pathname === "/admin/estadisticas" ? "active" : ""
           }`}
+          title={!abierto ? "Estadísticas y analítica" : undefined}
+          aria-label="Estadísticas y analítica"
         >
-          {abierto && (
-            <>
-              <span className="rieti-menu-icon">
-                <BarChart3 size={18} />
-              </span>
-
-              <strong>Estadísticas y analítica</strong>
-            </>
-          )}
+          <span className="rieti-menu-icon">
+            <BarChart3 size={18} />
+          </span>
+          {abierto && <strong>Estadísticas y analítica</strong>}
         </Link>
 
         {esAdministrador && (
           <Link
             href="/admin/usuarios"
             className={`rieti-menu-item ${
-              pathname == "/admin/usuarios" ? "active" : ""
+              pathname === "/admin/usuarios" ? "active" : ""
             }`}
+            title={!abierto ? "Administración de usuarios" : undefined}
+            aria-label="Administración de usuarios"
           >
-            {abierto && (
-              <>
-                <span className="rieti-menu-icon">
-                  <Users size={18} />
-                </span>
-
-                <strong>Administración de usuarios</strong>
-              </>
-            )}
+            <span className="rieti-menu-icon">
+              <Users size={18} />
+            </span>
+            {abierto && <strong>Administración de usuarios</strong>}
           </Link>
         )}
       </nav>
 
-      {abierto && (
-        <div className="rieti-sidebar-bottom">
-          <button
-            type="button"
-            className="rieti-sidebar-logout"
-            onClick={cerrarSesion}
-          >
-            <LogOut size={18} />
-            <span>Cerrar sesión</span>
-          </button>
-        </div>
-      )}
+      <div className="rieti-sidebar-bottom">
+        <button
+          type="button"
+          className="rieti-sidebar-logout"
+          onClick={cerrarSesion}
+          title={!abierto ? "Cerrar sesión" : undefined}
+          aria-label="Cerrar sesión"
+        >
+          <LogOut size={18} />
+          {abierto && <span>Cerrar sesión</span>}
+        </button>
+      </div>
     </aside>
-    
   );
 }
