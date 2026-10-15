@@ -606,7 +606,6 @@ body {
 }
 
 /* HEADER */
-
 /**
  * Estilos del encabezado principal del panel administrativo.
  *
@@ -623,41 +622,59 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 80px;
-  padding: 0 28px;
-  background: rgba(255, 255, 255, 0.94);
-  border-bottom: 1px solid #eceaf3;
-  backdrop-filter: blur(10px);
+  height: 76px;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.86);
+  border-bottom: 1px solid rgba(62, 56, 105, 0.08);
+  box-shadow: 0 4px 20px rgba(62, 56, 105, 0.05);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
-.rieti-menu-button {
-  display: none;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #e7e5ee;
-  border-radius: 10px;
-  background: #ffffff;
-  color: #3e3869;
-  font-size: 19px;
-}
-
+.rieti-header-left,
 .rieti-header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+}
+
+.rieti-header-right {
+  gap: 12px;
+}
+
+.rieti-menu-button,
+.rieti-notification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid #eceaf4;
+  background: #ffffff;
+  color: #3e3869;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(62, 56, 105, 0.06);
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
+}
+
+.rieti-menu-button {
+  border-radius: 12px;
+}
+
+.rieti-menu-button:hover {
+  background: #f2f1f8;
+  color: #a879da;
 }
 
 .rieti-notification {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border: 1px solid #e7e5ee;
   border-radius: 50%;
-  background: #ffffff;
-  color: #3e3869;
+}
+
+.rieti-notification:hover {
+  background: #f7f5fc;
+  color: #d85da5;
+  transform: translateY(-1px);
 }
 
 .rieti-profile-wrapper {
@@ -667,12 +684,19 @@ body {
 .rieti-profile {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px;
-  border: 0;
+  gap: 12px;
+  padding: 6px 10px;
   background: transparent;
+  border: 1px solid transparent;
+  border-radius: 14px;
   color: var(--rieti-text);
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rieti-profile:hover {
+  background: rgba(244, 241, 250, 0.8);
+  border-color: #eeebf5;
 }
 
 .rieti-profile-avatar,
@@ -682,25 +706,23 @@ body {
   justify-content: center;
   flex-shrink: 0;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    var(--rieti-purple),
-    var(--rieti-blue)
-  );
+  background: linear-gradient(135deg, #ec69b4 0%, #a879da 50%, #45b7df 100%);
   color: #ffffff;
+  box-shadow: 0 5px 14px rgba(155, 111, 211, 0.22);
 }
 
 .rieti-profile-avatar {
-  width: 36px;
-  height: 36px;
+  width: 42px;
+  height: 42px;
 }
 
 .rieti-profile-menu-avatar {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
 }
 
-.rieti-profile-info {
+.rieti-profile-info,
+.rieti-profile-menu-user {
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -708,26 +730,182 @@ body {
 }
 
 .rieti-profile-info strong {
-  color: var(--rieti-text);
-  font-size: 12px;
+  color: #30295d;
+  font-size: 13px;
   font-weight: 600;
 }
 
 .rieti-profile-info small {
-  color: #8b8999;
-  font-size: 10px;
+  color: #8985a2;
+  font-size: 11px;
 }
 
 .rieti-profile-arrow {
   display: flex;
   align-items: center;
-  margin-left: 4px;
-  color: #77758a;
+  margin-left: 5px;
+  color: #77718f;
   transition: transform 0.2s ease;
 }
 
 .rieti-profile-arrow.open {
   transform: rotate(180deg);
+}
+
+.rieti-profile-menu {
+  position: absolute;
+  top: calc(100% + 12px);
+  right: 0;
+  width: 290px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.98);
+  border: 1px solid #eeebf5;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(62, 56, 105, 0.16);
+  backdrop-filter: blur(14px);
+  animation: rieti-profile-menu-open 0.18s ease;
+}
+
+@keyframes rieti-profile-menu-open {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.rieti-profile-menu-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px;
+}
+
+.rieti-profile-menu-user strong {
+  color: #292451;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rieti-profile-menu-user small {
+  color: #9490a6;
+  font-size: 11px;
+}
+
+.rieti-profile-menu-divider {
+  width: 100%;
+  height: 1px;
+  margin: 8px 0;
+  background: #efedf5;
+}
+
+.rieti-profile-option,
+.rieti-profile-logout {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 11px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  color: #3e3869;
+  text-decoration: none;
+  text-align: left;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.rieti-profile-option:hover,
+.rieti-profile-logout:hover {
+  background: #f2f1f8;
+  color: var(--rieti-purple);
+}
+
+.rieti-profile-option-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(231, 108, 179, 0.12), rgba(75, 182, 220, 0.12));
+  color: #7767c8;
+}
+
+.rieti-profile-option > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.rieti-profile-option strong,
+.rieti-profile-logout strong {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.rieti-profile-option strong {
+  color: #3e3869;
+}
+
+.rieti-profile-option small {
+  color: #9692a5;
+  font-size: 10px;
+}
+
+.rieti-profile-logout {
+  gap: 13px;
+  padding: 0 15px;
+}
+
+.rieti-profile-logout svg {
+  flex-shrink: 0;
+  color: #b85d99;
+}
+
+.rieti-profile-logout:hover svg {
+  color: var(--rieti-purple);
+}
+
+@media only screen and (max-width: 900px) {
+  .rieti-header {
+    height: 70px;
+    padding: 0 16px;
+  }
+
+  .rieti-profile-info,
+  .rieti-profile-arrow {
+    display: none;
+  }
+
+  .rieti-profile {
+    padding: 5px;
+  }
+}
+
+@media only screen and (max-width: 520px) {
+  .rieti-header {
+    padding: 0 12px;
+  }
+
+  .rieti-header-right {
+    gap: 8px;
+  }
+
+  .rieti-profile-menu {
+    position: fixed;
+    top: 76px;
+    right: 12px;
+    left: 12px;
+    width: auto;
+  }
 }
 
 

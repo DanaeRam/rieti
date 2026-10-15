@@ -1,31 +1,18 @@
-/**
- * Encabezado principal del panel administrativo de RIETI.
- * Muestra el menú lateral, la información del usuario autenticado,
- * la disponibilidad del perfil y la opción para cerrar sesión.
- *
- * @module components/Header
- */
-
 "use client";
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
 import {
   Bell,
   ChevronDown,
   UserLock,
   UserRoundPen,
   UserRound,
+  Menu,
+  LogOut,
 } from "lucide-react";
 
-/**
- * Muestra la navegación y la información del usuario autenticado.
- *
- * @param {{ setSidebarAbierto: React.Dispatch<React.SetStateAction<boolean>> }} props - Función que alterna el estado del menú lateral.
- * @component
- * @example
- * <Header setSidebarAbierto={setSidebarAbierto} />
- */
 export default function Header({ setSidebarAbierto }) {
   const [usuario, setUsuario] = useState(null);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
@@ -44,13 +31,11 @@ export default function Header({ setSidebarAbierto }) {
   }, []);
 
   useEffect(() => {
-    /**
-     * Cierra el menú de perfil cuando se hace clic fuera de este.
-     *
-     * @param {MouseEvent} event - Evento del clic detectado en el documento.
-     */
     function cerrarPerfil(event) {
-      if (perfilRef.current && !perfilRef.current.contains(event.target)) {
+      if (
+        perfilRef.current &&
+        !perfilRef.current.contains(event.target)
+      ) {
         setPerfilAbierto(false);
       }
     }
@@ -62,9 +47,6 @@ export default function Header({ setSidebarAbierto }) {
     };
   }, []);
 
-  /**
-   * Cierra la sesión y redirige a la página principal.
-   */
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
@@ -76,26 +58,37 @@ export default function Header({ setSidebarAbierto }) {
 
   return (
     <header className="rieti-header">
+
       <div className="rieti-header-left">
         <button
+          type="button"
           className="rieti-menu-button"
           onClick={() => setSidebarAbierto((actual) => !actual)}
-          aria-label="Abrir menú"
+          aria-label="Plegar o desplegar sidebar"
+          title="Plegar o desplegar menú"
         >
-          ☰
+          <Menu size={22} />
         </button>
       </div>
 
       <div className="rieti-header-right">
-        <button className="rieti-notification" aria-label="Notificaciones">
-          <Bell size={22} />
+
+        <button
+          type="button"
+          className="rieti-notification"
+          aria-label="Notificaciones"
+        >
+          <Bell size={21} />
         </button>
 
         <div className="rieti-profile-wrapper" ref={perfilRef}>
+
           <button
+            type="button"
             className="rieti-profile"
             onClick={() => setPerfilAbierto((actual) => !actual)}
             aria-expanded={perfilAbierto}
+            aria-haspopup="menu"
             aria-label="Abrir menú de perfil"
           >
             <div className="rieti-profile-avatar">
@@ -108,20 +101,23 @@ export default function Header({ setSidebarAbierto }) {
             </div>
 
             <span
-              className={`rieti-profile-arrow ${perfilAbierto ? "open" : ""}`}
+              className={`rieti-profile-arrow ${
+                perfilAbierto ? "open" : ""
+              }`}
             >
-              <ChevronDown size={22} />
+              <ChevronDown size={20} />
             </span>
           </button>
 
           {perfilAbierto && (
             <div className="rieti-profile-menu">
+
               <div className="rieti-profile-menu-header">
                 <div className="rieti-profile-menu-avatar">
-                  <UserRound size={22} />
+                  <UserRound size={23} />
                 </div>
 
-                <div>
+                <div className="rieti-profile-menu-user">
                   <strong>{nombre}</strong>
                   <small>{rol}</small>
                 </div>
@@ -135,7 +131,7 @@ export default function Header({ setSidebarAbierto }) {
                 onClick={() => setPerfilAbierto(false)}
               >
                 <span className="rieti-profile-option-icon">
-                  <UserRoundPen size={22} />
+                  <UserRoundPen size={20} />
                 </span>
 
                 <div>
@@ -150,7 +146,7 @@ export default function Header({ setSidebarAbierto }) {
                 onClick={() => setPerfilAbierto(false)}
               >
                 <span className="rieti-profile-option-icon">
-                  <UserLock size={22} />
+                  <UserLock size={20} />
                 </span>
 
                 <div>
@@ -161,9 +157,15 @@ export default function Header({ setSidebarAbierto }) {
 
               <div className="rieti-profile-menu-divider" />
 
-              <button className="rieti-profile-logout" onClick={cerrarSesion}>
-                Cerrar sesión
+              <button
+                type="button"
+                className="rieti-profile-logout"
+                onClick={cerrarSesion}
+              >
+                <LogOut size={20} />
+                <strong>Cerrar sesión</strong>
               </button>
+
             </div>
           )}
         </div>
