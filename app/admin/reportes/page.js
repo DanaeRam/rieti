@@ -8,6 +8,7 @@
 import { useEffect, useState } from "react";
 import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
 import ExpedienteDigital from "@/components/ExpedienteDigital";
+import Bitacora from "@/components/Bitacora";
 
 /**
  * Permite consultar reportes mediante filtros y muestra los resultados.
@@ -35,6 +36,7 @@ export default function Reportes() {
   const [errorReportes, setErrorReportes] = useState("");
 
   const [expediente, setExpediente] = useState(null);
+  const [folioBitacora, setFolioBitacora] = useState(null);
 
   useEffect(() => {
     /** Carga el catálogo de municipios para el filtro de reportes. */
@@ -119,8 +121,16 @@ export default function Reportes() {
     setExpediente(reporte);
   }
 
+  function abrirBitacora(reporte) {
+    setFolioBitacora(reporte.folio);
+  }
+
   function cerrarExpediente() {
     setExpediente(null); 
+  }
+
+  function cerrarBitacora() {
+    setFolioBitacora(null);
   }
 
   /**
@@ -473,7 +483,11 @@ export default function Reportes() {
                         <FolderClosed size={18} />
                       </button>
 
-                      <button type="button" title="Bitácora">
+                      <button
+                        type="button"
+                        title="Bitácora"
+                        onClick={() => abrirBitacora(reporte)}
+                      >
                         <ClipboardList size={18} />
                       </button>
 
@@ -490,6 +504,13 @@ export default function Reportes() {
             <ExpedienteDigital
               expediente={expediente}
               cerrar={cerrarExpediente}
+            />
+          )}
+
+          {folioBitacora && (
+            <Bitacora
+              folio={folioBitacora}
+              cerrar={cerrarBitacora}
             />
           )}
         </div>
