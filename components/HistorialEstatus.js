@@ -34,8 +34,6 @@ export default function HistorialEstatus({ folio, cerrar }) {
         );
       }
 
-      console.log("HISTORIAL:", datos.historial);
-
       setHistorial(datos.historial || []);
     } catch (error) {
       console.error("Error al obtener historial:", error);
@@ -51,39 +49,170 @@ export default function HistorialEstatus({ folio, cerrar }) {
     }
   }, [folio]);
 
+  function formatearFecha(fecha) {
+    if (!fecha) {
+      return "Fecha no disponible";
+    }
+
+    const fechaFormateada = new Date(fecha);
+
+    if (Number.isNaN(fechaFormateada.getTime())) {
+      return fecha;
+    }
+
+    return fechaFormateada.toLocaleString("es-MX", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
+
+  function obtenerClaseEstatus(estatus) {
+    if (!estatus) {
+      return "";
+    }
+
+    switch (estatus) {
+      case "Recibido":
+        return "recibido";
+
+      case "En Revision":
+        return "revision";
+
+      case "En Proceso":
+        return "proceso";
+
+      case "Concluido":
+        return "concluido";
+
+      case "Reincidencia":
+        return "reincidencia";
+
+      case "Canalizado":
+        return "canalizado";
+
+      case "Cancelado":
+        return "cancelado";
+
+      default:
+        return "";
+    }
+  }
+
   return (
-    <div role="dialog" aria-modal="true">
-      <div>
-        <div>
-          <h2>Historial de estatus</h2>
+    <div
+      className="rieti-historial-overlay"
+      onClick={(event) => {
+        if (event.target === event.currentTarget) {
+          cerrar();
+        }
+      }}
+    >
+      <div
+        className="rieti-historial"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="historial-titulo"
+      >
+        {/* ENCABEZADO */}
 
-          <p>
-            Folio: <strong>{folio}</strong>
-          </p>
+        <div className="rieti-historial-header">
+          <div>
+            <h2 id="historial-titulo">Historial de estatus</h2>
+
+            <p>
+              Folio: <strong>{folio}</strong>
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="rieti-historial-cerrar"
+            onClick={cerrar}
+          >
+            Cerrar
+          </button>
         </div>
 
-        <button type="button" onClick={cerrar}>
-          Cerrar
-        </button>
-      </div>
+        {/* CONTENIDO */}
 
-      {cargando && <p>Cargando historial...</p>}
+        <div className="rieti-historial-contenido">
+          {cargando && (
+            <p className="rieti-historial-mensaje">Cargando historial...</p>
+          )}
 
-      {error && <p>{error}</p>}
+          {error && <p className="rieti-historial-error">{error}</p>}
 
-      {!cargando && !error && historial.length === 0 && (
-        <p>No hay cambios de estatus registrados.</p>
-      )}
+          {!cargando && !error && historial.length === 0 && (
+            <p className="rieti-historial-mensaje">
+              No hay cambios de estatus registrados.
+            </p>
+          )}
 
-      {!cargando && !error && historial.length > 0 && (
-        <div>
-          {historial.map((item, indice) => (
-            <div key={indice}>
-              <pre>{JSON.stringify(item, null, 2)}</pre>
+          {!cargando && !error && historial.length > 0 && (
+            <div className="rieti-historial-timeline">
+              {historial.map((item, indice) => (
+                <div
+                  className="rieti-historial-item"
+                  key={item.idHistorialEstatus || indice}
+                >
+                  {/* LÍNEA Y PUNTO */}
+
+                  <div className="rieti-historial-linea">
+                    <div className="rieti-historial-punto"></div>
+                  </div>
+
+                  {/* INFORMACIÓN */}
+
+                  <div className="rieti-historial-card">
+                    <div className="rieti-historial-fecha">
+                      {formatearFecha(item.fecha)}
+                    </div>
+
+                    <div className="rieti-historial-estatus">
+                      <span
+                        className={`rieti-historial-estatus-item ${obtenerClaseEstatus(
+                          item.estatus_anterior,
+                        )}`}
+                      >
+                        {item.estatus_anterior || "Sin estatus"}
+                      </span>
+
+                      <span className="rieti-historial-flecha">→</span>
+
+                      <span
+                        className={`rieti-historial-estatus-item ${obtenerClaseEstatus(
+                          item.estatus_nuevo,
+                        )}`}
+                      >
+                        {item.estatus_nuevo || "Sin estatus"}
+                      </span>
+                    </div>
+
+                    <div className="rieti-historial-datos">
+                      <div>
+                        <span>Usuario</span>
+
+                        <strong>Usuario #{item.idUsuario}</strong>
+                      </div>
+
+                      <div>
+                        <span>Justificación</span>
+
+                        <strong>
+                          {item.justificacion || "Sin justificación registrada"}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
-          ))}
+          )}
         </div>
-      )}
+      </div>
     </div>
   );
 }

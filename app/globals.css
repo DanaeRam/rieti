@@ -3310,3 +3310,270 @@ button {
     width: 100%;
   }
 }
+
+/* HISTORIAL DE ESTATUS */
+
+.rieti-historial-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 30px;
+  box-sizing: border-box;
+  background: rgba(32, 29, 57, 0.28);
+  backdrop-filter: blur(3px);
+}
+
+.rieti-historial {
+  display: flex;
+  flex-direction: column;
+  width: min(850px, 100%);
+  max-height: 85vh;
+  overflow: hidden;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1px solid #ebe9f3;
+  border-radius: 18px;
+  color: #3e3869;
+  box-shadow: 0 20px 60px rgba(39, 34, 75, 0.18);
+}
+
+.rieti-historial-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+  padding: 22px 28px;
+  border-bottom: 1px solid #ebe9f3;
+  background: #ffffff;
+}
+
+.rieti-historial-header h2 {
+  margin: 0;
+  color: #3e3869;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.rieti-historial-header p {
+  margin: 5px 0 0;
+  color: #9895a5;
+  font-size: 12px;
+}
+
+.rieti-historial-header strong {
+  color: #3e3869;
+  font-weight: 500;
+}
+
+.rieti-historial-cerrar {
+  padding: 9px 18px;
+  border: 1px solid #e2dfeb;
+  border-radius: 9px;
+  background: #ffffff;
+  color: #3e3869;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.rieti-historial-cerrar:hover {
+  background: #f5f3fb;
+  border-color: #d8d4e5;
+}
+
+.rieti-historial-contenido {
+  overflow-y: auto;
+  padding: 28px 32px 35px;
+}
+
+.rieti-historial-timeline {
+  position: relative;
+}
+
+.rieti-historial-item {
+  position: relative;
+  display: flex;
+  gap: 18px;
+  min-height: 145px;
+}
+
+.rieti-historial-linea {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 18px;
+  flex-shrink: 0;
+}
+
+.rieti-historial-linea::after {
+  content: "";
+  position: absolute;
+  top: 18px;
+  bottom: -10px;
+  width: 2px;
+  background: #e5e1ef;
+}
+
+.rieti-historial-item:last-child
+  .rieti-historial-linea::after {
+  display: none;
+}
+
+.rieti-historial-punto {
+  position: relative;
+  z-index: 2;
+  width: 11px;
+  height: 11px;
+  margin-top: 5px;
+  border: 3px solid #ffffff;
+  border-radius: 50%;
+  background: #496a9f;
+  box-shadow: 0 0 0 2px #dfe4f0;
+}
+
+.rieti-historial-card {
+  flex: 1;
+  min-width: 0;
+  padding: 18px 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ebe9f3;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 3px 12px rgba(62, 56, 105, 0.04);
+}
+
+.rieti-historial-fecha {
+  margin-bottom: 11px;
+  color: #9895a5;
+  font-size: 11px;
+}
+
+
+.rieti-historial-estatus {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 17px;
+}
+
+.rieti-historial-estatus-item {
+  padding: 5px 10px;
+  border-radius: 6px;
+  background: #f2f1f7;
+  color: #3e3869;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rieti-historial-flecha {
+  color: #9895a5;
+  font-size: 16px;
+}
+
+.rieti-historial-datos {
+  display: grid;
+  grid-template-columns: 160px 1fr;
+  gap: 14px;
+  padding-top: 13px;
+  border-top: 1px solid #f0eef5;
+}
+
+.rieti-historial-datos div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.rieti-historial-datos span {
+  color: #9895a5;
+  font-size: 10px;
+}
+
+.rieti-historial-datos strong {
+  color: #3e3869;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.rieti-historial-mensaje {
+  margin: 10px 0;
+  color: #9895a5;
+  font-size: 13px;
+}
+
+.rieti-historial-error {
+  margin: 10px 0;
+  color: #c54f6d;
+  font-size: 13px;
+}
+
+.rieti-historial-estatus-item.recibido {
+  background: #f1f0f7;
+}
+
+.rieti-historial-estatus-item.revision {
+  background: #fff1f5;
+  color: #c84f7a;
+}
+
+.rieti-historial-estatus-item.proceso {
+  background: #edf5fb;
+  color: #426d9e;
+}
+
+.rieti-historial-estatus-item.concluido {
+  background: #edf8f6;
+  color: #3d918a;
+}
+
+.rieti-historial-estatus-item.reincidencia {
+  background: #f8f1fc;
+  color: #79518f;
+}
+
+.rieti-historial-estatus-item.canalizado {
+  background: #f1f5fa;
+  color: #526d91;
+}
+
+.rieti-historial-estatus-item.cancelado {
+  background: #f9eeee;
+  color: #a95c5c;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 768px) {
+  .rieti-historial-overlay {
+    padding: 15px;
+  }
+
+  .rieti-historial {
+    width: 100%;
+    max-height: 90vh;
+    border-radius: 14px;
+  }
+
+  .rieti-historial-header {
+    padding: 18px 20px;
+  }
+
+  .rieti-historial-header h2 {
+    font-size: 19px;
+  }
+
+  .rieti-historial-contenido {
+    padding: 22px 20px 28px;
+  }
+
+  .rieti-historial-datos {
+    grid-template-columns: 1fr;
+  }
+
+  .rieti-historial-estatus {
+    flex-wrap: wrap;
+  }
+}

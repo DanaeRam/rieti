@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
 import ExpedienteDigital from "@/components/ExpedienteDigital";
 import Bitacora from "@/components/Bitacora";
+import HistorialEstatus from "@/components/HistorialEstatus";
 
 /**
  * Permite consultar reportes mediante filtros y muestra los resultados.
@@ -37,6 +38,7 @@ export default function Reportes() {
 
   const [expediente, setExpediente] = useState(null);
   const [folioBitacora, setFolioBitacora] = useState(null);
+  const [historialAbierto, setHistorialAbierto] = useState(null);
 
   useEffect(() => {
     /** Carga el catálogo de municipios para el filtro de reportes. */
@@ -117,20 +119,34 @@ export default function Reportes() {
     cargarReportes();
   }, []);
 
-  function abrirExpediente(reporte) {
-    setExpediente(reporte);
-  }
+function abrirExpediente(reporte) {
+  setFolioBitacora(null);
+  setHistorialAbierto(null);
+  setExpediente(reporte);
+}
 
   function abrirBitacora(reporte) {
+    setExpediente(null);
+    setHistorialAbierto(null);
     setFolioBitacora(reporte.folio);
   }
 
+  function abrirHistorial(reporte) {
+    setExpediente(null);
+    setFolioBitacora(null);
+    setHistorialAbierto(reporte.folio);
+  }
+
   function cerrarExpediente() {
-    setExpediente(null); 
+    setExpediente(null);
   }
 
   function cerrarBitacora() {
     setFolioBitacora(null);
+  }
+
+  function cerrarHistorial() {
+    setHistorialAbierto(null);
   }
 
   /**
@@ -483,15 +499,19 @@ export default function Reportes() {
                         <FolderClosed size={18} />
                       </button>
 
+                        <button
+    type="button"
+    title="Bitácora"
+    onClick={() => abrirBitacora(reporte)}
+  >
+    <ClipboardList size={18} />
+  </button>
+
                       <button
                         type="button"
-                        title="Bitácora"
-                        onClick={() => abrirBitacora(reporte)}
+                        title="Historial de estatus"
+                        onClick={() => abrirHistorial(reporte)}
                       >
-                        <ClipboardList size={18} />
-                      </button>
-
-                      <button type="button" title="Historial de estatus">
                         <FileClock size={18} />
                       </button>
                     </td>
@@ -513,6 +533,13 @@ export default function Reportes() {
               cerrar={cerrarBitacora}
             />
           )}
+
+          {historialAbierto && (
+  <HistorialEstatus
+    folio={historialAbierto}
+    cerrar={cerrarHistorial}
+  />
+)}
         </div>
 
       </section>
