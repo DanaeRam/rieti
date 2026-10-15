@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@linkurious/leaflet-heat": "^0.2.6",
     "apexcharts": "^7.8.0",
     "leaflet": "^1.9.4",
     "leaflet.heat": "^0.2.0",
