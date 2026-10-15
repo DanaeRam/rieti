@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
 
 :root {
   --rieti-purple: #3e3869;
@@ -3576,4 +3577,18 @@ button {
   .rieti-historial-estatus {
     flex-wrap: wrap;
   }
+}
+
+/* MAPA DE CALOR */
+
+.rieti-mapa-calor {
+  width: 100%;
+  height: 450px;
+  overflow: hidden;
+  border-radius: 14px;
+}
+
+.rieti-mapa-calor-contenedor {
+  width: 100%;
+  height: 450px;
 }
