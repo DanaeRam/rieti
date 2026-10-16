@@ -6,7 +6,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FolderClosed, ClipboardList, FileClock } from "lucide-react";
+import { FolderClosed, ClipboardList, FileClock, UserRoundPlus } from "lucide-react";
 import ExpedienteDigital from "@/components/ExpedienteDigital";
 import Bitacora from "@/components/Bitacora";
 import HistorialEstatus from "@/components/HistorialEstatus";
@@ -39,6 +39,12 @@ export default function Reportes() {
   const [expediente, setExpediente] = useState(null);
   const [folioBitacora, setFolioBitacora] = useState(null);
   const [historialAbierto, setHistorialAbierto] = useState(null);
+  const [reporteAsignacion, setReporteAsignacion] = useState(null);
+  const [alimentadores, setAlimentadores] = useState([]);
+  const [idAlimentador, setIdAlimentador] = useState("");
+  const [guardandoAsignacion, setGuardandoAsignacion] = useState(false);
+  const [errorAsignacion, setErrorAsignacion] = useState("");
+  const [mensajeAsignacion, setMensajeAsignacion] = useState("");
 
   useEffect(() => {
     /** Carga el catálogo de municipios para el filtro de reportes. */
@@ -149,6 +155,79 @@ function abrirExpediente(reporte) {
     setHistorialAbierto(null);
   }
 
+  function abrirAsignacion(reporte) {
+    setExpediente(null);
+    setFolioBitacora(null);
+    setHistorialAbierto(null);
+
+    setReporteAsignacion(reporte);
+    setIdAlimentador("");
+    setErrorAsignacion("");
+    setMensajeAsignacion("");
+  }
+
+  function cerrarAsignacion() {
+    if (guardandoAsignacion) return;
+
+    setReporteAsignacion(null);
+    setIdAlimentador("");
+    setErrorAsignacion("");
+  }
+
+  
+async function asignarReporte() {
+  if (!reporteAsignacion || !idAlimentador) return;
+
+  setGuardandoAsignacion(true);
+  setErrorAsignacion("");
+
+  try {
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("No hay una sesión activa.");
+    }
+
+    const respuesta = await fetch(
+      "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/asignaciones",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          folio: reporteAsignacion.folio,
+          idUsuario: Number(idAlimentador),
+        }),
+      }
+    );
+
+    const datos = await respuesta.json();
+
+    if (respuesta.status === 409) {
+      throw new Error("Este reporte ya tiene un responsable asignado.");
+    }
+
+    if (!respuesta.ok) {
+      throw new Error(
+        datos.message || datos.error || "No se pudo asignar el reporte."
+      );
+    }
+
+    setMensajeAsignacion(datos.message);
+    setReporteAsignacion(null);
+    setIdAlimentador("");
+
+    await cargarReportes();
+  } catch (error) {
+    setErrorAsignacion(error.message);
+  } finally {
+    setGuardandoAsignacion(false);
+  }
+}
+
+
   /**
    * Procesa el envío de los filtros de búsqueda.
    *
@@ -162,74 +241,68 @@ function abrirExpediente(reporte) {
 
     if (municipio) {
       const municipioSeleccionado = municipios.find(
-        (item) => String(item.idMunicipio) === municipio
+        (item) => String(item.idMunicipio) === municipio,
       );
 
       resultados = resultados.filter(
-        (reporte) =>
-          reporte.municipio === municipioSeleccionado?.nombre
+        (reporte) => reporte.municipio === municipioSeleccionado?.nombre,
       );
     }
 
     if (estatus) {
-      resultados = resultados.filter(
-        (reporte) => reporte.estatus === estatus
-      );
+      resultados = resultados.filter((reporte) => reporte.estatus === estatus);
     }
 
     if (prioridad) {
       resultados = resultados.filter(
-        (reporte) => reporte.prioridad === prioridad
+        (reporte) => reporte.prioridad === prioridad,
       );
     }
 
     if (fecha) {
-      resultados = resultados.filter(
-        (reporte) => reporte.fecha_registro.startsWith(fecha)
+      resultados = resultados.filter((reporte) =>
+        reporte.fecha_registro.startsWith(fecha),
       );
     }
 
     if (nna) {
       if (nna === "5") {
         resultados = resultados.filter(
-          (reporte) => Number(reporte.num_menores) >= 5
+          (reporte) => Number(reporte.num_menores) >= 5,
         );
       } else {
         resultados = resultados.filter(
-          (reporte) => String(reporte.num_menores) === nna
+          (reporte) => String(reporte.num_menores) === nna,
         );
       }
     }
 
     if (rangoEdad) {
       resultados = resultados.filter(
-        (reporte) => reporte.rango_edad === rangoEdad
+        (reporte) => reporte.rango_edad === rangoEdad,
       );
     }
 
     if (genero) {
       resultados = resultados.filter(
         (reporte) =>
-          reporte.genero_observado?.toLowerCase() ===
-          genero.toLowerCase()
+          reporte.genero_observado?.toLowerCase() === genero.toLowerCase(),
       );
     }
 
-  if (actividad) {
-  const actividadSeleccionada = actividades.find(
-    (item) => String(item.idCatalogoActividad) === actividad
-  );
+    if (actividad) {
+      const actividadSeleccionada = actividades.find(
+        (item) => String(item.idCatalogoActividad) === actividad,
+      );
 
-  resultados = resultados.filter(
-    (reporte) =>
-      reporte.actividad === actividadSeleccionada?.nombre
-  );
-}
+      resultados = resultados.filter(
+        (reporte) => reporte.actividad === actividadSeleccionada?.nombre,
+      );
+    }
 
     if (hora) {
-      resultados = resultados.filter(
-        (reporte) =>
-          reporte.hora_observada?.startsWith(hora)
+      resultados = resultados.filter((reporte) =>
+        reporte.hora_observada?.startsWith(hora),
       );
     }
 
@@ -500,12 +573,12 @@ function abrirExpediente(reporte) {
                       </button>
 
                         <button
-    type="button"
-    title="Bitácora"
-    onClick={() => abrirBitacora(reporte)}
-  >
-    <ClipboardList size={18} />
-  </button>
+                          type="button"
+                          title="Bitácora"
+                          onClick={() => abrirBitacora(reporte)}
+                        >
+                          <ClipboardList size={18} />
+                        </button>
 
                       <button
                         type="button"
@@ -514,6 +587,16 @@ function abrirExpediente(reporte) {
                       >
                         <FileClock size={18} />
                       </button>
+
+                      {reporte.estatus === "Recibido" && (
+                        <button
+                          type="button"
+                          title="Asignar responsable"
+                          onClick={() => abrirAsignacion(reporte)}
+                        >
+                          <UserRoundPlus size={18} />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
