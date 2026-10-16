@@ -1,87 +1,90 @@
-"use client";
+const TAMANO_ZONA_KM = 3;
 
-import { useEffect, useRef } from "react";
+const COLORES = {
+  baja: "#38bdf8",
+  media: "#facc15",
+  alta: "#dc2626",
+};
 
-export default function MapaCalor({ reportes }) {
-  const mapaRef = useRef(null);
-  const mapaInstancia = useRef(null);
+function obtenerCoordenadas(reporte) {
+  const latitud = Number(reporte.latitud);
+  const longitud = Number(reporte.longitud);
 
-  useEffect(() => {
-    let cancelado = false;
+  if (
+    reporte.latitud == null ||
+    reporte.longitud == null ||
+    String(reporte.latitud).trim() === "" ||
+    String(reporte.longitud).trim() === "" ||
+    !Number.isFinite(latitud) ||
+    !Number.isFinite(longitud) ||
+    Math.abs(latitud) > 90 ||
+    Math.abs(longitud) > 180 ||
+    (latitud === 0 && longitud === 0)
+  ) {
+    return null;
+  }
 
-    async function cargarMapa() {
-      const L = (await import("leaflet")).default;
-      const { heatLayer } = await import("@linkurious/leaflet-heat");
+  return { latitud, longitud };
+}
 
-      if (cancelado || !mapaRef.current) {
-        return;
-      }
+function agruparReportes(reportes) {
+  const zonas = new Map();
 
-      const puntos = reportes
-        .map((reporte) => {
-          const latitud = Number(reporte.latitud);
-          const longitud = Number(reporte.longitud);
+  const pasoLatitud = TAMANO_ZONA_KM / 111.32;
+  const pasoLongitud =
+    TAMANO_ZONA_KM / (111.32 * Math.cos((19.35 * Math.PI) / 180));
 
-          if (
-            Number.isNaN(latitud) ||
-            Number.isNaN(longitud)
-          ) {
-            return null;
-          }
+  for (const reporte of reportes) {
+    const coordenadas = obtenerCoordenadas(reporte);
 
-          return [latitud, longitud, 1];
-        })
-        .filter(Boolean);
+    if (!coordenadas) continue;
 
-        const mapa = L.map(mapaRef.current, {
-          center: [19.35, -99.65],
-          zoom: 9,
-          minZoom: 7,
-          maxZoom: 15,
-          zoomControl: true,
-          scrollWheelZoom: false,
-        });
+    const { latitud, longitud } = coordenadas;
 
-      L.tileLayer(
-        "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-        {
-          attribution:
-            '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-        },
-      ).addTo(mapa);
+    const fila = Math.floor(latitud / pasoLatitud);
+    const columna = Math.floor(longitud / pasoLongitud);
+    const clave = `${fila}-${columna}`;
 
-      heatLayer(puntos, {
-        radius: 30,
-        blur: 20,
-        maxZoom: 15,
-        minOpacity: 0.35,
-        gradient: {
-          0.2: "#3e3869",
-          0.4: "#496a9f",
-          0.6: "#35a9c4",
-          0.8: "#e45b91",
-          1: "#e63946",
-        },
-      }).addTo(mapa);
-      mapaInstancia.current = mapa;
+    if (!zonas.has(clave)) {
+      zonas.set(clave, {
+        cantidad: 0,
+        sumaLatitud: 0,
+        sumaLongitud: 0,
+      });
     }
 
-    cargarMapa();
+    const zona = zonas.get(clave);
 
-    return () => {
-      cancelado = true;
+    zona.cantidad++;
+    zona.sumaLatitud += latitud;
+    zona.sumaLongitud += longitud;
+  }
 
-      if (mapaInstancia.current) {
-        mapaInstancia.current.remove();
-        mapaInstancia.current = null;
-      }
+  return [...zonas.values()].map((zona) => ({
+    cantidad: zona.cantidad,
+    latitud: zona.sumaLatitud / zona.cantidad,
+    longitud: zona.sumaLongitud / zona.cantidad,
+  }));
+}
+
+function clasificarZonas(zonas) {
+  const maximo = Math.max(0, ...zonas.map((zona) => zona.cantidad));
+
+  return zonas.map((zona) => {
+    const porcentaje = maximo > 0 ? zona.cantidad / maximo : 0;
+
+    let nivel = "baja";
+
+    if (maximo > 1 && porcentaje >= 0.67) {
+      nivel = "alta";
+    } else if (maximo > 1 && porcentaje >= 0.34) {
+      nivel = "media";
+    }
+
+    return {
+      ...zona,
+      nivel,
+      color: COLORES[nivel],
     };
-  }, [reportes]);
-
-  return (
-    <div
-      ref={mapaRef}
-      className="rieti-mapa-calor"
-    />
-  );
+  });
 }
