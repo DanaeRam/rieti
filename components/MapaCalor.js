@@ -88,3 +88,49 @@ function clasificarZonas(zonas) {
     };
   });
 }
+
+function dibujarConcentracion(L, capa, zona) {
+  const centro = [zona.latitud, zona.longitud];
+
+  L.circle(centro, {
+    radius: 1900,
+    stroke: false,
+    fillColor: zona.color,
+    fillOpacity: 0.12,
+    interactive: false,
+    className: "rieti-calor-exterior",
+  }).addTo(capa);
+
+  L.circle(centro, {
+    radius: 1200,
+    stroke: false,
+    fillColor: zona.color,
+    fillOpacity: 0.3,
+    interactive: false,
+    className: "rieti-calor-intermedio",
+  }).addTo(capa);
+
+  L.circle(centro, {
+    radius: 550,
+    stroke: false,
+    fillColor: zona.color,
+    fillOpacity: 0.8,
+    className: "rieti-calor-centro",
+  })
+    .bindPopup(
+      `<strong>Concentración: ${zona.nivel}</strong>
+       <p>Reportes en la zona: ${zona.cantidad}</p>`,
+    )
+    .addTo(capa);
+}
+
+function actualizarConcentraciones(reportes, L, capa) {
+  capa.clearLayers();
+
+  const zonas = agruparReportes(reportes);
+  const zonasClasificadas = clasificarZonas(zonas);
+
+  for (const zona of zonasClasificadas) {
+    dibujarConcentracion(L, capa, zona);
+  }
+}

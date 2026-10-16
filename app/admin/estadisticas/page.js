@@ -1,48 +1,65 @@
-/**
- * Página de estadísticas y analítica de RIETI.
- * Presenta los espacios destinados a gráficas e indicadores del sistema.
- *
- * @module app/admin/estadisticas/page
- */
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import MapaCalor from "@/components/MapaCalor";
 
-/**
- * Presenta los paneles de análisis estadístico del sistema y el mapa de calor.
- *
- * @component
- */
 export default function Estadisticas() {
-  const mapaRef = useRef(null);
+  const [reportes, setReportes] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState("");
+
+  const URL_BASE =
+    "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
 
   useEffect(() => {
-    let mapa;
-    let cancelado = false;
+    async function obtenerReportes() {
+      try {
+        const token = localStorage.getItem("token");
 
-    async function cargarMapa() {
-      const L = (await import("leaflet")).default;
+        console.log("TOKEN:", token);
 
-      if (cancelado || !mapaRef.current) {
-        return;
+        if (!token) {
+          throw new Error("No hay una sesión activa.");
+        }
+
+        const respuesta = await fetch(
+          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/reportes",
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          },
+        );
+
+        console.log("STATUS:", respuesta.status);
+
+        const datos = await respuesta.json();
+
+        console.log("REPORTES:", datos);
+
+        if (!respuesta.ok) {
+          throw new Error(
+            datos.message ||
+              datos.error ||
+              "No se pudieron obtener los reportes.",
+          );
+        }
+
+        const listaReportes = Array.isArray(datos)
+          ? datos
+          : datos.reportes || [];
+
+        setReportes(listaReportes);
+      } catch (error) {
+        console.error("ERROR REPORTES:", error);
+        setError(error.message);
+      } finally {
+        setCargando(false);
       }
-
-      mapa = L.map(mapaRef.current).setView([19.4326, -99.1332], 10);
-
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-        mapa,
-      );
     }
 
-    cargarMapa();
-
-    return () => {
-      cancelado = true;
-
-      if (mapa) {
-        mapa.remove();
-      }
-    };
+    obtenerReportes();
   }, []);
 
   return (
@@ -54,17 +71,16 @@ export default function Estadisticas() {
       <article className="rieti-panel">
         <div className="rieti-panel-header">
           <div>
+            <span>UBICACIÓN</span>
             <h3>Mapa de calor</h3>
           </div>
         </div>
 
-        <div
-          ref={mapaRef}
-          style={{
-            height: "400px",
-            width: "100%",
-          }}
-        ></div>
+        {cargando && <p>Cargando mapa de calor...</p>}
+
+        {error && <p>{error}</p>}
+
+        {!cargando && !error && <MapaCalor reportes={reportes} />}
       </article>
     </>
   );

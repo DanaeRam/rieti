@@ -3690,3 +3690,18 @@ body {
   width: 100%;
   height: 450px;
 }
+
+
+.rieti-calor-exterior {
+  filter: blur(16px);
+  pointer-events: none;
+}
+
+.rieti-calor-intermedio {
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.rieti-calor-centro {
+  filter: blur(5px);
+}
