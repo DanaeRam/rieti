@@ -35,6 +35,14 @@ export default function Reporte() {
   const [calle, setCalle] = useState("");
   const [colonia, setColonia] = useState("");
   const [referencias, setReferencias] = useState("");
+  const [fotografias, setFotografias] = useState([]);
+  const [cargandoFotos, setCargandoFotos] = useState(false);
+  const [resultadoFotos, setResultadoFotos] = useState([]);
+
+  const [latitud, setLatitud] = useState("");
+  const [longitud, setLongitud] = useState("");
+  const [cp, setCp] = useState("");
+  const [errorUbicacion, setErrorUbicacion] = useState("");
 
   const [aceptoAviso, setAceptoAviso] = useState(false);
   const [enviando, setEnviando] = useState(false);
@@ -90,70 +98,229 @@ export default function Reporte() {
     cargarMunicipios();
   }, []);
 
-  /**
-   * Envía el reporte consolidado a la API del sistema.
-   * Valida que se haya aceptado el aviso de privacidad antes de enviar.
-   */
-  async function enviarReporte() {
-    if (!aceptoAviso) {
-      return;
+  const API_BASE =
+    "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
+
+  async function subirFotografia(archivo, folioReporte) {
+    if (!["image/jpeg", "image/png", "image/webp"].includes(archivo.type)) {
+      throw new Error(`Formato no permitido: ${archivo.name}`);
     }
 
-    setEnviando(true);
-    setErrorEnvio("");
+    const respuestaUrl = await fetch(`${API_BASE}/evidencias/presigned-url`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        folio: folioReporte,
+        nombreArchivo: archivo.name,
+        fileType: archivo.type,
+      }),
+    });
 
-    try {
-      const datosReporte = {
-        idMunicipio: Number(municipio),
-        idCatalogoActividad: Number(actividad),
-        modalidad,
-        correo_contacto: modalidad === "SEGUIMIENTO" ? correoContacto : null,
-        num_menores: Number(numNinos),
-        rango_edad: rangoEdad,
-        genero_observado: generoObservado,
-        hora_observada: horaObservada ? `${horaObservada}:00` : undefined,
-        descripcion,
-        situacion_riesgo:
-          situacionRiesgo === "true"
-            ? true
-            : situacionRiesgo === "false"
-              ? false
-              : null,
-        latitud: 0,
-        longitud: 0,
-        calle,
-        colonia,
-        cp: null,
-        referencias,
-        acepto_aviso: true,
-      };
+    const datosUrl = await respuestaUrl.json();
 
-      const respuesta = await fetch(
-        "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/reportes",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datosReporte),
-        },
+    if (!respuestaUrl.ok || !datosUrl.uploadUrl || !datosUrl.key) {
+      throw new Error(
+        datosUrl.message ||
+          datosUrl.error ||
+          `No se pudo preparar la fotografía ${archivo.name}.`,
       );
+    }
 
-      const datos = await respuesta.json();
+    const respuestaS3 = await fetch(datosUrl.uploadUrl, {
+      method: "PUT",
+      headers: {
+        "Content-Type": archivo.type,
+      },
+      body: archivo,
+    });
 
-      if (!respuesta.ok) {
-        throw new Error(
-          datos.message || datos.error || "No se pudo enviar el reporte.",
+    if (!respuestaS3.ok) {
+      throw new Error(`No se pudo subir ${archivo.name} a Amazon S3.`);
+    }
+
+    const respuestaConfirmacion = await fetch(
+      `${API_BASE}/evidencias/confirmar`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          folio: folioReporte,
+          key: datosUrl.key,
+        }),
+      },
+    );
+
+    const datosConfirmacion = await respuestaConfirmacion.json();
+
+    if (!respuestaConfirmacion.ok) {
+      throw new Error(
+        datosConfirmacion.message ||
+          datosConfirmacion.error ||
+          `No se pudo confirmar ${archivo.name}.`,
+      );
+    }
+
+    return {
+      nombre: archivo.name,
+      idEvidencia: datosConfirmacion.idEvidencia,
+      key: datosUrl.key,
+    };
+
+    /**
+     * Envía el reporte consolidado a la API del sistema.
+     * Valida que se haya aceptado el aviso de privacidad antes de enviar.
+     */
+    async function enviarReporte() {
+      if (!aceptoAviso || enviando) return;
+
+      setEnviando(true);
+      setErrorEnvio("");
+
+      let folioActual = folio;
+
+      try {
+        if (!folioActual) {
+          if (!municipio || !actividad || !descripcion.trim()) {
+            throw new Error(
+              "Completa los campos obligatorios antes de enviar.",
+            );
+          }
+
+          if (modalidad === "SEGUIMIENTO" && !correoContacto.trim()) {
+            throw new Error("Ingresa un correo para el seguimiento.");
+          }
+
+          if (
+            latitud === "" ||
+            longitud === "" ||
+            !Number.isFinite(Number(latitud)) ||
+            !Number.isFinite(Number(longitud)) ||
+            Number(latitud) < -90 ||
+            Number(latitud) > 90 ||
+            Number(longitud) < -180 ||
+            Number(longitud) > 180
+          ) {
+            throw new Error(
+              "Indica una ubicación válida antes de enviar el reporte.",
+            );
+          }
+
+          const datosReporte = {
+            idMunicipio: Number(municipio),
+            idCatalogoActividad: Number(actividad),
+            modalidad,
+            correo_contacto:
+              modalidad === "SEGUIMIENTO" ? correoContacto.trim() : null,
+            num_menores: numNinos ? Number(numNinos) : 1,
+            rango_edad: rangoEdad || "No especificado",
+            genero_observado: generoObservado || "No especificado",
+            hora_observada: horaObservada ? `${horaObservada}:00` : undefined,
+            descripcion: descripcion.trim(),
+            situacion_riesgo: situacionRiesgo === "true",
+            latitud: Number(latitud),
+            longitud: Number(longitud),
+            calle: calle.trim(),
+            colonia: colonia.trim(),
+            cp: cp.trim() || null,
+            referencias: referencias.trim() || null,
+            acepto_aviso: aceptoAviso,
+          };
+
+          const respuesta = await fetch(`${API_BASE}/reportes`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(datosReporte),
+          });
+
+          const datos = await respuesta.json();
+
+          if (!respuesta.ok) {
+            throw new Error(
+              datos.message || datos.error || "No se pudo enviar el reporte.",
+            );
+          }
+
+          folioActual = datos.folio;
+
+          if (!folioActual) {
+            throw new Error(
+              "El servidor no devolvió un folio para el reporte.",
+            );
+          }
+
+          setFolio(folioActual);
+          setEstatus(datos.estatus || "Recibido");
+        }
+
+        if (fotografias.length === 0) {
+          setResultadoFotos([]);
+          return;
+        }
+
+        setCargandoFotos(true);
+
+        const archivosPendientes = fotografias.filter(
+          (archivo) =>
+            !resultadoFotos.some(
+              (resultado) =>
+                resultado.nombre === archivo.name &&
+                resultado.tamano === archivo.size &&
+                resultado.ultimaModificacion === archivo.lastModified &&
+                resultado.exito,
+            ),
         );
-      }
 
-      setFolio(datos.folio);
-      setEstatus(datos.estatus);
-    } catch (error) {
-      console.error("Error al enviar reporte:", error);
-      setErrorEnvio(error.message || "No se pudo enviar el reporte.");
-    } finally {
-      setEnviando(false);
+        const nuevosResultados = [];
+
+        for (const archivo of archivosPendientes) {
+          try {
+            const evidencia = await subirFotografia(archivo, folioActual);
+
+            nuevosResultados.push({
+              nombre: archivo.name,
+              tamano: archivo.size,
+              ultimaModificacion: archivo.lastModified,
+              exito: true,
+              idEvidencia: evidencia.idEvidencia,
+            });
+          } catch (error) {
+            nuevosResultados.push({
+              nombre: archivo.name,
+              tamano: archivo.size,
+              ultimaModificacion: archivo.lastModified,
+              exito: false,
+              error: error.message,
+            });
+          }
+        }
+
+        const actualizados = [
+          ...resultadoFotos.filter((resultado) => resultado.exito),
+          ...nuevosResultados,
+        ];
+
+        setResultadoFotos(actualizados);
+
+        const fallidos = actualizados.filter((resultado) => !resultado.exito);
+
+        if (fallidos.length > 0) {
+          setErrorEnvio(
+            "El reporte se registró correctamente, pero algunas fotografías no pudieron confirmarse. Puedes reintentar la subida sin crear otro reporte.",
+          );
+        }
+      } catch (error) {
+        console.error("Error al enviar reporte:", error);
+        setErrorEnvio(error.message || "No se pudo enviar el reporte.");
+      } finally {
+        setCargandoFotos(false);
+        setEnviando(false);
+      }
     }
   }
 
@@ -439,6 +606,43 @@ export default function Reporte() {
               placeholder="Ej. frente a una escuela, junto a un parque..."
               required
             />
+          </div>
+
+          
+          <div className="reporte-fotografias">
+            <label htmlFor="fotografias">
+              Evidencias fotográficas
+            </label>
+
+            <p>
+              Puedes adjuntar fotografías de la situación observada.
+            </p>
+
+            <input
+              id="fotografias"
+              type="file"
+              accept="image/jpeg,image/png,image/webp"
+              multiple
+              onChange={(event) => {
+                const archivos = Array.from(event.target.files || []);
+                setFotografias(archivos);
+                setResultadoFotos([]);
+              }}
+            />
+
+            {fotografias.length > 0 && (
+              <div className="reporte-fotografias-lista">
+                <strong>
+                  {fotografias.length} fotografía(s) seleccionada(s)
+                </strong>
+
+                {fotografias.map((archivo, indice) => (
+                  <p key={`${archivo.name}-${indice}`}>
+                    {archivo.name}
+                  </p>
+                ))}
+              </div>
+            )}
           </div>
 
           <div className="reporte-resumen">
