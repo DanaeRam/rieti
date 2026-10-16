@@ -10,6 +10,7 @@ import { FolderClosed, ClipboardList, FileClock, UserRoundPlus } from "lucide-re
 import ExpedienteDigital from "@/components/ExpedienteDigital";
 import Bitacora from "@/components/Bitacora";
 import HistorialEstatus from "@/components/HistorialEstatus";
+import AsignacionReporte from "@/components/AsignacionReporte";
 
 /**
  * Permite consultar reportes mediante filtros y muestra los resultados.
@@ -40,10 +41,6 @@ export default function Reportes() {
   const [folioBitacora, setFolioBitacora] = useState(null);
   const [historialAbierto, setHistorialAbierto] = useState(null);
   const [reporteAsignacion, setReporteAsignacion] = useState(null);
-  const [alimentadores, setAlimentadores] = useState([]);
-  const [idAlimentador, setIdAlimentador] = useState("");
-  const [guardandoAsignacion, setGuardandoAsignacion] = useState(false);
-  const [errorAsignacion, setErrorAsignacion] = useState("");
   const [mensajeAsignacion, setMensajeAsignacion] = useState("");
 
   useEffect(() => {
@@ -159,74 +156,22 @@ function abrirExpediente(reporte) {
     setExpediente(null);
     setFolioBitacora(null);
     setHistorialAbierto(null);
-
     setReporteAsignacion(reporte);
-    setIdAlimentador("");
-    setErrorAsignacion("");
     setMensajeAsignacion("");
   }
 
   function cerrarAsignacion() {
-    if (guardandoAsignacion) return;
-
     setReporteAsignacion(null);
-    setIdAlimentador("");
-    setErrorAsignacion("");
   }
 
-  
-async function asignarReporte() {
-  if (!reporteAsignacion || !idAlimentador) return;
-
-  setGuardandoAsignacion(true);
-  setErrorAsignacion("");
-
-  try {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      throw new Error("No hay una sesión activa.");
-    }
-
-    const respuesta = await fetch(
-      "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/asignaciones",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          folio: reporteAsignacion.folio,
-          idUsuario: Number(idAlimentador),
-        }),
-      }
+  async function asignacionExitosa(datos) {
+    setReporteAsignacion(null);
+    setMensajeAsignacion(
+      datos.message || "Reporte asignado correctamente."
     );
 
-    const datos = await respuesta.json();
-
-    if (respuesta.status === 409) {
-      throw new Error("Este reporte ya tiene un responsable asignado.");
-    }
-
-    if (!respuesta.ok) {
-      throw new Error(
-        datos.message || datos.error || "No se pudo asignar el reporte."
-      );
-    }
-
-    setMensajeAsignacion(datos.message);
-    setReporteAsignacion(null);
-    setIdAlimentador("");
-
     await cargarReportes();
-  } catch (error) {
-    setErrorAsignacion(error.message);
-  } finally {
-    setGuardandoAsignacion(false);
   }
-}
-
 
   /**
    * Procesa el envío de los filtros de búsqueda.
@@ -335,6 +280,10 @@ async function asignarReporte() {
       <div className="rieti-page-title">
         <h2>Bandeja de reportes</h2>
       </div>
+
+      {mensajeAsignacion && (
+        <p role="status">{mensajeAsignacion}</p>
+      )}
 
       <section className="rieti-panel">
         <div className="rieti-panel-header">
@@ -618,11 +567,19 @@ async function asignarReporte() {
           )}
 
           {historialAbierto && (
-  <HistorialEstatus
-    folio={historialAbierto}
-    cerrar={cerrarHistorial}
-  />
-)}
+            <HistorialEstatus
+              folio={historialAbierto}
+              cerrar={cerrarHistorial}
+            />
+          )}
+
+          {reporteAsignacion && (
+            <AsignacionReporte
+              reporte={reporteAsignacion}
+              cerrar={cerrarAsignacion}
+              asignacionExitosa={asignacionExitosa}
+            />
+          )}
         </div>
 
       </section>
