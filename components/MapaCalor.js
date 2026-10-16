@@ -33,10 +33,14 @@ export default function MapaCalor({ reportes }) {
         })
         .filter(Boolean);
 
-      const mapa = L.map(mapaRef.current).setView(
-        [19.4326, -99.1332],
-        10,
-      );
+        const mapa = L.map(mapaRef.current, {
+          center: [19.35, -99.65],
+          zoom: 9,
+          minZoom: 7,
+          maxZoom: 15,
+          zoomControl: true,
+          scrollWheelZoom: false,
+        });
 
       L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
@@ -59,20 +63,6 @@ export default function MapaCalor({ reportes }) {
           1: "#e63946",
         },
       }).addTo(mapa);
-
-      if (puntos.length > 0) {
-        const limites = L.latLngBounds(
-          puntos.map((punto) => [
-            punto[0],
-            punto[1],
-          ]),
-        );
-
-        mapa.fitBounds(limites, {
-          padding: [30, 30],
-        });
-      }
-
       mapaInstancia.current = mapa;
     }
 
