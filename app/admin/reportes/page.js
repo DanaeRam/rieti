@@ -5,7 +5,7 @@
  */
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { FolderClosed, ClipboardList, FileClock, UserRoundPlus } from "lucide-react";
 import ExpedienteDigital from "@/components/ExpedienteDigital";
 import Bitacora from "@/components/Bitacora";
@@ -29,10 +29,10 @@ export default function Reportes() {
   const [genero, setGenero] = useState("");
   const [actividad, setActividad] = useState("");
   const [hora, setHora] = useState("");
-  const [reportesFiltrados, setReportesFiltrados] = useState([]);
-  
+  const [filtrosAplicados, setFiltrosAplicados] = useState(null);
+
   const [municipios, setMunicipios] = useState([]);
-  const [reportes, setReportes] = useState([])
+  const [reportes, setReportes] = useState([]);
   const [actividades, setActividades] = useState([]);
   const [cargandoReportes, setCargandoReportes] = useState(false);
   const [errorReportes, setErrorReportes] = useState("");
@@ -108,8 +108,7 @@ export default function Reportes() {
       }
 
       setReportes(datos.reportes || []);
-      setReportesFiltrados(datos.reportes || []);
-
+  
     } catch (error) {
       console.error("Error al cargar reportes:", error);
       setErrorReportes(error.message || "No se pudieron cargar los reportes");
@@ -122,11 +121,11 @@ export default function Reportes() {
     cargarReportes();
   }, []);
 
-function abrirExpediente(reporte) {
-  setFolioBitacora(null);
-  setHistorialAbierto(null);
-  setExpediente(reporte);
-}
+  function abrirExpediente(reporte) {
+    setFolioBitacora(null);
+    setHistorialAbierto(null);
+    setExpediente(reporte);
+  }
 
   function abrirBitacora(reporte) {
     setExpediente(null);
@@ -166,9 +165,7 @@ function abrirExpediente(reporte) {
 
   async function asignacionExitosa(datos) {
     setReporteAsignacion(null);
-    setMensajeAsignacion(
-      datos.message || "Reporte asignado correctamente."
-    );
+    setMensajeAsignacion(datos.message || "Reporte asignado correctamente.");
 
     await cargarReportes();
   }
@@ -182,77 +179,83 @@ function abrirExpediente(reporte) {
   function buscarReportes(event) {
     event.preventDefault();
 
-    let resultados = reportes;
-
-    if (municipio) {
-      const municipioSeleccionado = municipios.find(
-        (item) => String(item.idMunicipio) === municipio,
-      );
-
-      resultados = resultados.filter(
-        (reporte) => reporte.municipio === municipioSeleccionado?.nombre,
-      );
-    }
-
-    if (estatus) {
-      resultados = resultados.filter((reporte) => reporte.estatus === estatus);
-    }
-
-    if (prioridad) {
-      resultados = resultados.filter(
-        (reporte) => reporte.prioridad === prioridad,
-      );
-    }
-
-    if (fecha) {
-      resultados = resultados.filter((reporte) =>
-        reporte.fecha_registro.startsWith(fecha),
-      );
-    }
-
-    if (nna) {
-      if (nna === "5") {
-        resultados = resultados.filter(
-          (reporte) => Number(reporte.num_menores) >= 5,
-        );
-      } else {
-        resultados = resultados.filter(
-          (reporte) => String(reporte.num_menores) === nna,
-        );
-      }
-    }
-
-    if (rangoEdad) {
-      resultados = resultados.filter(
-        (reporte) => reporte.rango_edad === rangoEdad,
-      );
-    }
-
-    if (genero) {
-      resultados = resultados.filter(
-        (reporte) =>
-          reporte.genero_observado?.toLowerCase() === genero.toLowerCase(),
-      );
-    }
-
-    if (actividad) {
-      const actividadSeleccionada = actividades.find(
-        (item) => String(item.idCatalogoActividad) === actividad,
-      );
-
-      resultados = resultados.filter(
-        (reporte) => reporte.actividad === actividadSeleccionada?.nombre,
-      );
-    }
-
-    if (hora) {
-      resultados = resultados.filter((reporte) =>
-        reporte.hora_observada?.startsWith(hora),
-      );
-    }
-
-    setReportesFiltrados(resultados);
+    setFiltrosAplicados({
+      municipio,
+      estatus,
+      prioridad,
+      fecha,
+      nna,
+      rangoEdad,
+      genero,
+      actividad,
+      hora,
+    });
   }
+
+
+  const reportesFiltrados = useMemo(() => {
+    if (!filtrosAplicados) return reportes;
+
+    const filtros = filtrosAplicados;
+
+    return reportes.filter((reporte) => {
+      if (filtros.municipio) {
+        const seleccionado = municipios.find(
+          (item) => String(item.idMunicipio) === filtros.municipio
+        );
+
+        if (reporte.municipio !== seleccionado?.nombre) return false;
+      }
+
+      if (filtros.estatus && reporte.estatus !== filtros.estatus) {
+        return false;
+      }
+
+      if (filtros.prioridad && reporte.prioridad !== filtros.prioridad) {
+        return false;
+      }
+
+      if (filtros.fecha && !reporte.fecha_registro?.startsWith(filtros.fecha)) {
+        return false;
+      }
+
+      if (filtros.nna) {
+        const cantidad = Number(reporte.num_menores);
+
+        if (filtros.nna === "5" && cantidad < 5) return false;
+
+        if (filtros.nna !== "5" && String(reporte.num_menores) !== filtros.nna) {
+          return false;
+        }
+      }
+
+      if (filtros.rangoEdad && reporte.rango_edad !== filtros.rangoEdad) {
+        return false;
+      }
+
+      if (
+        filtros.genero &&
+        reporte.genero_observado?.toLowerCase() !== filtros.genero.toLowerCase()
+      ) {
+        return false;
+      }
+
+      if (filtros.actividad) {
+        const seleccionada = actividades.find(
+          (item) => String(item.idCatalogoActividad) === filtros.actividad
+        );
+
+        if (reporte.actividad !== seleccionada?.nombre) return false;
+      }
+
+      if (filtros.hora && !reporte.hora_observada?.startsWith(filtros.hora)) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [reportes, filtrosAplicados, municipios, actividades]);
+
 
   /**
    * Restablece los filtros de búsqueda a sus valores iniciales.
@@ -272,7 +275,7 @@ function abrirExpediente(reporte) {
 
     setFiltrosAvanzados(false);
 
-    setReportesFiltrados(reportes);
+    setFiltrosAplicados(null);
   }
 
   return (
@@ -282,7 +285,9 @@ function abrirExpediente(reporte) {
       </div>
 
       {mensajeAsignacion && (
-        <p role="status">{mensajeAsignacion}</p>
+        <p className="reportes-mensaje" role="status">
+          {mensajeAsignacion}
+        </p>
       )}
 
       <section className="rieti-panel">
@@ -507,45 +512,85 @@ function abrirExpediente(reporte) {
                 !errorReportes &&
                 reportesFiltrados.map((reporte) => (
                   <tr key={reporte.folio}>
-                    <td>{reporte.folio}</td>
-                    <td>{reporte.municipio}</td>
-                    <td>{reporte.estatus}</td>
-                    <td>{reporte.prioridad}</td>
-                    <td>{reporte.fecha_registro}</td>
                     <td>
-                      <button
-                        type="button"
-                        title="Expediente digital"
-                        onClick={() => abrirExpediente(reporte)}
+                      <span className="reportes-folio">{reporte.folio}</span>
+                    </td>
+
+                    <td>{reporte.municipio}</td>
+
+                    <td>
+                      <span
+                        className={`reportes-estatus ${
+                          reporte.estatus
+                            ?.toLowerCase()
+                            .normalize("NFD")
+                            .replace(/[\u0300-\u036f]/g, "")
+                            .replace(/\s+/g, "-") || ""
+                        }`}
                       >
-                        <FolderClosed size={18} />
-                      </button>
+                        {reporte.estatus}
+                      </span>
+                    </td>
+
+                    <td>
+                      <span
+                        className={`reportes-prioridad ${reporte.prioridad?.toLowerCase() || ""}`}
+                      >
+                        {reporte.prioridad}
+                      </span>
+                    </td>
+
+                    <td>
+                      {new Date(reporte.fecha_registro).toLocaleDateString(
+                        "es-MX",
+                        {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "numeric",
+                        },
+                      )}
+                    </td>
+
+                    <td>
+                      <div className="reportes-acciones">
+                        <button
+                          type="button"
+                          className="reportes-accion"
+                          title="Expediente digital"
+                          onClick={() => abrirExpediente(reporte)}
+                        >
+                          <FolderClosed size={18} />
+                        </button>
 
                         <button
                           type="button"
+                          className="reportes-accion"
                           title="Bitácora"
                           onClick={() => abrirBitacora(reporte)}
                         >
                           <ClipboardList size={18} />
                         </button>
 
-                      <button
-                        type="button"
-                        title="Historial de estatus"
-                        onClick={() => abrirHistorial(reporte)}
-                      >
-                        <FileClock size={18} />
-                      </button>
-
-                      {reporte.estatus === "Recibido" && (
                         <button
                           type="button"
-                          title="Asignar responsable"
-                          onClick={() => abrirAsignacion(reporte)}
+                          className="reportes-accion"
+                          title="Historial de estatus"
+                          onClick={() => abrirHistorial(reporte)}
                         >
-                          <UserRoundPlus size={18} />
+                          <FileClock size={18} />
                         </button>
-                      )}
+
+                        {reporte.estatus === "Recibido" && (
+                          <button
+                            type="button"
+                            className="reportes-accion asignar"
+                            title="Asignar responsable"
+                            onClick={() => abrirAsignacion(reporte)}
+                          >
+                            <UserRoundPlus size={18} />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -560,10 +605,7 @@ function abrirExpediente(reporte) {
           )}
 
           {folioBitacora && (
-            <Bitacora
-              folio={folioBitacora}
-              cerrar={cerrarBitacora}
-            />
+            <Bitacora folio={folioBitacora} cerrar={cerrarBitacora} />
           )}
 
           {historialAbierto && (
@@ -581,7 +623,6 @@ function abrirExpediente(reporte) {
             />
           )}
         </div>
-
       </section>
     </div>
   );
