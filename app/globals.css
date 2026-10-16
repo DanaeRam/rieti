@@ -161,6 +161,395 @@ body {
   }
 }
 
+/* SEGUIMIENTO */
+/**
+ * Estilos de la página de seguimiento de reportes.
+ *
+ * Define el fondo con degradado pastel, la navegación,
+ * los estilos del formulario de consulta por folio, las 
+ * tarjetas de información, los indicadores de estatus, 
+ * los mensajes de error y el comportamiento responsivo.
+ *
+ * @author ChatGPT (OpenAI)
+ */
+
+.seguimiento-page {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 36px 24px 55px;
+  background: linear-gradient(135deg, #ffffff 0%, #f4f0fa 50%, #f1f7fd 100%);
+}
+
+.seguimiento-container {
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.seguimiento-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+  color: #77749a;
+  font-size: 13px;
+}
+
+.seguimiento-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #77749a;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.seguimiento-breadcrumb a:hover {
+  color: #7955c8;
+}
+
+.seguimiento-header {
+  margin-bottom: 28px;
+}
+
+.seguimiento-header > span {
+  display: block;
+  margin-bottom: 10px;
+  color: #20a8c8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.3px;
+}
+
+.seguimiento-header h1 {
+  margin: 0 0 10px;
+  color: #30295d;
+  font-size: 36px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.seguimiento-header p {
+  margin: 0;
+  color: #77749a;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.seguimiento-panel {
+  min-width: 0;
+  margin-bottom: 26px;
+  padding: 28px 30px 32px;
+  border: 1px solid #e9e1f6;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 8px 30px rgba(78, 65, 131, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.seguimiento-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 24px;
+}
+
+.seguimiento-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 58px;
+  height: 58px;
+  border-radius: 15px;
+  background: #f0eafd;
+  color: #7955c8;
+}
+
+.seguimiento-icono.turquesa {
+  background: #e5f7f9;
+  color: #20a8c8;
+}
+
+.seguimiento-panel-header h2 {
+  margin: 0 0 6px;
+  color: #30295d;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.seguimiento-panel-header p {
+  margin: 0;
+  color: #77749a;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.seguimiento-form {
+  display: flex;
+  align-items: flex-end;
+  gap: 18px;
+  padding-top: 22px;
+  border-top: 1px solid #eee8f6;
+}
+
+.seguimiento-campo {
+  flex: 1;
+  min-width: 0;
+}
+
+.seguimiento-campo label {
+  display: block;
+  margin-bottom: 9px;
+  color: #51448d;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.seguimiento-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-sizing: border-box;
+  width: 100%;
+  height: 50px;
+  padding: 0 15px;
+  border: 1px solid #e4e0ef;
+  border-radius: 11px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #8075a5;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.seguimiento-input:hover {
+  border-color: #b7a1d4;
+}
+
+.seguimiento-input:focus-within {
+  border-color: #9571c4;
+  box-shadow: 0 0 0 3px rgba(149, 113, 196, 0.12);
+}
+
+.seguimiento-input input {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: #30295d;
+  font-size: 13px;
+}
+
+.seguimiento-input input::placeholder {
+  color: #aaa6b8;
+}
+
+.seguimiento-boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  flex-shrink: 0;
+  min-width: 230px;
+  height: 50px;
+  padding: 0 22px;
+  border: none;
+  border-radius: 11px;
+  background: linear-gradient(110deg, #7955c8 0%, #a66bd8 55%, #e17ac0 100%);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(121, 85, 200, 0.18);
+  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.seguimiento-boton:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 22px rgba(121, 85, 200, 0.25);
+}
+
+.seguimiento-boton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.seguimiento-error {
+  margin: 18px 0 0;
+  padding: 13px 16px;
+  border: 1px solid #f1cbd2;
+  border-radius: 11px;
+  background: #fff0f2;
+  color: #bd465d;
+  font-size: 13px;
+}
+
+.seguimiento-detalles {
+  padding: 8px 18px;
+  border-radius: 14px;
+  background: rgba(248, 246, 252, 0.76);
+}
+
+.seguimiento-fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 14px 0;
+  border-bottom: 1px solid #e9e4f2;
+}
+
+.seguimiento-fila:last-child {
+  border-bottom: none;
+}
+
+.seguimiento-etiqueta {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  color: #77749a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.seguimiento-etiqueta svg {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  padding: 9px;
+  box-sizing: border-box;
+  border-radius: 10px;
+  background: #f0eafd;
+  color: #7955c8;
+}
+
+.seguimiento-fila > strong {
+  color: #30295d;
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.seguimiento-estatus {
+  display: inline-flex;
+  align-items: center;
+  padding: 7px 13px;
+  border-radius: 30px;
+  background: #e6efff;
+  color: #4675b9;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.seguimiento-estatus.recibido {
+  background: #e6efff;
+  color: #4675b9;
+}
+
+.seguimiento-estatus.en-revision {
+  background: #f2eaff;
+  color: #8b60bb;
+}
+
+.seguimiento-estatus.en-proceso {
+  background: #e4f1ff;
+  color: #367fae;
+}
+
+.seguimiento-estatus.canalizado {
+  background: #e7f4f3;
+  color: #29847e;
+}
+
+.seguimiento-estatus.concluido {
+  background: #e5f5ec;
+  color: #268356;
+}
+
+.seguimiento-estatus.cancelado {
+  background: #fee9eb;
+  color: #c75061;
+}
+
+.seguimiento-estatus.reincidencia {
+  background: #fff0e0;
+  color: #b87931;
+}
+
+@media (max-width: 768px) {
+  .seguimiento-page {
+    padding: 22px 14px 35px;
+  }
+
+  .seguimiento-breadcrumb {
+    margin-bottom: 22px;
+  }
+
+  .seguimiento-header h1 {
+    font-size: 28px;
+  }
+
+  .seguimiento-header p {
+    font-size: 13px;
+  }
+
+  .seguimiento-panel {
+    padding: 20px 18px 24px;
+    border-radius: 17px;
+  }
+
+  .seguimiento-panel-header {
+    gap: 12px;
+  }
+
+  .seguimiento-icono {
+    width: 46px;
+    height: 46px;
+  }
+
+  .seguimiento-panel-header h2 {
+    font-size: 17px;
+  }
+
+  .seguimiento-form {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+
+  .seguimiento-boton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .seguimiento-detalles {
+    padding: 4px 12px;
+  }
+
+  .seguimiento-fila {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 7px;
+    padding: 13px 0;
+  }
+
+  .seguimiento-fila > strong {
+    text-align: left;
+    padding-left: 49px;
+  }
+
+  .seguimiento-estatus {
+    margin-left: 49px;
+  }
+}
+
+
 /* LOGIN */
 /**
  * Estilos de la página de inicio de sesión.

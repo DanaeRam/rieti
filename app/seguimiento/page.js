@@ -6,6 +6,8 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
+import {Home, ChevronRight, FileSearch, FileText, Search, Clock3, CalendarDays, MapPin,} from "lucide-react";
 
 /**
  * Permite consultar un reporte y muestra el resultado del seguimiento.
@@ -54,62 +56,155 @@ export default function Seguimiento() {
   }
 
   return (
-    <>
-      <div>
-        <h2>Seguimiento de reporte</h2>
-        <p>Consulta el estado de tu reporte ingresando tu folio.</p>
-      </div>
+    <main className="seguimiento-page">
+      <div className="seguimiento-container">
+        <nav className="seguimiento-breadcrumb" aria-label="Navegación">
+          <Link href="/">
+            <Home size={16} />
+            Inicio
+          </Link>
 
-      <section
-        className="rieti-panel"
-        style={{ maxWidth: "600px", margin: "0 auto" }}
-      >
-        <div className="rieti-panel-header">
-          <div>
-            <span>SEGUIMIENTO</span>
-            <h3>Consultar reporte</h3>
+          <ChevronRight size={15} />
+          <span>Seguimiento de reporte</span>
+        </nav>
+
+        <header className="seguimiento-header">
+          <span>SEGUIMIENTO</span>
+          <h1>Seguimiento de reporte</h1>
+          <p>Consulta el estado de tu reporte ingresando tu folio.</p>
+        </header>
+
+        <section className="seguimiento-panel">
+          <div className="seguimiento-panel-header">
+            <div className="seguimiento-icono">
+              <FileSearch size={25} />
+            </div>
+
+            <div>
+              <h2>Consultar reporte</h2>
+              <p>
+                Ingresa el folio de tu reporte para conocer su estado actual.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <form className="usuarios-form" onSubmit={consultarReporte}>
-          <div className="usuario-filtro">
-            <label htmlFor="folio">Folio del reporte</label>
+          <form className="seguimiento-form" onSubmit={consultarReporte}>
+            <div className="seguimiento-campo">
+              <label htmlFor="folio">Folio del reporte</label>
 
-            <input
-              id="folio"
-              type="text"
-              value={folio}
-              onChange={(e) => setFolio(e.target.value)}
-              placeholder="Ej. RIETI-ATZ-2026-00008"
-              required
-            />
-          </div>
+              <div className="seguimiento-input">
+                <FileText size={20} />
 
-          <div className="usuarios-form-actions">
+                <input
+                  id="folio"
+                  type="text"
+                  value={folio}
+                  onChange={(e) => setFolio(e.target.value)}
+                  placeholder="Ej. RIETI-ATZ-2026-00008"
+                  required
+                />
+              </div>
+            </div>
+
             <button
               type="submit"
-              className="usuarios-button"
+              className="seguimiento-boton"
               disabled={cargando}
             >
+              <Search size={19} />
               {cargando ? "Consultando..." : "Consultar reporte"}
             </button>
-          </div>
-        </form>
+          </form>
 
-        {error && <p>{error}</p>}
-      </section>
-
-      {reporte && (
-        <section>
-          <h2>Información del reporte</h2>
-
-          <p>Folio: {reporte.folio}</p>
-          <p>Estatus: {reporte.estatus}</p>
-          <p>Fecha de registro: {reporte.fecha_registro}</p>
-          <p>Última atención: (Pendiente de implementar)</p>
-          <p>Municipio: {reporte.municipio}</p>
+          {error && (
+            <p className="seguimiento-error" role="alert">
+              {error}
+            </p>
+          )}
         </section>
-      )}
-    </>
+
+        {reporte && (
+          <section className="seguimiento-panel">
+            <div className="seguimiento-panel-header">
+              <div className="seguimiento-icono turquesa">
+                <FileText size={25} />
+              </div>
+
+              <div>
+                <h2>Información del reporte</h2>
+                <p>Detalle y estado actual del reporte.</p>
+              </div>
+            </div>
+
+            <div className="seguimiento-detalles">
+              <div className="seguimiento-fila">
+                <div className="seguimiento-etiqueta">
+                  <FileText size={18} />
+                  <span>Folio del reporte</span>
+                </div>
+                <strong>{reporte.folio}</strong>
+              </div>
+
+              <div className="seguimiento-fila">
+                <div className="seguimiento-etiqueta">
+                  <Clock3 size={18} />
+                  <span>Estatus</span>
+                </div>
+
+                <span
+                  className={`seguimiento-estatus ${
+                    reporte.estatus
+                      ?.toLowerCase()
+                      .normalize("NFD")
+                      .replace(/[\u0300-\u036f]/g, "")
+                      .replace(/\s+/g, "-") || ""
+                  }`}
+                >
+                  {reporte.estatus || "—"}
+                </span>
+              </div>
+
+              <div className="seguimiento-fila">
+                <div className="seguimiento-etiqueta">
+                  <CalendarDays size={18} />
+                  <span>Fecha de registro</span>
+                </div>
+
+                <strong>
+                  {reporte.fecha_registro
+                    ? new Date(reporte.fecha_registro).toLocaleDateString("es-MX")
+                    : "—"}
+                </strong>
+              </div>
+
+              <div className="seguimiento-fila">
+                <div className="seguimiento-etiqueta">
+                  <Clock3 size={18} />
+                  <span>Última atención</span>
+                </div>
+
+                <strong>
+                  {reporte.fecha_ultima_atencion
+                    ? new Date(reporte.fecha_ultima_atencion).toLocaleDateString(
+                        "es-MX"
+                      )
+                    : "Sin atención registrada"}
+                </strong>
+              </div>
+
+              <div className="seguimiento-fila">
+                <div className="seguimiento-etiqueta">
+                  <MapPin size={18} />
+                  <span>Municipio</span>
+                </div>
+
+                <strong>{reporte.municipio || "—"}</strong>
+              </div>
+            </div>
+          </section>
+        )}
+      </div>
+    </main>
   );
+
 }
