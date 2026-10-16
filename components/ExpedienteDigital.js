@@ -59,6 +59,7 @@ export default function ExpedienteDigital({ expediente, cerrar }) {
             type="button"
             className="expediente-cerrar"
             onClick={cerrar}
+            aria-label="Cerrar expediente"
           >
             ×
           </button>
@@ -132,7 +133,7 @@ export default function ExpedienteDigital({ expediente, cerrar }) {
                 <div className="expediente-dato">
                   <span>NNA aproximados</span>
                   <strong>
-                    {expediente.num_menores || "—"}
+                    {expediente.num_menores ?? "—"}
                   </strong>
                 </div>
 
