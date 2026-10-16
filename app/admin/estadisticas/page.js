@@ -15,28 +15,18 @@ export default function Estadisticas() {
     async function obtenerReportes() {
       try {
         const token = localStorage.getItem("token");
-
-        console.log("TOKEN:", token);
-
         if (!token) {
           throw new Error("No hay una sesión activa.");
         }
 
-        const respuesta = await fetch(
-          "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1/admin/reportes",
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        const respuesta = await fetch(`${URL_BASE}/admin/reportes`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-        );
-
-        console.log("STATUS:", respuesta.status);
+        });
 
         const datos = await respuesta.json();
-
-        console.log("REPORTES:", datos);
 
         if (!respuesta.ok) {
           throw new Error(

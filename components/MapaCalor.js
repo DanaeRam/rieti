@@ -1,5 +1,10 @@
-const TAMANO_ZONA_KM = 3;
+"use client";
 
+import { useEffect, useRef } from "react";
+
+const CENTRO_EDOMEX = [19.35, -99.65];
+const ZOOM_INICIAL = 9;
+const TAMANO_ZONA_KM = 3;
 const COLORES = {
   baja: "#38bdf8",
   media: "#facc15",
@@ -133,4 +138,81 @@ function actualizarConcentraciones(reportes, L, capa) {
   for (const zona of zonasClasificadas) {
     dibujarConcentracion(L, capa, zona);
   }
+}
+
+export default function MapaCalor({ reportes = [] }) {
+  const mapaRef = useRef(null);
+  const mapaInstancia = useRef(null);
+  const capaRef = useRef(null);
+  const leafletRef = useRef(null);
+  const reportesRef = useRef(reportes);
+
+  useEffect(() => {
+    reportesRef.current = reportes;
+
+    if (!leafletRef.current || !capaRef.current) return;
+
+    actualizarConcentraciones(reportes, leafletRef.current, capaRef.current);
+  }, [reportes]);
+
+  useEffect(() => {
+    let cancelado = false;
+    let observador = null;
+
+    async function cargarMapa() {
+      const L = (await import("leaflet")).default;
+
+      if (cancelado || !mapaRef.current) return;
+
+      const mapa = L.map(mapaRef.current, {
+        center: CENTRO_EDOMEX,
+        zoom: ZOOM_INICIAL,
+        minZoom: 7,
+        maxZoom: 15,
+        zoomControl: true,
+        scrollWheelZoom: false,
+      });
+
+      mapaInstancia.current = mapa;
+      leafletRef.current = L;
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors",
+        maxZoom: 19,
+      }).addTo(mapa);
+
+      const capa = L.layerGroup().addTo(mapa);
+      capaRef.current = capa;
+
+      actualizarConcentraciones(reportesRef.current, L, capa);
+
+      observador = new ResizeObserver(() => {
+        mapa.invalidateSize({ pan: false });
+      });
+
+      observador.observe(mapaRef.current);
+    }
+
+    cargarMapa().catch((error) => {
+      if (!cancelado) console.error("Error al cargar mapa:", error);
+    });
+
+    return () => {
+      cancelado = true;
+      observador?.disconnect();
+
+      mapaInstancia.current?.remove();
+      mapaInstancia.current = null;
+      capaRef.current = null;
+      leafletRef.current = null;
+    };
+  }, []);
+
+  return (
+    <div
+      ref={mapaRef}
+      className="rieti-mapa-calor"
+      aria-label="Mapa de concentraciones del Estado de México"
+    />
+  );
 }
