@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import L from "leaflet";
-import {MapContainer, TileLayer, Marker, useMap, useMapEvents} from "react-leaflet";
 
 const CENTRO_INICIAL = [19.4326, -99.1332];
 

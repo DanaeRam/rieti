@@ -9,6 +9,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import MapaUbicacion from "@/components/MapaUbicacion";
 
 /**
  * Guía a la persona usuaria por los pasos para enviar un reporte.
@@ -169,167 +170,175 @@ export default function Reporte() {
       idEvidencia: datosConfirmacion.idEvidencia,
       key: datosUrl.key,
     };
-    }
+  }
 
-    /**
-     * Envía el reporte consolidado a la API del sistema.
-     * Valida que se haya aceptado el aviso de privacidad antes de enviar.
-     */
-    async function enviarReporte() {
-      if (!aceptoAviso || enviando) return;
+  function seleccionarUbicacion(lat, lng) {
+    setLatitud(lat);
+    setLongitud(lng);
+    setErrorUbicacion("");
+  }
 
-      setEnviando(true);
-      setErrorEnvio("");
+  /**
+   * Envía el reporte consolidado a la API del sistema.
+   * Valida que se haya aceptado el aviso de privacidad antes de enviar.
+   */
+  async function enviarReporte() {
+    if (!aceptoAviso || enviando) return;
 
-      let folioActual = folio;
+    setEnviando(true);
+    setErrorEnvio("");
 
-      try {
-        if (!folioActual) {
-          if (!municipio || !actividad || !descripcion.trim()) {
-            throw new Error(
-              "Completa los campos obligatorios antes de enviar.",
-            );
-          }
+    let folioActual = folio;
 
-          if (modalidad === "SEGUIMIENTO" && !correoContacto.trim()) {
-            throw new Error("Ingresa un correo para el seguimiento.");
-          }
-
-          if (
-            latitud === "" ||
-            longitud === "" ||
-            !Number.isFinite(Number(latitud)) ||
-            !Number.isFinite(Number(longitud)) ||
-            Number(latitud) < -90 ||
-            Number(latitud) > 90 ||
-            Number(longitud) < -180 ||
-            Number(longitud) > 180
-          ) {
-            throw new Error(
-              "Indica una ubicación válida antes de enviar el reporte.",
-            );
-          }
-
-          const datosReporte = {
-            idMunicipio: Number(municipio),
-            idCatalogoActividad: Number(actividad),
-            modalidad,
-            correo_contacto:
-              modalidad === "SEGUIMIENTO" ? correoContacto.trim() : null,
-            num_menores: numNinos ? Number(numNinos) : 1,
-            rango_edad: rangoEdad || "No especificado",
-            genero_observado: generoObservado || "No especificado",
-            hora_observada: horaObservada ? `${horaObservada}:00` : undefined,
-            descripcion: descripcion.trim(),
-            situacion_riesgo: situacionRiesgo === "true",
-            latitud: Number(latitud),
-            longitud: Number(longitud),
-            calle: calle.trim(),
-            colonia: colonia.trim(),
-            cp: cp.trim() || null,
-            referencias: referencias.trim() || null,
-            acepto_aviso: aceptoAviso,
-          };
-
-          const respuesta = await fetch(`${API_BASE}/reportes`, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(datosReporte),
-          });
-
-          const datos = await respuesta.json();
-
-          if (!respuesta.ok) {
-            throw new Error(
-              datos.message || datos.error || "No se pudo enviar el reporte.",
-            );
-          }
-
-          folioActual = datos.folio;
-
-          if (!folioActual) {
-            throw new Error(
-              "El servidor no devolvió un folio para el reporte.",
-            );
-          }
-
-          setFolio(folioActual);
-          setEstatus(datos.estatus || "Recibido");
+    try {
+      if (!folioActual) {
+        if (!municipio || !actividad || !descripcion.trim()) {
+          throw new Error("Completa los campos obligatorios antes de enviar.");
         }
 
-        if (fotografias.length === 0) {
-          setResultadoFotos([]);
-          return;
+        if (modalidad === "SEGUIMIENTO" && !correoContacto.trim()) {
+          throw new Error("Ingresa un correo para el seguimiento.");
         }
 
-        setCargandoFotos(true);
-
-        const archivosPendientes = fotografias.filter(
-          (archivo) =>
-            !resultadoFotos.some(
-              (resultado) =>
-                resultado.nombre === archivo.name &&
-                resultado.tamano === archivo.size &&
-                resultado.ultimaModificacion === archivo.lastModified &&
-                resultado.exito,
-            ),
-        );
-
-        const nuevosResultados = [];
-
-        for (const archivo of archivosPendientes) {
-          try {
-            const evidencia = await subirFotografia(archivo, folioActual);
-
-            nuevosResultados.push({
-              nombre: archivo.name,
-              tamano: archivo.size,
-              ultimaModificacion: archivo.lastModified,
-              exito: true,
-              idEvidencia: evidencia.idEvidencia,
-            });
-          } catch (error) {
-            nuevosResultados.push({
-              nombre: archivo.name,
-              tamano: archivo.size,
-              ultimaModificacion: archivo.lastModified,
-              exito: false,
-              error: error.message,
-            });
-          }
-        }
-
-        const actualizados = [
-          ...resultadoFotos.filter((resultado) => resultado.exito),
-          ...nuevosResultados,
-        ];
-
-        setResultadoFotos(actualizados);
-
-        const fallidos = actualizados.filter((resultado) => !resultado.exito);
-
-        if (fallidos.length > 0) {
-          setErrorEnvio(
-            "El reporte se registró correctamente, pero algunas fotografías no pudieron confirmarse. Puedes reintentar la subida sin crear otro reporte.",
+        if (
+          latitud === "" ||
+          longitud === "" ||
+          !Number.isFinite(Number(latitud)) ||
+          !Number.isFinite(Number(longitud)) ||
+          Number(latitud) < -90 ||
+          Number(latitud) > 90 ||
+          Number(longitud) < -180 ||
+          Number(longitud) > 180
+        ) {
+          throw new Error(
+            "Indica una ubicación válida antes de enviar el reporte.",
           );
         }
-      } catch (error) {
-        console.error("Error al enviar reporte:", error);
-        setErrorEnvio(error.message || "No se pudo enviar el reporte.");
-      } finally {
-        setCargandoFotos(false);
-        setEnviando(false);
-      }
-    }
 
+        const datosReporte = {
+          idMunicipio: Number(municipio),
+          idCatalogoActividad: Number(actividad),
+          modalidad,
+          correo_contacto:
+            modalidad === "SEGUIMIENTO" ? correoContacto.trim() : null,
+          num_menores: numNinos ? Number(numNinos) : 1,
+          rango_edad: rangoEdad || "No especificado",
+          genero_observado: generoObservado || "No especificado",
+          hora_observada: horaObservada ? `${horaObservada}:00` : undefined,
+          descripcion: descripcion.trim(),
+          situacion_riesgo: situacionRiesgo === "true",
+          latitud: Number(latitud),
+          longitud: Number(longitud),
+          calle: calle.trim(),
+          colonia: colonia.trim(),
+          cp: cp.trim() || null,
+          referencias: referencias.trim() || null,
+          acepto_aviso: aceptoAviso,
+        };
+
+        const respuesta = await fetch(`${API_BASE}/reportes`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(datosReporte),
+        });
+
+        const datos = await respuesta.json();
+
+        if (!respuesta.ok) {
+          throw new Error(
+            datos.message || datos.error || "No se pudo enviar el reporte.",
+          );
+        }
+
+        folioActual = datos.folio;
+
+        if (!folioActual) {
+          throw new Error("El servidor no devolvió un folio para el reporte.");
+        }
+
+        setFolio(folioActual);
+        setEstatus(datos.estatus || "Recibido");
+      }
+
+      if (fotografias.length === 0) {
+        setResultadoFotos([]);
+        return;
+      }
+
+      setCargandoFotos(true);
+
+      const archivosPendientes = fotografias.filter(
+        (archivo) =>
+          !resultadoFotos.some(
+            (resultado) =>
+              resultado.nombre === archivo.name &&
+              resultado.tamano === archivo.size &&
+              resultado.ultimaModificacion === archivo.lastModified &&
+              resultado.exito,
+          ),
+      );
+
+      const nuevosResultados = [];
+
+      for (const archivo of archivosPendientes) {
+        try {
+          const evidencia = await subirFotografia(archivo, folioActual);
+
+          nuevosResultados.push({
+            nombre: archivo.name,
+            tamano: archivo.size,
+            ultimaModificacion: archivo.lastModified,
+            exito: true,
+            idEvidencia: evidencia.idEvidencia,
+          });
+        } catch (error) {
+          nuevosResultados.push({
+            nombre: archivo.name,
+            tamano: archivo.size,
+            ultimaModificacion: archivo.lastModified,
+            exito: false,
+            error: error.message,
+          });
+        }
+      }
+
+      const actualizados = [
+        ...resultadoFotos.filter((resultado) => resultado.exito),
+        ...nuevosResultados,
+      ];
+
+      setResultadoFotos(actualizados);
+
+      const fallidos = actualizados.filter((resultado) => !resultado.exito);
+
+      if (fallidos.length > 0) {
+        setErrorEnvio(
+          "El reporte se registró correctamente, pero algunas fotografías no pudieron confirmarse. Puedes reintentar la subida sin crear otro reporte.",
+        );
+      }
+    } catch (error) {
+      console.error("Error al enviar reporte:", error);
+      setErrorEnvio(error.message || "No se pudo enviar el reporte.");
+    } finally {
+      setCargandoFotos(false);
+      setEnviando(false);
+    }
+  }
 
   /**
    * Avanza al siguiente paso del formulario de reporte.
    */
   function siguiente() {
-    setPaso(paso + 1);
+    setErrorEnvio("");
+
+    if (paso === 3 && (latitud === "" || longitud === "")) {
+      setErrorEnvio("Selecciona una ubicación en el mapa.");
+      return;
+    }
+
+    setPaso((anterior) => anterior + 1);
   }
 
   /**
@@ -550,6 +559,20 @@ export default function Reporte() {
 
           <p>Proporciona la ubicación donde observaste la situación.</p>
 
+          <div className="reporte-resumen">
+            <h2>Ubicación del reporte</h2>
+
+            <p>Selecciona el lugar donde ocurrió la situación.</p>
+
+            <MapaUbicacion
+              latitud={latitud}
+              longitud={longitud}
+              onSeleccionar={seleccionarUbicacion}
+            />
+
+            {errorUbicacion && <p>{errorUbicacion}</p>}
+          </div>
+
           <div>
             <label htmlFor="municipio">Municipio *</label>
 
@@ -598,6 +621,20 @@ export default function Reporte() {
           </div>
 
           <div>
+            <label htmlFor="cp">Código postal</label>
+
+            <input
+              id="cp"
+              type="text"
+              inputMode="numeric"
+              maxLength={5}
+              value={cp}
+              onChange={(e) => setCp(e.target.value.replace(/\D/g, ""))}
+              placeholder="Ej. 52900"
+            />
+          </div>
+
+          <div>
             <label htmlFor="referencias">Referencias del lugar *</label>
 
             <textarea
@@ -609,15 +646,10 @@ export default function Reporte() {
             />
           </div>
 
-          
           <div className="reporte-fotografias">
-            <label htmlFor="fotografias">
-              Evidencias fotográficas
-            </label>
+            <label htmlFor="fotografias">Evidencias fotográficas</label>
 
-            <p>
-              Puedes adjuntar fotografías de la situación observada.
-            </p>
+            <p>Puedes adjuntar fotografías de la situación observada.</p>
 
             <input
               id="fotografias"
@@ -638,24 +670,17 @@ export default function Reporte() {
                 </strong>
 
                 {fotografias.map((archivo, indice) => (
-                  <p key={`${archivo.name}-${indice}`}>
-                    {archivo.name}
-                  </p>
+                  <p key={`${archivo.name}-${indice}`}>{archivo.name}</p>
                 ))}
               </div>
             )}
           </div>
 
-          <div className="reporte-resumen">
-            <h2>Ubicación del reporte</h2>
-
-            <p>
-              Utiliza tu ubicación actual o selecciona manualmente el punto
-              donde observaste la situación.
+          {errorEnvio && (
+            <p className="reporte-error" role="alert">
+              {errorEnvio}
             </p>
-
-            <button type="button">Usar mi ubicación</button>
-          </div>
+          )}
 
           <div className="reporte-botones">
             <button type="button" onClick={regresar}>
@@ -710,14 +735,23 @@ export default function Reporte() {
             </p>
           </div>
 
-          <div className="reporte-resumen">
-            <h2>Ubicación</h2>
+          <p>
+            Municipio:{" "}
+            {municipios.find((item) => String(item.idMunicipio) === municipio)
+              ?.nombre || "No especificado"}
+          </p>
 
-            <p>Municipio: {municipio}</p>
-            <p>Calle: {calle}</p>
-            <p>Colonia: {colonia}</p>
-            <p>Referencias: {referencias}</p>
-          </div>
+          <p>Calle: {calle || "No especificada"}</p>
+          <p>Colonia: {colonia || "No especificada"}</p>
+          <p>Código postal: {cp || "No especificado"}</p>
+          <p>Referencias: {referencias || "No especificadas"}</p>
+
+          <p>
+            Coordenadas:{" "}
+            {latitud !== "" && longitud !== ""
+              ? `${Number(latitud).toFixed(6)}, ${Number(longitud).toFixed(6)}`
+              : "No seleccionadas"}
+          </p>
 
           <div>
             <label className="reporte-checkbox">
