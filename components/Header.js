@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-
+import Perfil from "./Perfil";
 import {
   Bell,
   ChevronDown,
@@ -16,6 +15,8 @@ import {
 export default function Header({ setSidebarAbierto }) {
   const [usuario, setUsuario] = useState(null);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
+  const [modalAbierto, setModalAbierto] = useState(false);
+  const [seccionModal, setSeccionModal] = useState("perfil");
   const perfilRef = useRef(null);
 
   useEffect(() => {
@@ -32,10 +33,7 @@ export default function Header({ setSidebarAbierto }) {
 
   useEffect(() => {
     function cerrarPerfil(event) {
-      if (
-        perfilRef.current &&
-        !perfilRef.current.contains(event.target)
-      ) {
+      if (perfilRef.current && !perfilRef.current.contains(event.target)) {
         setPerfilAbierto(false);
       }
     }
@@ -47,6 +45,12 @@ export default function Header({ setSidebarAbierto }) {
     };
   }, []);
 
+  function abrirModal(seccion) {
+    setSeccionModal(seccion);
+    setPerfilAbierto(false);
+    setModalAbierto(true);
+  }
+
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");
@@ -57,119 +61,121 @@ export default function Header({ setSidebarAbierto }) {
   const rol = usuario?.rol || "—";
 
   return (
-    <header className="rieti-header">
-
-      <div className="rieti-header-left">
-        <button
-          type="button"
-          className="rieti-menu-button"
-          onClick={() => setSidebarAbierto((actual) => !actual)}
-          aria-label="Plegar o desplegar sidebar"
-          title="Plegar o desplegar menú"
-        >
-          <Menu size={22} />
-        </button>
-      </div>
-
-      <div className="rieti-header-right">
-
-        <button
-          type="button"
-          className="rieti-notification"
-          aria-label="Notificaciones"
-        >
-          <Bell size={21} />
-        </button>
-
-        <div className="rieti-profile-wrapper" ref={perfilRef}>
-
+    <>
+      <header className="rieti-header">
+        <div className="rieti-header-left">
           <button
             type="button"
-            className="rieti-profile"
-            onClick={() => setPerfilAbierto((actual) => !actual)}
-            aria-expanded={perfilAbierto}
-            aria-haspopup="menu"
-            aria-label="Abrir menú de perfil"
+            className="rieti-menu-button"
+            onClick={() => setSidebarAbierto((actual) => !actual)}
+            aria-label="Plegar o desplegar sidebar"
+            title="Plegar o desplegar menú"
           >
-            <div className="rieti-profile-avatar">
-              <UserRound size={22} />
-            </div>
+            <Menu size={22} />
+          </button>
+        </div>
 
-            <div className="rieti-profile-info">
-              <strong>{nombre}</strong>
-              <small>{rol}</small>
-            </div>
-
-            <span
-              className={`rieti-profile-arrow ${
-                perfilAbierto ? "open" : ""
-              }`}
-            >
-              <ChevronDown size={20} />
-            </span>
+        <div className="rieti-header-right">
+          <button
+            type="button"
+            className="rieti-notification"
+            aria-label="Notificaciones"
+          >
+            <Bell size={21} />
           </button>
 
-          {perfilAbierto && (
-            <div className="rieti-profile-menu">
-
-              <div className="rieti-profile-menu-header">
-                <div className="rieti-profile-menu-avatar">
-                  <UserRound size={23} />
-                </div>
-
-                <div className="rieti-profile-menu-user">
-                  <strong>{nombre}</strong>
-                  <small>{rol}</small>
-                </div>
+          <div className="rieti-profile-wrapper" ref={perfilRef}>
+            <button
+              type="button"
+              className="rieti-profile"
+              onClick={() => setPerfilAbierto((actual) => !actual)}
+              aria-expanded={perfilAbierto}
+              aria-haspopup="menu"
+              aria-label="Abrir menú de perfil"
+            >
+              <div className="rieti-profile-avatar">
+                <UserRound size={22} />
               </div>
 
-              <div className="rieti-profile-menu-divider" />
+              <div className="rieti-profile-info">
+                <strong>{nombre}</strong>
+                <small>{rol}</small>
+              </div>
 
-              <Link
-                href="/admin/perfil"
-                className="rieti-profile-option"
-                onClick={() => setPerfilAbierto(false)}
+              <span
+                className={`rieti-profile-arrow ${perfilAbierto ? "open" : ""}`}
               >
-                <span className="rieti-profile-option-icon">
-                  <UserRoundPen size={20} />
-                </span>
+                <ChevronDown size={20} />
+              </span>
+            </button>
 
-                <div>
-                  <strong>Mi perfil</strong>
-                  <small>Información del funcionario</small>
+            {perfilAbierto && (
+              <div className="rieti-profile-menu">
+                <div className="rieti-profile-menu-header">
+                  <div className="rieti-profile-menu-avatar">
+                    <UserRound size={23} />
+                  </div>
+
+                  <div className="rieti-profile-menu-user">
+                    <strong>{nombre}</strong>
+                    <small>{rol}</small>
+                  </div>
                 </div>
-              </Link>
 
-              <Link
-                href="/admin/seguridad"
-                className="rieti-profile-option"
-                onClick={() => setPerfilAbierto(false)}
-              >
-                <span className="rieti-profile-option-icon">
-                  <UserLock size={20} />
-                </span>
+                <div className="rieti-profile-menu-divider" />
 
-                <div>
-                  <strong>Seguridad</strong>
-                  <small>Cambiar contraseña</small>
-                </div>
-              </Link>
+                <button
+                  type="button"
+                  className="rieti-profile-option"
+                  onClick={() => abrirModal("perfil")}
+                >
+                  <span className="rieti-profile-option-icon">
+                    <UserRoundPen size={20} />
+                  </span>
 
-              <div className="rieti-profile-menu-divider" />
+                  <div>
+                    <strong>Mi perfil</strong>
+                    <small>Información del funcionario</small>
+                  </div>
+                </button>
 
-              <button
-                type="button"
-                className="rieti-profile-logout"
-                onClick={cerrarSesion}
-              >
-                <LogOut size={20} />
-                <strong>Cerrar sesión</strong>
-              </button>
+                <button
+                  type="button"
+                  className="rieti-profile-option"
+                  onClick={() => abrirModal("seguridad")}
+                >
+                  <span className="rieti-profile-option-icon">
+                    <UserLock size={20} />
+                  </span>
 
-            </div>
-          )}
+                  <div>
+                    <strong>Seguridad</strong>
+                    <small>Cambiar contraseña</small>
+                  </div>
+                </button>
+                <div className="rieti-profile-menu-divider" />
+
+                <button
+                  type="button"
+                  className="rieti-profile-logout"
+                  onClick={cerrarSesion}
+                >
+                  <LogOut size={20} />
+                  <strong>Cerrar sesión</strong>
+                </button>
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </header>
+      </header>
+
+      {modalAbierto && (
+        <Perfil
+          key={seccionModal}
+          seccionInicial={seccionModal}
+          onClose={() => setModalAbierto(false)}
+        />
+      )}
+    </>
   );
 }
