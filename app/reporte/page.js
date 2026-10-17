@@ -169,6 +169,7 @@ export default function Reporte() {
       idEvidencia: datosConfirmacion.idEvidencia,
       key: datosUrl.key,
     };
+    }
 
     /**
      * Envía el reporte consolidado a la API del sistema.
@@ -322,7 +323,7 @@ export default function Reporte() {
         setEnviando(false);
       }
     }
-  }
+
 
   /**
    * Avanza al siguiente paso del formulario de reporte.
