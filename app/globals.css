@@ -1444,173 +1444,380 @@ body {
   }
 }
 
+/* MODAL PERFIL */
+/**
+ * Estilos del modal de perfil y seguridad del funcionario.
+ *
+ * Define el fondo superpuesto, la ventana emergente,
+ * los estilos del encabezado, de las pestañas de navegación, 
+ * de los mensajes de validación y el comportamiento responsivo.
+ *
+ * @author ChatGPT (OpenAI)
+ */
 
-/* MENÚ DE PERFIL */
-
-.rieti-profile-menu {
-  position: absolute;
-  top: calc(100% + 12px);
-  right: 0;
-  z-index: 200;
-  width: 330px;
-  padding: 18px;
-  background: #ffffff;
-  border: 1px solid #ebe9f2;
-  border-radius: 17px;
-  box-shadow: 0 12px 35px rgba(16, 24, 40, 0.12);
-}
-
-.rieti-profile-menu-header {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  padding: 4px 4px 14px;
-}
-
-.rieti-profile-menu-header > div:last-child {
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-}
-
-.rieti-profile-menu-header strong {
-  color: var(--rieti-text);
-  font-size: 15px;
-  font-weight: 700;
-}
-
-.rieti-profile-menu-header span {
-  margin-top: 3px;
-  overflow: hidden;
-  color: var(--rieti-muted);
-  font-size: 12px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.rieti-profile-menu-header small {
-  margin-top: 4px;
-  color: var(--rieti-purple);
-  font-size: 11px;
-  font-weight: 600;
-}
-
-.rieti-profile-menu-divider {
-  height: 1px;
-  margin: 5px 0 10px;
-  background: var(--rieti-border);
-}
-
-.rieti-profile-option {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  width: 100%;
-  padding: 12px 10px;
-  border-radius: 10px;
-  color: var(--rieti-text);
-  text-decoration: none;
-  transition: background 0.2s ease;
-}
-
-.rieti-profile-option:hover {
-  background: #f5f4fa;
-}
-
-.rieti-profile-option-icon {
+.rieti-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
   display: flex;
   align-items: center;
   justify-content: center;
+  padding: 24px;
+  background: rgba(27, 25, 65, 0.48);
+  backdrop-filter: blur(4px);
+}
+
+.rieti-perfil-modal {
+  width: 100%;
+  max-width: 720px;
+  max-height: calc(100dvh - 48px);
+  overflow-y: auto;
+  background: #fff;
+  border: 1px solid #e9e6f3;
+  border-radius: 20px;
+  box-shadow: 0 24px 65px rgba(35, 30, 83, 0.22);
+  animation: rietiModalEntrada 0.25s ease-out;
+}
+
+@keyframes rietiModalEntrada {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.rieti-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  padding: 30px 34px 22px;
+}
+
+.rieti-modal-header h2 {
+  margin: 0 0 7px;
+  font-size: 25px;
+  font-weight: 700;
+  color: #25264e;
+}
+
+.rieti-modal-header p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #777d99;
+}
+
+.rieti-modal-header > button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
   width: 36px;
   height: 36px;
-  flex-shrink: 0;
-  border-radius: 9px;
-  background: #f0eff7;
-  color: var(--rieti-purple);
-}
-
-.rieti-profile-option div {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.rieti-profile-option strong {
-  color: var(--rieti-text);
-  font-size: 14px;
-  font-weight: 600;
-}
-
-.rieti-profile-option small {
-  color: var(--rieti-muted);
-  font-size: 11px;
-}
-
-.rieti-profile-logout {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 9px;
-  width: 100%;
-  height: 44px;
-  border: 1px solid var(--rieti-border);
-  border-radius: 10px;
-  background: #ffffff;
-  color: var(--rieti-text);
-  font-size: 14px;
-  font-weight: 600;
+  border: 1px solid #e8e6f1;
+  border-radius: 50%;
+  background: #f8f7fc;
+  color: #49436f;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.rieti-profile-logout:hover {
-  border-color: var(--rieti-pink);
-  background: #fdf4f8;
-  color: var(--rieti-pink);
+.rieti-modal-header > button:hover {
+  background: #efebf9;
+  color: #7650bc;
+  transform: rotate(90deg);
+}
+
+.rieti-modal-tabs {
+  display: flex;
+  gap: 12px;
+  margin: 0 34px;
+  border-bottom: 1px solid #e7e6ef;
+}
+
+.rieti-modal-tabs button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 14px 18px;
+  border: none;
+  background: transparent;
+  color: #7b819c;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.rieti-modal-tabs button:hover,
+.rieti-modal-tabs button.active {
+  color: #7551d3;
+}
+
+.rieti-modal-tabs button.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(90deg, #d16cbd, #9966e6, #56a9e4);
+}
+
+.rieti-modal-content {
+  padding: 24px 34px 34px;
+}
+
+.rieti-modal-perfil,
+.rieti-modal-seguridad {
+  padding: 26px;
+  background: #fff;
+  border: 1px solid #e8e6f1;
+  border-radius: 13px;
+}
+
+.rieti-modal-content h3 {
+  margin: 0 0 6px;
+  color: #29264e;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.rieti-modal-perfil > p,
+.rieti-modal-seguridad > p {
+  margin: 0 0 25px;
+  color: #8589a1;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.rieti-modal-perfil .perfil-datos,
+.rieti-modal-seguridad .seguridad-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.rieti-modal-perfil .perfil-dato,
+.rieti-modal-seguridad .seguridad-dato {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.rieti-modal-perfil .perfil-dato span,
+.rieti-modal-seguridad .seguridad-dato label {
+  color: #606684;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.rieti-modal-perfil .perfil-dato strong,
+.rieti-modal-seguridad .seguridad-dato input {
+  width: 100%;
+  min-height: 46px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  color: #29264e;
+  font-size: 13px;
+  box-sizing: border-box;
+}
+
+.rieti-modal-perfil .perfil-dato strong {
+  display: flex;
+  align-items: center;
+  background: #f2f1f8;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.rieti-modal-seguridad .seguridad-dato input {
+  background: #f7f6fb;
+  border: 1px solid #e6e4f0;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rieti-modal-seguridad .seguridad-dato input::placeholder {
+  color: #9a9eb5;
+}
+
+.rieti-modal-seguridad .seguridad-dato input:focus {
+  border-color: #9971db;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(153, 113, 219, 0.12);
+}
+
+.rieti-modal-seguridad .seguridad-dato small {
+  color: #8589a1;
+  font-size: 11px;
+  line-height: 1.5;
+}
+
+.rieti-modal-seguridad .seguridad-mensaje {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: 9px;
+  font-size: 13px;
+}
+
+.rieti-modal-seguridad .seguridad-mensaje.success {
+  color: #187653;
+  background: #eaf7f0;
+  border: 1px solid #c7ead8;
+}
+
+.rieti-modal-seguridad .seguridad-mensaje.error {
+  color: #b53d54;
+  background: #fdf0f2;
+  border: 1px solid #f2cbd2;
+}
+
+.rieti-modal-seguridad .seguridad-acciones {
+  display: flex;
+  justify-content: flex-end;
+  grid-column: 1 / -1;
+  margin-top: 5px;
+}
+
+.rieti-modal-seguridad .seguridad-button {
+  min-height: 44px;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #6555b3, #9567db 55%, #d16cbd);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 0 5px 14px rgba(112, 80, 175, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.rieti-modal-seguridad .seguridad-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 7px 17px rgba(112, 80, 175, 0.25);
+}
+
+.rieti-modal-seguridad .seguridad-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 
-/* RESPONSIVO */
-
 @media (max-width: 768px) {
-  .rieti-main {
-    width: 100%;
-    margin-left: 0;
+  .rieti-modal-overlay {
+    padding: 10px;
   }
 
-  .rieti-menu-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .rieti-perfil-modal {
+    max-height: calc(100dvh - 20px);
+    border-radius: 14px;
   }
 
-  .rieti-header {
-    height: 64px;
-    min-height: 64px;
-    padding: 0 16px;
+  .rieti-modal-header {
+    padding: 18px 20px 12px;
+    gap: 10px;
   }
 
-  .rieti-header-left h1 {
-    font-size: 17px;
+  .rieti-modal-header h2 {
+    font-size: 20px;
   }
 
-  .rieti-profile-info,
-  .rieti-profile-arrow {
-    display: none;
+  .rieti-modal-header p {
+    font-size: 12px;
   }
 
-  .rieti-content {
-    width: 100%;
+  .rieti-modal-header > button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .rieti-modal-tabs {
+    margin: 0 20px;
+    gap: 6px;
+  }
+
+  .rieti-modal-tabs button {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .rieti-modal-content {
+    padding: 14px 20px 18px;
+  }
+
+  .rieti-modal-perfil,
+  .rieti-modal-seguridad {
     padding: 16px;
   }
 
-  .rieti-profile-menu {
-    position: fixed;
-    top: 72px;
-    right: 15px;
-    width: min(330px, calc(100vw - 30px));
+  .rieti-modal-content h3 {
+    font-size: 16px;
+  }
+
+  .rieti-modal-perfil > p,
+  .rieti-modal-seguridad > p {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  .rieti-modal-perfil .perfil-datos {
+    gap: 12px;
+  }
+
+  .rieti-modal-seguridad .seguridad-form {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .rieti-modal-perfil .perfil-dato,
+  .rieti-modal-seguridad .seguridad-dato {
+    gap: 6px;
+  }
+
+  .rieti-modal-perfil .perfil-dato strong,
+  .rieti-modal-seguridad .seguridad-dato input {
+    min-height: 40px;
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .rieti-modal-seguridad .seguridad-dato small {
+    font-size: 10px;
+  }
+
+  .rieti-modal-seguridad .seguridad-acciones {
+    margin-top: 0;
+  }
+
+  .rieti-modal-seguridad .seguridad-button {
+    width: 100%;
+    min-height: 40px;
+    padding: 10px 16px;
+    font-size: 12px;
   }
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .rieti-perfil-modal {
+    animation: none;
+  }
+}
+
 
 /* DASHBOARD */
 /**
