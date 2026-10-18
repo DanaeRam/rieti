@@ -9,6 +9,7 @@ export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
+  const [pestanaActiva, setPestanaActiva] = useState("municipios");
 
   const URL_BASE =
     "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
@@ -63,33 +64,44 @@ export default function Estadisticas() {
       {!cargando && !error && (
         <>
           <article className="rieti-panel">
-            <div className="rieti-panel-header">
-              <div>
-                <span>DISTRIBUCIÓN TERRITORIAL</span>
-                <h3>Concentración de reportes por municipio</h3>
-              </div>
+            <h3>DISTRIBUCIÓN TERRITORIAL</h3>
+            <p>Concentración geográfica de reportes</p>
+
+            <div className="rieti-mapas-pestanas">
+              <button
+                className={pestanaActiva === "municipios" ? "activo" : ""}
+                onClick={() => setPestanaActiva("municipios")}
+              >
+                Municipios
+              </button>
+
+              <button
+                className={pestanaActiva === "calor" ? "activo" : ""}
+                onClick={() => setPestanaActiva("calor")}
+              >
+                Zonas de calor
+              </button>
+
+              <button
+                className={pestanaActiva === "reportes" ? "activo" : ""}
+                onClick={() => setPestanaActiva("reportes")}
+              >
+                Reportes individuales
+              </button>
             </div>
 
-            <MapaMunicipios reportes={reportes} />
-          </article>
+            <div className="rieti-mapas-contenido">
+              {pestanaActiva === "municipios" && (
+                <MapaMunicipios reportes={reportes} />
+              )}
 
-          <article className="rieti-panel">
-            <div className="rieti-panel-header">
-              <div>
-                <span>CONCENTRACIÓN GEOGRÁFICA</span>
-                <h3>Mapa de calor por zonas</h3>
-              </div>
+              {pestanaActiva === "calor" && <MapaCalor reportes={reportes} />}
+
+              {pestanaActiva === "reportes" && (
+                <MapaPuntos reportes={reportes} />
+              )}
             </div>
-
-            <MapaCalor reportes={reportes} />
           </article>
-
-          <article className="rieti-panel">
-  <h3>UBICACIÓN DE REPORTES</h3>
-  <p>Reportes individuales y agrupaciones geográficas</p>
-
-  <MapaPuntos reportes={reportes} />
-</article>
         </>
       )}
     </>
