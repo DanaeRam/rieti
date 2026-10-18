@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import MapaMunicipios from "@/components/MapaMunicipios";
 import MapaCalor from "@/components/MapaCalor";
+import MapaPuntos from "@/components/MapaPuntos";
 
 export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
@@ -82,6 +83,13 @@ export default function Estadisticas() {
 
             <MapaCalor reportes={reportes} />
           </article>
+
+          <article className="rieti-panel">
+  <h3>UBICACIÓN DE REPORTES</h3>
+  <p>Reportes individuales y agrupaciones geográficas</p>
+
+  <MapaPuntos reportes={reportes} />
+</article>
         </>
       )}
     </>
