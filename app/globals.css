@@ -1256,7 +1256,8 @@ body {
 }
 
 .rieti-content:has(> .rieti-dashboard),
-.rieti-content:has(> .reportes-page) {
+.rieti-content:has(> .reportes-page),
+.rieti-content:has(> .estadisticas-page) {
   padding: 0;
   background: transparent;
 }
@@ -2748,6 +2749,218 @@ body {
     padding: 13px 12px;
   }
 }
+
+/* */
+
+.estadisticas-page {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: calc(100dvh - 76px);
+  padding: 28px 30px 45px;
+  background: linear-gradient(135deg, #ffffff 0%, #f4f0fa 50%, #f1f7fd 100%);
+}
+
+.estadisticas-page .rieti-page-title {
+  margin-bottom: 24px;
+}
+
+.estadisticas-page .rieti-page-title h2 {
+  margin: 0 0 8px;
+  color: #30295d;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+}
+
+.estadisticas-page .rieti-page-title p {
+  margin: 0;
+  color: #8985a2;
+  font-size: 15px;
+}
+
+.estadisticas-page .rieti-panel {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 8px 30px rgba(78, 65, 131, 0.06);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+.estadisticas-page .rieti-panel-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 25px 26px 18px;
+}
+
+.estadisticas-page .rieti-panel-header > div > span {
+  display: block;
+  color: #20a8c8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.1px;
+}
+
+.estadisticas-page .rieti-panel-header h3 {
+  margin: 8px 0 8px;
+  color: #30295d;
+  font-size: 19px;
+  font-weight: 700;
+}
+
+.estadisticas-page .rieti-panel-header p {
+  margin: 0;
+  color: #8985a2;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.estadisticas-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 14px;
+  border: 1px solid #e9e1f6;
+  border-radius: 999px;
+  background: rgba(244, 239, 252, 0.8);
+  color: #7955c8;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.estadisticas-contenido {
+  padding: 0 26px 26px;
+}
+
+.rieti-mapas-pestanas {
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 0 8px;
+  margin-bottom: 18px;
+  border-bottom: 1px solid #e7e6ef;
+}
+
+.rieti-mapas-pestanas button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  min-height: 52px;
+  padding: 14px 18px;
+  border: none;
+  background: transparent;
+  color: #7b819c;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.rieti-mapas-pestanas button:hover,
+.rieti-mapas-pestanas button.activo {
+  color: #7551d3;
+}
+
+.rieti-mapas-pestanas button.activo::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  border-radius: 4px 4px 0 0;
+  background: linear-gradient(90deg, #d16cbd, #9966e6, #56a9e4);
+}
+
+.rieti-mapas-contenido {
+  min-width: 0;
+}
+
+.rieti-mapas-contenido > div {
+  padding: 14px;
+  border: 1px solid #eadff5;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.rieti-mapa-municipios,
+.rieti-mapa-calor,
+.rieti-mapa-puntos {
+  width: 100%;
+  height: 420px;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.mapa-municipios .rieti-mapa-municipios,
+.mapa-calor .rieti-mapa-calor,
+.mapa-reportes .rieti-mapa-puntos {
+  height: 420px;
+}
+
+@media (max-width: 768px) {
+  .estadisticas-page {
+    min-height: calc(100dvh - 70px);
+    padding: 20px 14px 30px;
+  }
+
+  .estadisticas-page .rieti-page-title h2 {
+    font-size: 26px;
+  }
+
+  .estadisticas-page .rieti-page-title p {
+    font-size: 13px;
+  }
+
+  .estadisticas-page .rieti-panel {
+    border-radius: 18px;
+  }
+
+  .estadisticas-page .rieti-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 18px 14px;
+  }
+
+  .estadisticas-contenido {
+    padding: 0 18px 18px;
+  }
+
+  .rieti-mapas-pestanas {
+    gap: 10px;
+    overflow-x: auto;
+    padding: 0;
+  }
+
+  .rieti-mapas-pestanas button {
+    flex: none;
+    min-width: 160px;
+    min-height: 48px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .rieti-mapa-municipios,
+  .rieti-mapa-calor,
+  .rieti-mapa-puntos {
+    height: 300px;
+  }
+
+  .mapa-municipios .rieti-mapa-municipios,
+  .mapa-calor .rieti-mapa-calor,
+  .mapa-reportes .rieti-mapa-puntos {
+    height: 300px;
+  }
+}
+
 
 /* ADMINISTRACIÓN DE USUARIOS */
 
@@ -4853,45 +5066,4 @@ body {
   justify-content: center;
   width: 100%;
   height: 100%;
-}
-
-.rieti-mapas-pestanas {
-  display: flex;
-  gap: 8px;
-  padding: 6px;
-  margin-bottom: 15px;
-  background: #f1eef8;
-  border-radius: 14px;
-}
-
-.rieti-mapas-pestanas button {
-  flex: 1;
-  padding: 12px;
-  border: none;
-  border-radius: 10px;
-  background: transparent;
-  color: #6b647d;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.rieti-mapas-pestanas button.activo {
-  background: #7955c8;
-  color: white;
-}
-
-.rieti-mapas-contenido {
-  width: 100%;
-  min-width: 0;
-}
-
-@media (max-width: 768px) {
-  .rieti-mapas-pestanas {
-    gap: 4px;
-  }
-
-  .rieti-mapas-pestanas button {
-    padding: 10px 5px;
-    font-size: 12px;
-  }
 }

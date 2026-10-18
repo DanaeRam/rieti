@@ -52,7 +52,7 @@ export default function Estadisticas() {
   }, []);
 
   return (
-    <>
+    <main className="estadisticas-page">
       <div className="rieti-page-title">
         <h2>Estadísticas y analítica</h2>
       </div>
@@ -62,13 +62,22 @@ export default function Estadisticas() {
       {error && <p role="alert">{error}</p>}
 
       {!cargando && !error && (
-        <>
-          <article className="rieti-panel">
-            <h3>DISTRIBUCIÓN TERRITORIAL</h3>
-            <p>Concentración geográfica de reportes</p>
+        <article className="rieti-panel">
+          <div className="rieti-panel-header">
+            <div>
+              <span>DISTRIBUCIÓN TERRITORIAL</span>
+              <h3>Concentración geográfica de reportes</h3>
+            </div>
 
+            <span className="estadisticas-etiqueta">
+              {reportes.length} reportes
+            </span>
+          </div>
+
+          <div className="estadisticas-contenido">
             <div className="rieti-mapas-pestanas">
               <button
+                type="button"
                 className={pestanaActiva === "municipios" ? "activo" : ""}
                 onClick={() => setPestanaActiva("municipios")}
               >
@@ -76,6 +85,7 @@ export default function Estadisticas() {
               </button>
 
               <button
+                type="button"
                 className={pestanaActiva === "calor" ? "activo" : ""}
                 onClick={() => setPestanaActiva("calor")}
               >
@@ -83,6 +93,7 @@ export default function Estadisticas() {
               </button>
 
               <button
+                type="button"
                 className={pestanaActiva === "reportes" ? "activo" : ""}
                 onClick={() => setPestanaActiva("reportes")}
               >
@@ -90,7 +101,7 @@ export default function Estadisticas() {
               </button>
             </div>
 
-            <div className="rieti-mapas-contenido">
+            <div className={`rieti-mapas-contenido mapa-${pestanaActiva}`}>
               {pestanaActiva === "municipios" && (
                 <MapaMunicipios reportes={reportes} />
               )}
@@ -101,9 +112,9 @@ export default function Estadisticas() {
                 <MapaPuntos reportes={reportes} />
               )}
             </div>
-          </article>
-        </>
+          </div>
+        </article>
       )}
-    </>
+    </main>
   );
 }
