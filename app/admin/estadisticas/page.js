@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import MapaMunicipios from "@/components/MapaMunicipios";
+import MapaCalor from "@/components/MapaCalor";
 
 export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
@@ -21,7 +22,6 @@ export default function Estadisticas() {
         }
 
         const respuesta = await fetch(`${URL_BASE}/admin/reportes`, {
-          method: "GET",
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -37,11 +37,7 @@ export default function Estadisticas() {
           );
         }
 
-        const listaReportes = Array.isArray(datos)
-          ? datos
-          : datos.reportes || [];
-
-        setReportes(listaReportes);
+        setReportes(Array.isArray(datos) ? datos : datos.reportes || []);
       } catch (error) {
         console.error("Error al obtener reportes:", error);
         setError(error.message);
@@ -59,20 +55,35 @@ export default function Estadisticas() {
         <h2>Estadísticas y analítica</h2>
       </div>
 
-      <article className="rieti-panel">
-        <div className="rieti-panel-header">
-          <div>
-            <span>DISTRIBUCIÓN TERRITORIAL</span>
-            <h3>Concentración de reportes por municipio</h3>
-          </div>
-        </div>
+      {cargando && <p>Cargando estadísticas...</p>}
 
-        {cargando && <p>Cargando reportes municipales...</p>}
+      {error && <p role="alert">{error}</p>}
 
-        {error && <p role="alert">{error}</p>}
+      {!cargando && !error && (
+        <>
+          <article className="rieti-panel">
+            <div className="rieti-panel-header">
+              <div>
+                <span>DISTRIBUCIÓN TERRITORIAL</span>
+                <h3>Concentración de reportes por municipio</h3>
+              </div>
+            </div>
 
-        {!cargando && !error && <MapaMunicipios reportes={reportes} />}
-      </article>
+            <MapaMunicipios reportes={reportes} />
+          </article>
+
+          <article className="rieti-panel">
+            <div className="rieti-panel-header">
+              <div>
+                <span>CONCENTRACIÓN GEOGRÁFICA</span>
+                <h3>Mapa de calor por zonas</h3>
+              </div>
+            </div>
+
+            <MapaCalor reportes={reportes} />
+          </article>
+        </>
+      )}
     </>
   );
 }
