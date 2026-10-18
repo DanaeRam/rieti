@@ -1,4 +1,5 @@
 import Link from "next/link";
+import DatosRieti from "@/components/DatosRieti";
 
 export default function Home() {
   return (
@@ -31,9 +32,8 @@ export default function Home() {
           </h1>
 
           <p className="rieti-home-description">
-            Impulsado por SIPINNA, RIETI articula esfuerzos intermunicipales
-            para prevenir, identificar y dar seguimiento a casos de trabajo
-            infantil, fortaleciendo la protección de niñas, niños y
+            Impulsado por SIPINNA, RIETI busca prevenir, identificar y dar seguimiento a 
+            casos de trabajo infantil, fortaleciendo la protección de niñas, niños y
             adolescentes.
           </p>
 
@@ -47,6 +47,7 @@ export default function Home() {
           </nav>
         </div>
       </section>
+      <DatosRieti />
     </main>
   );
 }

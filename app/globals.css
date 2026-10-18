@@ -4681,3 +4681,256 @@ body {
   width: 100%;
   height: 100%;
 }
+
+/* ANIMACIÓN PAPALOTE */
+/**
+ * Estilos de la presentación de SIPINNA, recorrido
+ * animado del papalote y métricas de RIETI.
+ *
+ * @author ChatGPT (OpenAI)
+ */
+
+.rieti-recorrido {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(180deg, #f8f5ff, #eee5fa 48%, #f8f5ff);
+}
+
+.rieti-sipinna,
+.rieti-transicion,
+.rieti-impacto {
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.rieti-sipinna,
+.rieti-impacto {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.rieti-sipinna {
+  align-items: center;
+  min-height: 60vh;
+  padding: 65px 24px 35px;
+  text-align: center;
+}
+
+.rieti-seccion-etiqueta {
+  color: #8059b6;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 3px;
+}
+
+.rieti-sipinna h2,
+.rieti-impacto-encabezado h2 {
+  color: #302248;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.rieti-sipinna h2 {
+  margin: 22px 0 25px;
+  font-size: clamp(28px, 3.5vw, 44px);
+}
+
+.rieti-sipinna-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(100%, 300px);
+  margin: 0 auto 25px;
+}
+
+.rieti-sipinna-logo img {
+  display: block;
+  width: 100%;
+  max-height: 130px;
+  object-fit: contain;
+}
+
+.rieti-sipinna p {
+  max-width: 630px;
+  margin: 0;
+  color: #6d587e;
+  font-size: clamp(15px, 1.4vw, 18px);
+  line-height: 1.75;
+}
+
+.rieti-transicion {
+  min-height: 16vh;
+}
+
+.rieti-impacto {
+  min-height: 95vh;
+  padding: 40px 6% 120px;
+}
+
+.rieti-impacto-encabezado {
+  max-width: 750px;
+  margin: 0 auto 35px;
+  text-align: center;
+}
+
+.rieti-impacto-encabezado h2 {
+  margin: 15px 0;
+  font-size: clamp(32px, 4vw, 48px);
+}
+
+.rieti-impacto-encabezado p {
+  margin: 0;
+  color: #736782;
+  font-size: 15px;
+  line-height: 1.7;
+}
+
+.rieti-impacto-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  width: 100%;
+}
+
+.rieti-impacto-tarjeta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 185px;
+  padding: 30px 22px;
+  text-align: center;
+}
+
+.rieti-impacto-numero {
+  display: block;
+  margin-bottom: 14px;
+  color: #9870d5;
+  background: linear-gradient(110deg, #5386d8 5%, #9870d5 52%, #e17ac0 95%);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-size: clamp(56px, 6vw, 90px);
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -2px;
+}
+
+.rieti-impacto-tarjeta h3 {
+  margin: 0 0 10px;
+  color: #5b348d;
+  font-size: 19px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.rieti-impacto-tarjeta p {
+  max-width: 255px;
+  margin: 0;
+  color: #75658b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.rieti-recorrido-svg {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.rieti-recorrido-linea {
+  fill: none;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: .8;
+}
+
+.rieti-recorrido-papalote {
+  filter: drop-shadow(0 3px 6px rgba(89, 42, 156, .3));
+}
+
+@media (max-width: 768px) {
+  .rieti-sipinna {
+    min-height: 58vh;
+    padding: 55px 22px 30px;
+  }
+
+  .rieti-sipinna h2 {
+    margin: 18px 0 22px;
+    font-size: clamp(27px, 7vw, 38px);
+  }
+
+  .rieti-sipinna-logo {
+    width: min(100%, 220px);
+    margin-bottom: 22px;
+  }
+
+  .rieti-sipinna-logo img {
+    max-height: 105px;
+  }
+
+  .rieti-sipinna p {
+    font-size: 14px;
+    line-height: 1.7;
+  }
+
+  .rieti-transicion {
+    min-height: 12vh;
+  }
+
+  .rieti-impacto {
+    min-height: 110vh;
+    padding: 45px 20px 105px;
+  }
+
+  .rieti-impacto-encabezado {
+    margin-bottom: 30px;
+  }
+
+  .rieti-impacto-encabezado h2 {
+    font-size: 34px;
+  }
+
+  .rieti-impacto-encabezado p {
+    font-size: 14px;
+  }
+
+  .rieti-impacto-tarjetas {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .rieti-impacto-tarjeta {
+    min-height: 145px;
+    padding: 20px 15px;
+  }
+
+  .rieti-impacto-numero {
+    margin-bottom: 10px;
+    font-size: 62px;
+  }
+
+  .rieti-impacto-tarjeta h3 {
+    margin-bottom: 6px;
+    font-size: 17px;
+  }
+
+  .rieti-impacto-tarjeta p {
+    font-size: 13px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rieti-recorrido-svg {
+    display: none;
+  }
+}
