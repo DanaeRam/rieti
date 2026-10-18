@@ -32,31 +32,29 @@ body {
 
 /* PÁGINA INICIO */
 /**
- * Estilos de la página principal de RIETI.
+ * Estilos de la página principal.
  *
  * Define la presentación visual del sistema mediante
- * una ilustración de fondo, un overlay claro y la
- * distribución de logos y el título.
+ * una ilustración de fondo, un overlay oscuro y la
+ * distribución de logos y el texto.
  *
  * @author ChatGPT (OpenAI)
  */
 
 .rieti-home {
-  width: 100%;
-  min-height: 100dvh;
+  min-height: 100vh;
   margin: 0;
-  overflow-x: hidden;
-  background: #fff;
+  background: #17112b;
+  font-family: "Inter", Arial, sans-serif;
+  overflow-x: clip;
 }
 
 .rieti-home-hero {
   position: relative;
   display: flex;
   flex-direction: column;
-  align-items: center;
   min-height: 100vh;
   min-height: 100dvh;
-  background: #fff;
   isolation: isolate;
   overflow: hidden;
 }
@@ -70,12 +68,15 @@ body {
 
 .rieti-home-background {
   z-index: -2;
-  background: url("/images/rieti-hero3.png") center bottom / cover no-repeat;
+  background: url("/images/rieti-hero.png") center / cover no-repeat;
 }
 
 .rieti-home-overlay {
   z-index: -1;
-  background: linear-gradient(to bottom, rgba(255,255,255,.12), rgba(255,255,255,.08) 50%, transparent);
+  background:
+    radial-gradient(ellipse at 0% 0%, rgba(19,10,65,.92), rgba(30,17,83,.76) 30%, rgba(49,28,110,.38) 60%, transparent 85%),
+    linear-gradient(90deg, rgba(20,12,65,.68), rgba(31,19,83,.48) 40%, rgba(32,20,75,.12) 75%, rgba(20,12,65,.05)),
+    linear-gradient(180deg, rgba(22,12,65,.2), transparent 55%, rgba(15,10,45,.32));
 }
 
 .rieti-home-header {
@@ -83,57 +84,51 @@ body {
   z-index: 10;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   width: 100%;
-  min-height: 125px;
-  padding: 25px 40px;
+  padding: 26px 5.5%;
 }
 
-.rieti-home-logo {
-  display: flex;
+.rieti-home-logo,
+.rieti-home-admin,
+.rieti-home-button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 32px;
-  background: rgba(255,255,255,.88);
-  border: 1px solid #e4d7f4;
-  border-radius: 50px;
-  box-shadow: 0 7px 24px rgba(104,67,177,.1), 0 0 22px rgba(166,107,216,.07);
-  backdrop-filter: blur(8px);
+  text-decoration: none;
 }
 
 .rieti-home-logo-image {
   display: block;
-  width: 215px;
+  width: 195px;
   max-width: 100%;
   height: auto;
-  object-fit: contain;
+  filter: drop-shadow(0 3px 10px rgba(10,5,35,.25));
 }
 
 .rieti-home-admin {
-  position: absolute;
-  top: 30px;
-  right: 40px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0 23px;
-  color: #4e288c;
-  font-size: 13px;
-  font-weight: 700;
-  text-decoration: none;
-  background: rgba(255,255,255,.95);
-  border: 1px solid #6e37b5;
-  border-radius: 24px;
-  box-shadow: 0 4px 12px rgba(65,37,121,.07);
-  transition: background .25s, color .25s, transform .25s, box-shadow .25s;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 20px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.55);
+  border-radius: 22px;
+  backdrop-filter: blur(8px);
+  transition: background .25s, transform .25s;
+}
+
+.rieti-home-admin span {
+  font-size: 17px;
+  font-weight: 400;
 }
 
 .rieti-home-admin:hover {
   color: #fff;
-  background: #592a9c;
+  background: rgba(255,255,255,.18);
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(65,37,121,.17);
 }
 
 .rieti-home-content {
@@ -143,22 +138,10 @@ body {
   flex: 1;
   flex-direction: column;
   align-items: center;
-  width: min(94%,1100px);
-  margin: 0 auto;
-  padding: 35px 20px 0;
+  justify-content: center;
+  width: min(100%,760px);
+  padding: 40px 0 100px 6%;
   text-align: center;
-}
-
-.rieti-home-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-  border: 0;
 }
 
 .rieti-home-title {
@@ -166,14 +149,25 @@ body {
   align-items: center;
   justify-content: center;
   width: 100%;
+  max-width: 720px;
+  margin: 0;
 }
 
 .rieti-home-title-image {
   display: block;
-  width: min(100%,650px);
+  width: 100%;
+  max-width: 640px;
   height: auto;
-  object-fit: contain;
-  filter: drop-shadow(0 4px 7px rgba(88,49,130,.12));
+  filter: brightness(1.12) drop-shadow(0 6px 18px rgba(8,6,32,.35));
+}
+
+.rieti-home-description {
+  max-width: 700px;
+  margin: 26px auto 0;
+  color: rgba(255,255,255,.96);
+  font-size: 16px;
+  line-height: 1.85;
+  text-shadow: 0 2px 8px rgba(8,6,32,.28);
 }
 
 .rieti-home-actions {
@@ -181,501 +175,121 @@ body {
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
-  gap: 28px;
-  margin-top: auto;
-  padding: 40px 0 85px;
+  gap: 14px;
+  width: 100%;
+  margin-top: 28px;
 }
 
 .rieti-home-button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 250px;
-  min-height: 56px;
-  padding: 0 28px;
-  border-radius: 15px;
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  transition: transform .25s, box-shadow .25s, background .25s, color .25s;
+  min-width: 190px;
+  min-height: 44px;
+  padding: 0 20px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  transition: background .25s, color .25s, transform .25s, box-shadow .25s;
 }
 
 .rieti-home-button.primary {
-  color: #fff;
-  background: linear-gradient(110deg,#4a2390,#602bb4 55%,#7640c5);
-  border: 1px solid rgba(255,255,255,.15);
-  box-shadow: 0 8px 22px rgba(74,35,144,.22);
+  color: #542a9b;
+  background: rgba(255,255,255,.96);
+  border: 1px solid rgba(255,255,255,.95);
+  box-shadow: 0 5px 16px rgba(21,10,70,.15);
 }
 
 .rieti-home-button.secondary {
-  color: #4a2390;
-  background: rgba(255,255,255,.9);
-  border: 2px solid #7335bd;
-  box-shadow: 0 6px 18px rgba(74,35,144,.08);
+  color: #fff;
+  background: rgba(255,255,255,.09);
+  border: 1px solid rgba(255,255,255,.65);
+  backdrop-filter: blur(8px);
+}
+
+.rieti-home-button:hover {
+  transform: translateY(-2px);
 }
 
 .rieti-home-button.primary:hover {
-  color: #fff;
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(74,35,144,.32);
+  color: #492080;
+  background: #f1e9ff;
+  box-shadow: 0 8px 22px rgba(21,10,70,.22);
 }
 
 .rieti-home-button.secondary:hover {
   color: #fff;
-  background: #602bb4;
-  transform: translateY(-3px);
-  box-shadow: 0 10px 24px rgba(74,35,144,.2);
+  background: rgba(255,255,255,.2);
 }
 
-.rieti-home-button:active { transform: translateY(0); }
+.rieti-home-button:active {
+  transform: translateY(0);
+}
 
 .rieti-home a:focus-visible {
-  outline: 3px solid #7955c8;
+  outline: 3px solid #e7a5e5;
   outline-offset: 4px;
 }
 
 @media (max-width: 768px) {
+  .rieti-home-background {
+    background-position: 70% center;
+  }
+
+  .rieti-home-overlay {
+    background: linear-gradient(180deg, rgba(19,10,65,.9), rgba(30,17,83,.78) 38%, rgba(49,28,110,.43) 70%, rgba(15,10,45,.38));
+  }
+
   .rieti-home-header {
-    min-height: 95px;
-    padding: 20px 16px;
+    padding: 20px 6%;
   }
 
-  .rieti-home-logo {
-    padding: 10px 15px;
-    border-radius: 35px;
+  .rieti-home-logo-image {
+    width: 135px;
   }
-
-  .rieti-home-logo-image { width: 115px; }
 
   .rieti-home-admin {
-    top: 24px;
-    right: 12px;
-    min-height: 35px;
-    padding: 0 10px;
+    min-height: 36px;
+    padding: 0 13px;
     font-size: 11px;
   }
 
-  .rieti-home-background { background-position: 30% bottom; }
-
   .rieti-home-content {
     width: 100%;
-    padding: 55px 18px 0;
+    padding: 65px 6% 90px;
   }
 
-  .rieti-home-title-image { width: min(100%,420px); }
+  .rieti-home-title {
+    max-width: 480px;
+  }
+
+  .rieti-home-title-image {
+    max-width: 480px;
+  }
+
+  .rieti-home-description {
+    max-width: 460px;
+    margin-top: 18px;
+    font-size: 14px;
+    line-height: 1.7;
+  }
 
   .rieti-home-actions {
-    width: 100%;
-    flex-direction: column;
-    gap: 14px;
-    padding: 45px 0;
+    gap: 12px;
+    margin-top: 24px;
   }
 
   .rieti-home-button {
-    width: min(100%,320px);
-    min-height: 52px;
-    padding: 14px 22px;
+    min-width: 150px;
+    min-height: 43px;
+    padding: 0 18px;
+    font-size: 12px;
   }
-}
-
-@media (max-height: 650px) {
-  .rieti-home-actions { padding-bottom: 35px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .rieti-home-admin,
-  .rieti-home-button { transition: none; }
-}
-
-
-/* SEGUIMIENTO */
-/**
- * Estilos de la página de seguimiento de reportes.
- *
- * Define el fondo con degradado pastel, la navegación,
- * los estilos del formulario de consulta por folio, las 
- * tarjetas de información, los indicadores de estatus, 
- * los mensajes de error y el comportamiento responsivo.
- *
- * @author ChatGPT (OpenAI)
- */
-
-.seguimiento-page {
-  box-sizing: border-box;
-  width: 100%;
-  min-height: 100dvh;
-  padding: 36px 24px 55px;
-  background: linear-gradient(135deg, #ffffff 0%, #f4f0fa 50%, #f1f7fd 100%);
-}
-
-.seguimiento-container {
-  width: 100%;
-  max-width: 1000px;
-  margin: 0 auto;
-}
-
-.seguimiento-breadcrumb {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 28px;
-  color: #77749a;
-  font-size: 13px;
-}
-
-.seguimiento-breadcrumb a {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  color: #77749a;
-  text-decoration: none;
-  transition: color 0.2s;
-}
-
-.seguimiento-breadcrumb a:hover {
-  color: #7955c8;
-}
-
-.seguimiento-header {
-  margin-bottom: 28px;
-}
-
-.seguimiento-header > span {
-  display: block;
-  margin-bottom: 10px;
-  color: #20a8c8;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.3px;
-}
-
-.seguimiento-header h1 {
-  margin: 0 0 10px;
-  color: #30295d;
-  font-size: 36px;
-  font-weight: 700;
-  letter-spacing: -0.8px;
-}
-
-.seguimiento-header p {
-  margin: 0;
-  color: #77749a;
-  font-size: 15px;
-  line-height: 1.6;
-}
-
-.seguimiento-panel {
-  min-width: 0;
-  margin-bottom: 26px;
-  padding: 28px 30px 32px;
-  border: 1px solid #e9e1f6;
-  border-radius: 22px;
-  background: rgba(255, 255, 255, 0.78);
-  box-shadow: 0 8px 30px rgba(78, 65, 131, 0.06);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-}
-
-.seguimiento-panel-header {
-  display: flex;
-  align-items: center;
-  gap: 18px;
-  margin-bottom: 24px;
-}
-
-.seguimiento-icono {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  width: 58px;
-  height: 58px;
-  border-radius: 15px;
-  background: #f0eafd;
-  color: #7955c8;
-}
-
-.seguimiento-icono.turquesa {
-  background: #e5f7f9;
-  color: #20a8c8;
-}
-
-.seguimiento-panel-header h2 {
-  margin: 0 0 6px;
-  color: #30295d;
-  font-size: 19px;
-  font-weight: 700;
-}
-
-.seguimiento-panel-header p {
-  margin: 0;
-  color: #77749a;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.seguimiento-form {
-  display: flex;
-  align-items: flex-end;
-  gap: 18px;
-  padding-top: 22px;
-  border-top: 1px solid #eee8f6;
-}
-
-.seguimiento-campo {
-  flex: 1;
-  min-width: 0;
-}
-
-.seguimiento-campo label {
-  display: block;
-  margin-bottom: 9px;
-  color: #51448d;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.seguimiento-input {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 50px;
-  padding: 0 15px;
-  border: 1px solid #e4e0ef;
-  border-radius: 11px;
-  background: rgba(255, 255, 255, 0.9);
-  color: #8075a5;
-  transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-.seguimiento-input:hover {
-  border-color: #b7a1d4;
-}
-
-.seguimiento-input:focus-within {
-  border-color: #9571c4;
-  box-shadow: 0 0 0 3px rgba(149, 113, 196, 0.12);
-}
-
-.seguimiento-input input {
-  flex: 1;
-  min-width: 0;
-  height: 100%;
-  padding: 0;
-  border: none;
-  outline: none;
-  background: transparent;
-  color: #30295d;
-  font-size: 13px;
-}
-
-.seguimiento-input input::placeholder {
-  color: #aaa6b8;
-}
-
-.seguimiento-boton {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  flex-shrink: 0;
-  min-width: 230px;
-  height: 50px;
-  padding: 0 22px;
-  border: none;
-  border-radius: 11px;
-  background: linear-gradient(110deg, #7955c8 0%, #a66bd8 55%, #e17ac0 100%);
-  color: white;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(121, 85, 200, 0.18);
-  transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
-}
-
-.seguimiento-boton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 9px 22px rgba(121, 85, 200, 0.25);
-}
-
-.seguimiento-boton:disabled {
-  opacity: 0.65;
-  cursor: not-allowed;
-}
-
-.seguimiento-error {
-  margin: 18px 0 0;
-  padding: 13px 16px;
-  border: 1px solid #f1cbd2;
-  border-radius: 11px;
-  background: #fff0f2;
-  color: #bd465d;
-  font-size: 13px;
-}
-
-.seguimiento-detalles {
-  padding: 8px 18px;
-  border-radius: 14px;
-  background: rgba(248, 246, 252, 0.76);
-}
-
-.seguimiento-fila {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
-  padding: 14px 0;
-  border-bottom: 1px solid #e9e4f2;
-}
-
-.seguimiento-fila:last-child {
-  border-bottom: none;
-}
-
-.seguimiento-etiqueta {
-  display: flex;
-  align-items: center;
-  gap: 13px;
-  color: #77749a;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.seguimiento-etiqueta svg {
-  flex-shrink: 0;
-  width: 36px;
-  height: 36px;
-  padding: 9px;
-  box-sizing: border-box;
-  border-radius: 10px;
-  background: #f0eafd;
-  color: #7955c8;
-}
-
-.seguimiento-fila > strong {
-  color: #30295d;
-  font-size: 13px;
-  font-weight: 600;
-  text-align: right;
-  overflow-wrap: anywhere;
-}
-
-.seguimiento-estatus {
-  display: inline-flex;
-  align-items: center;
-  padding: 7px 13px;
-  border-radius: 30px;
-  background: #e6efff;
-  color: #4675b9;
-  font-size: 12px;
-  font-weight: 700;
-  white-space: nowrap;
-}
-
-.seguimiento-estatus.recibido {
-  background: #e6efff;
-  color: #4675b9;
-}
-
-.seguimiento-estatus.en-revision {
-  background: #f2eaff;
-  color: #8b60bb;
-}
-
-.seguimiento-estatus.en-proceso {
-  background: #e4f1ff;
-  color: #367fae;
-}
-
-.seguimiento-estatus.canalizado {
-  background: #e7f4f3;
-  color: #29847e;
-}
-
-.seguimiento-estatus.concluido {
-  background: #e5f5ec;
-  color: #268356;
-}
-
-.seguimiento-estatus.cancelado {
-  background: #fee9eb;
-  color: #c75061;
-}
-
-.seguimiento-estatus.reincidencia {
-  background: #fff0e0;
-  color: #b87931;
-}
-
-@media (max-width: 768px) {
-  .seguimiento-page {
-    padding: 22px 14px 35px;
-  }
-
-  .seguimiento-breadcrumb {
-    margin-bottom: 22px;
-  }
-
-  .seguimiento-header h1 {
-    font-size: 28px;
-  }
-
-  .seguimiento-header p {
-    font-size: 13px;
-  }
-
-  .seguimiento-panel {
-    padding: 20px 18px 24px;
-    border-radius: 17px;
-  }
-
-  .seguimiento-panel-header {
-    gap: 12px;
-  }
-
-  .seguimiento-icono {
-    width: 46px;
-    height: 46px;
-  }
-
-  .seguimiento-panel-header h2 {
-    font-size: 17px;
-  }
-
-  .seguimiento-form {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 14px;
-  }
-
-  .seguimiento-boton {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .seguimiento-detalles {
-    padding: 4px 12px;
-  }
-
-  .seguimiento-fila {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 7px;
-    padding: 13px 0;
-  }
-
-  .seguimiento-fila > strong {
-    text-align: left;
-    padding-left: 49px;
-  }
-
-  .seguimiento-estatus {
-    margin-left: 49px;
+  .rieti-home-button {
+    transition: none;
   }
 }
-
 
 /* LOGIN */
 /**
