@@ -2,14 +2,25 @@
 
 import { useEffect, useState } from "react";
 import L from "leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  useMap,
+  useMapEvents,
+} from "react-leaflet";
+import LimitesMunicipales from "@/components/LimitesMunicipales";
+import markerIcon from "leaflet/dist/images/marker-icon.png";
+import markerShadow from "leaflet/dist/images/marker-shadow.png";
 
-const CENTRO_INICIAL = [19.4326, -99.1332];
+const CENTRO_INICIAL = [19.45, -99.6];
 
 const icono = L.icon({
-  iconUrl: "/leaflet/marker-icon.png",
-  shadowUrl: "/leaflet/marker-shadow.png",
+  iconUrl: markerIcon.src,
+  shadowUrl: markerShadow.src,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
+  shadowSize: [41, 41],
 });
 
 function SeleccionarPunto({ onSeleccionar }) {
@@ -45,6 +56,8 @@ export default function MapaUbicacionLeaflet({
   const posicion =
     latitud !== "" &&
     longitud !== "" &&
+    latitud != null &&
+    longitud != null &&
     Number.isFinite(Number(latitud)) &&
     Number.isFinite(Number(longitud))
       ? [Number(latitud), Number(longitud)]
@@ -66,7 +79,7 @@ export default function MapaUbicacionLeaflet({
         setObteniendoUbicacion(false);
       },
       () => {
-        setError("No se pudo obtener tu ubicación");
+        setError("No se pudo obtener tu ubicación.");
         setObteniendoUbicacion(false);
       },
       {
@@ -86,20 +99,26 @@ export default function MapaUbicacionLeaflet({
         {obteniendoUbicacion ? "Obteniendo ubicación..." : "Usar mi ubicación"}
       </button>
 
-      <p>Haz clic en el mapa o arrastra el marcador para elegir el lugar.</p>
+      <p>
+        Haz clic en el mapa o arrastra el marcador para indicar dónde ocurrió la
+        situación.
+      </p>
 
       <MapContainer
         center={CENTRO_INICIAL}
-        zoom={11}
+        zoom={9}
         scrollWheelZoom={false}
         style={{ height: "350px", width: "100%" }}
       >
         <TileLayer
-          attribution="&copy; OpenStreetMap contributors"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
 
+        <LimitesMunicipales />
+
         <SeleccionarPunto onSeleccionar={onSeleccionar} />
+
         <CentrarMapa posicion={posicion} />
 
         {posicion && (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import MapaCalor from "@/components/MapaCalor";
+import MapaMunicipios from "@/components/MapaMunicipios";
 
 export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
@@ -15,6 +15,7 @@ export default function Estadisticas() {
     async function obtenerReportes() {
       try {
         const token = localStorage.getItem("token");
+
         if (!token) {
           throw new Error("No hay una sesión activa.");
         }
@@ -42,7 +43,7 @@ export default function Estadisticas() {
 
         setReportes(listaReportes);
       } catch (error) {
-        console.error("ERROR REPORTES:", error);
+        console.error("Error al obtener reportes:", error);
         setError(error.message);
       } finally {
         setCargando(false);
@@ -61,16 +62,16 @@ export default function Estadisticas() {
       <article className="rieti-panel">
         <div className="rieti-panel-header">
           <div>
-            <span>UBICACIÓN</span>
-            <h3>Mapa de calor</h3>
+            <span>DISTRIBUCIÓN TERRITORIAL</span>
+            <h3>Concentración de reportes por municipio</h3>
           </div>
         </div>
 
-        {cargando && <p>Cargando mapa de calor...</p>}
+        {cargando && <p>Cargando reportes municipales...</p>}
 
-        {error && <p>{error}</p>}
+        {error && <p role="alert">{error}</p>}
 
-        {!cargando && !error && <MapaCalor reportes={reportes} />}
+        {!cargando && !error && <MapaMunicipios reportes={reportes} />}
       </article>
     </>
   );
