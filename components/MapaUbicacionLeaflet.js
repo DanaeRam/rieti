@@ -1,7 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import L from "leaflet";
+import { useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -9,20 +8,41 @@ import {
   useMap,
   useMapEvents,
 } from "react-leaflet";
-import LimitesMunicipales from "@/components/LimitesMunicipales";
-import markerIcon from "leaflet/dist/images/marker-icon.png";
-import markerShadow from "leaflet/dist/images/marker-shadow.png";
+import L from "leaflet";
 
-const CENTRO_INICIAL = [19.45, -99.6];
+const CENTRO_INICIAL = [23.6345, -102.5528];
 
-const icono = L.icon({
-  iconUrl: markerIcon.src,
-  shadowUrl: markerShadow.src,
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  shadowSize: [41, 41],
+const iconoUbicacion = L.divIcon({
+  className: "reporte-marcador",
+  html: '<div class="reporte-marcador-punto"></div>',
+  iconSize: [28, 28],
+  iconAnchor: [14, 14],
 });
 
+/**
+ * Centra el mapa cuando cambian las coordenadas,
+ * por ejemplo, al utilizar el GPS.
+ *
+ * @component
+ */
+function CentrarMapa({ latitud, longitud }) {
+  const mapa = useMap();
+
+  useEffect(() => {
+    if (latitud === "" || longitud === "") return;
+
+    mapa.flyTo([Number(latitud), Number(longitud)], 16, { duration: 1 });
+  }, [latitud, longitud, mapa]);
+
+  return null;
+}
+
+/**
+ * Permite seleccionar un punto haciendo clic
+ * sobre el mapa.
+ *
+ * @component
+ */
 function SeleccionarPunto({ onSeleccionar }) {
   useMapEvents({
     click(evento) {
@@ -33,116 +53,61 @@ function SeleccionarPunto({ onSeleccionar }) {
   return null;
 }
 
-function CentrarMapa({ posicion }) {
-  const mapa = useMap();
-
-  useEffect(() => {
-    if (posicion) {
-      mapa.setView(posicion, 16);
-    }
-  }, [mapa, posicion?.[0], posicion?.[1]]);
-
-  return null;
-}
-
+/**
+ * Mapa interactivo de ubicación de reportes RIETI.
+ *
+ * Utiliza OpenStreetMap y permite seleccionar
+ * o arrastrar un marcador para modificar
+ * las coordenadas del reporte.
+ *
+ * @component
+ */
 export default function MapaUbicacionLeaflet({
   latitud,
   longitud,
   onSeleccionar,
 }) {
-  const [obteniendoUbicacion, setObteniendoUbicacion] = useState(false);
-  const [error, setError] = useState("");
-
-  const posicion =
+  const tieneUbicacion =
     latitud !== "" &&
     longitud !== "" &&
-    latitud != null &&
-    longitud != null &&
     Number.isFinite(Number(latitud)) &&
-    Number.isFinite(Number(longitud))
-      ? [Number(latitud), Number(longitud)]
-      : null;
+    Number.isFinite(Number(longitud));
 
-  function usarMiUbicacion() {
-    setError("");
-
-    if (!navigator.geolocation) {
-      setError("Tu navegador no permite obtener la ubicación.");
-      return;
-    }
-
-    setObteniendoUbicacion(true);
-
-    navigator.geolocation.getCurrentPosition(
-      (resultado) => {
-        onSeleccionar(resultado.coords.latitude, resultado.coords.longitude);
-        setObteniendoUbicacion(false);
-      },
-      () => {
-        setError("No se pudo obtener tu ubicación.");
-        setObteniendoUbicacion(false);
-      },
-      {
-        enableHighAccuracy: true,
-        timeout: 15000,
-      },
-    );
-  }
+  const posicion = tieneUbicacion ? [Number(latitud), Number(longitud)] : null;
 
   return (
-    <div>
-      <button
-        type="button"
-        onClick={usarMiUbicacion}
-        disabled={obteniendoUbicacion}
-      >
-        {obteniendoUbicacion ? "Obteniendo ubicación..." : "Usar mi ubicación"}
-      </button>
+    <MapContainer
+      center={CENTRO_INICIAL}
+      zoom={5}
+      minZoom={3}
+      maxZoom={19}
+      scrollWheelZoom={true}
+      className="reporte-mapa-leaflet"
+    >
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        maxZoom={19}
+      />
 
-      <p>
-        Haz clic en el mapa o arrastra el marcador para indicar dónde ocurrió la
-        situación.
-      </p>
+      <SeleccionarPunto onSeleccionar={onSeleccionar} />
 
-      <MapContainer
-        center={CENTRO_INICIAL}
-        zoom={9}
-        scrollWheelZoom={false}
-        style={{ height: "350px", width: "100%" }}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
-
-        <LimitesMunicipales />
-
-        <SeleccionarPunto onSeleccionar={onSeleccionar} />
-
-        <CentrarMapa posicion={posicion} />
-
-        {posicion && (
-          <Marker
-            position={posicion}
-            icon={icono}
-            draggable
-            eventHandlers={{
-              dragend(evento) {
-                const punto = evento.target.getLatLng();
-                onSeleccionar(punto.lat, punto.lng);
-              },
-            }}
-          />
-        )}
-      </MapContainer>
+      <CentrarMapa latitud={latitud} longitud={longitud} />
 
       {posicion && (
-        <p>
-          Coordenadas: {posicion[0].toFixed(6)}, {posicion[1].toFixed(6)}
-        </p>
-      )}
+        <Marker
+          position={posicion}
+          icon={iconoUbicacion}
+          draggable={true}
+          eventHandlers={{
+            dragend(evento) {
+              const nuevaPosicion = evento.target.getLatLng();
 
-      {error && <p role="alert">{error}</p>}
-    </div>
+              onSeleccionar(nuevaPosicion.lat, nuevaPosicion.lng);
+            },
+          }}
+        />
+      )}
+    </MapContainer>
   );
 }

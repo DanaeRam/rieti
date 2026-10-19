@@ -2872,192 +2872,932 @@ body {
 }
 
 
-
-
-
 /* FORMULARIO DE REPORTES */
+/**
+ * Estilos de la página pública de reportes de RIETI.
+ *
+ * Define la navegación, encabezado, selección de modalidad,
+ * indicador de progreso, campos del formulario, mapa Leaflet,
+ * fotografías, resumen, confirmación y adaptación responsiva.
+ *
+ * @author ChatGPT (OpenAI)
+ */
 
 .reporte-page {
   min-height: 100vh;
-  padding: 40px 20px;
-  background: #f7f6fa;
+  padding: 38px 24px 80px;
+  background: transparent;
+  color: #30295d;
+  font-family: inherit;
+}
+
+.reporte-container {
+  width: min(100%, 960px);
+  margin: 0 auto;
+}
+
+.reporte-page,
+.reporte-page * {
+  box-sizing: border-box;
+}
+
+.reporte-page button,
+.reporte-page input,
+.reporte-page select,
+.reporte-page textarea {
+  font-family: inherit;
+}
+
+.reporte-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 38px;
+  color: #77749a;
+  font-size: 12px;
+}
+
+.reporte-breadcrumb a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  color: #7955c8;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.reporte-breadcrumb a:hover {
+  color: #51448d;
+}
+
+.reporte-breadcrumb > svg {
+  color: #aaa5bd;
+}
+
+.reporte-header {
+  margin-bottom: 30px;
+}
+
+.reporte-header > span,
+.reporte-kicker {
+  display: block;
+  margin-bottom: 10px;
+  color: #20a8c8;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.4px;
+}
+
+.reporte-header h1 {
+  margin: 0 0 12px;
+  color: #30295d;
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+}
+
+.reporte-header p {
+  max-width: 700px;
+  margin: 0;
+  color: #77749a;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* TARJETAS Y ENCABEZADOS */
+
+.reporte-card,
+.reporte-progreso {
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 8px 30px rgba(78, 65, 131, 0.07);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 }
 
 .reporte-card {
-  width: min(720px, 100%);
-  margin: 0 auto;
-  padding: 35px;
-  background: #fff;
-  border: 1px solid #e8e6ef;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(62, 56, 105, 0.1);
-}
-
-.reporte-card > span {
-  color: var(--rieti-purple);
-  font-size: 12px;
-  font-weight: 700;
+  margin-bottom: 24px;
+  padding: 28px;
 }
 
 .reporte-card h1 {
-  margin: 8px 0;
-  color: var(--rieti-text);
-  font-size: 26px;
-}
-
-.reporte-card h2 {
-  color: var(--rieti-text);
-  font-size: 15px;
+  margin: 0 0 10px;
+  color: #30295d;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
 }
 
 .reporte-card > p {
-  margin-bottom: 25px;
-  color: var(--rieti-muted);
+  margin: 0 0 26px;
+  color: #77749a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* PROGRESO */
+
+.reporte-progreso {
+  margin-bottom: 24px;
+  padding: 25px 28px;
+}
+
+.reporte-progreso-encabezado,
+.reporte-progreso-pasos,
+.reporte-progreso-item {
+  display: flex;
+  align-items: center;
+}
+
+.reporte-progreso-encabezado {
+  justify-content: space-between;
+  gap: 15px;
+  margin-bottom: 24px;
+  color: #77749a;
+  font-size: 12px;
+}
+
+.reporte-progreso-encabezado strong {
+  color: #30295d;
   font-size: 13px;
+  font-weight: 700;
 }
 
-.reporte-card > div {
-  margin-bottom: 16px;
+.reporte-progreso-pasos {
+  gap: 12px;
 }
 
-.reporte-card label {
-  display: block;
-  margin-bottom: 7px;
-  color: var(--rieti-text);
+.reporte-progreso-item {
+  flex: 1;
+  gap: 11px;
+  min-width: 0;
+  padding-top: 14px;
+  border-top: 3px solid #e9e1f6;
+  color: #aaa5bd;
   font-size: 12px;
   font-weight: 600;
 }
 
-.reporte-card input,
-.reporte-card select,
-.reporte-card textarea {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 11px 12px;
-  border: 1px solid var(--rieti-border);
-  border-radius: 8px;
-  outline: none;
-  background: #fff;
-  color: var(--rieti-text);
-  font-size: 13px;
+.reporte-progreso-circulo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #e9e1f6;
+  border-radius: 50%;
+  background: #f5f2fb;
+  color: #aaa5bd;
 }
 
-.reporte-card textarea {
-  min-height: 100px;
-  resize: vertical;
+.reporte-progreso-item.activo {
+  border-color: #7955c8;
+  color: #51448d;
 }
 
-.reporte-card input:focus,
-.reporte-card select:focus,
-.reporte-card textarea:focus {
-  border-color: var(--rieti-purple);
+.reporte-progreso-item.activo .reporte-progreso-circulo {
+  border-color: #7955c8;
+  background: linear-gradient(135deg, #7955c8, #ae78ee);
+  color: #ffffff;
+}
+
+.reporte-progreso-item.completado {
+  border-color: #20a8c8;
+  color: #168da9;
+}
+
+.reporte-progreso-item.completado .reporte-progreso-circulo {
+  border-color: #d4f0f3;
+  background: #eaf9fa;
+  color: #20a8c8;
+}
+
+/* MODALIDAD DEL REPORTE */
+
+.reporte-opciones,
+.reporte-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
 }
 
 .reporte-opciones {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  margin-bottom: 24px;
 }
 
 .reporte-opciones button {
-  padding: 18px;
-  border: 1px solid var(--rieti-border);
-  border-radius: 10px;
-  background: #fff;
+  padding: 24px;
+  border: 1px solid #e4e0ef;
+  border-radius: 15px;
+  background: #ffffff;
   text-align: left;
   cursor: pointer;
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
 }
 
-.reporte-opciones button:hover {
-  border-color: var(--rieti-purple);
-  background: #f7f5fc;
+.reporte-opciones button:hover,
+.reporte-opciones button.seleccionado {
+  border-color: #9571c4;
+  background: #f4effc;
 }
 
-.reporte-card button {
-  cursor: pointer;
+.reporte-opciones button.seleccionado {
+  box-shadow: 0 0 0 3px rgba(149, 113, 196, 0.12);
 }
 
-.reporte-botones {
+.reporte-opciones h2,
+.reporte-resumen h2 {
+  margin: 0 0 8px;
+  color: #30295d;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.reporte-opciones p,
+.reporte-fotografias p {
+  margin: 0;
+  color: #77749a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+/* CAMPOS */
+
+.reporte-form-grid {
+  margin-top: 24px;
+}
+
+.reporte-campo {
   display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 25px;
+  flex-direction: column;
+  gap: 9px;
+  min-width: 0;
 }
 
-.reporte-botones button,
-.reporte-card > button {
-  min-width: 130px;
-  padding: 11px 18px;
-  border: 0;
-  border-radius: 9px;
-  font-size: 13px;
+.reporte-campo.ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.reporte-campo label,
+.reporte-campo legend {
+  color: #77749a;
+  font-size: 12px;
   font-weight: 600;
 }
 
-.reporte-botones button:first-child {
-  border: 1px solid var(--rieti-border);
-  background: #fff;
-  color: var(--rieti-text);
+.reporte-campo input,
+.reporte-campo select,
+.reporte-campo textarea {
+  width: 100%;
+  min-height: 46px;
+  padding: 11px 14px;
+  border: 1px solid #e4e0ef;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #30295d;
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.reporte-botones button:last-child,
-.reporte-card > button {
-  background: linear-gradient(
-    135deg,
-    var(--rieti-purple),
-    var(--rieti-blue)
-  );
-  color: #fff;
+.reporte-campo textarea {
+  min-height: 110px;
+  resize: vertical;
+  line-height: 1.6;
 }
 
-.reporte-card button:disabled {
-  opacity: 0.5;
+.reporte-campo input:hover,
+.reporte-campo select:hover,
+.reporte-campo textarea:hover {
+  border-color: #b7a1d4;
+}
+
+.reporte-campo input:focus,
+.reporte-campo select:focus,
+.reporte-campo textarea:focus {
+  border-color: #9571c4;
+  box-shadow: 0 0 0 3px rgba(149, 113, 196, 0.12);
+}
+
+.reporte-campo input::placeholder,
+.reporte-campo textarea::placeholder {
+  color: #aaa5bd;
+}
+
+.reporte-campo select {
+  cursor: pointer;
+}
+
+.reporte-campo-riesgo {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+.reporte-campo-riesgo legend {
+  padding: 0;
+  margin-bottom: 10px;
+}
+
+.reporte-radio-opciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.reporte-radio-opciones label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 11px 15px;
+  border: 1px solid #e4e0ef;
+  border-radius: 11px;
+  background: #ffffff;
+  color: #514d69;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.reporte-radio-opciones label:hover,
+.reporte-radio-opciones label.seleccionado {
+  border-color: #9571c4;
+  background: #f4effc;
+  color: #51448d;
+}
+
+.reporte-radio-opciones input,
+.reporte-checkbox input {
+  width: 16px;
+  height: 16px;
+  min-height: auto;
+  margin: 0;
+  accent-color: #7955c8;
+}
+
+/* BOTONES */
+
+.reporte-botones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 28px;
+  padding-top: 23px;
+  border-top: 1px solid #eeeaf5;
+}
+
+.reporte-botones button,
+.reporte-gps,
+.reporte-adjuntar,
+.reporte-volver-inicio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 0 23px;
+  border: 1px solid transparent;
+  border-radius: 11px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.reporte-botones .primario {
+  background: linear-gradient(115deg, #51448d, #7955c8, #ae78ee);
+  color: #ffffff;
+  box-shadow: 0 5px 16px rgba(121, 85, 200, 0.16);
+}
+
+.reporte-botones .primario:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(121, 85, 200, 0.25);
+}
+
+.reporte-botones .secundario,
+.reporte-gps,
+.reporte-volver-inicio {
+  border-color: #e4dcf5;
+  background: #f4effc;
+  color: #7955c8;
+}
+
+.reporte-botones .secundario:hover:not(:disabled),
+.reporte-gps:hover:not(:disabled),
+.reporte-volver-inicio:hover {
+  background: #e9dff8;
+}
+
+.reporte-botones button:disabled,
+.reporte-gps:disabled,
+.reporte-adjuntar.deshabilitado {
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.reporte-resumen {
-  padding: 15px;
-  border-radius: 10px;
-  background: #f7f6fa;
-  border: 1px solid #e8e6ef;
+.reporte-page button:focus-visible,
+.reporte-page a:focus-visible,
+.reporte-adjuntar:focus-within {
+  outline: 2px solid #7955c8;
+  outline-offset: 3px;
 }
 
-.reporte-resumen h2 {
-  margin-top: 0;
+/* UBICACIÓN Y MAPA LEAFLET */
+
+.reporte-mapa-encabezado,
+.reporte-fotos-encabezado,
+.reporte-fotos-lista > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
 }
 
-.reporte-resumen p {
-  margin: 6px 0;
-  color: var(--rieti-muted);
+.reporte-mapa-encabezado {
+  margin: 26px 0 14px;
+}
+
+.reporte-mapa-encabezado strong {
+  color: #30295d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reporte-gps {
+  min-height: 40px;
+  padding: 0 16px;
+  font-size: 12px;
+}
+
+.reporte-mapa-contenedor,
+.reporte-mapa-leaflet {
+  width: 100%;
+  height: 390px;
+  border-radius: 14px;
+}
+
+.reporte-mapa-contenedor {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid #e4e0ef;
+  background: #f4effc;
+}
+
+.reporte-mapa-leaflet {
+  z-index: 0;
+  font-family: inherit;
+}
+
+.reporte-mapa-cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 390px;
+  color: #77749a;
   font-size: 13px;
 }
 
+.reporte-mapa-leaflet .leaflet-control-zoom {
+  overflow: hidden;
+  border: 1px solid #e4dcf5;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(78, 65, 131, 0.12);
+}
+
+.reporte-mapa-leaflet .leaflet-control-zoom a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  background: #ffffff;
+  color: #7955c8;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.reporte-mapa-leaflet .leaflet-control-zoom a:hover {
+  background: #f4effc;
+}
+
+.reporte-mapa-leaflet .leaflet-control-attribution {
+  padding: 3px 7px;
+  background: rgba(255, 255, 255, 0.88);
+  color: #77749a;
+  font-size: 10px;
+}
+
+.reporte-mapa-leaflet .leaflet-control-attribution a {
+  color: #7955c8;
+}
+
+.reporte-marcador {
+  border: none;
+  background: transparent;
+}
+
+.reporte-marcador-punto {
+  width: 28px;
+  height: 28px;
+  border: 5px solid #ffffff;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #7955c8, #ae78ee);
+  box-shadow: 0 3px 12px rgba(48, 41, 93, 0.3);
+  cursor: grab;
+}
+
+.reporte-marcador-punto:active {
+  cursor: grabbing;
+}
+
+.reporte-coordenadas {
+  display: inline-flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin: 13px 0 4px;
+  padding: 9px 13px;
+  border: 1px solid #cceee1;
+  border-radius: 9px;
+  background: #e9f8f1;
+  color: #268356;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* FOTOGRAFÍAS */
+
+.reporte-fotografias {
+  margin-top: 28px;
+  padding: 22px;
+  border: 1px dashed #d9cfe9;
+  border-radius: 15px;
+  background: #faf8fd;
+}
+
+.reporte-fotos-encabezado {
+  margin-bottom: 10px;
+}
+
+.reporte-fotos-encabezado strong {
+  color: #30295d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.reporte-fotos-encabezado small {
+  color: #77749a;
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.reporte-fotos-encabezado > span {
+  padding: 6px 11px;
+  border-radius: 20px;
+  background: #f0e9fb;
+  color: #7955c8;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.reporte-adjuntar {
+  position: relative;
+  margin-top: 17px;
+  border-color: #e4dcf5;
+  background: #ffffff;
+  color: #7955c8;
+  font-size: 12px;
+}
+
+.reporte-adjuntar:hover:not(.deshabilitado) {
+  background: #f4effc;
+}
+
+.reporte-adjuntar input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.reporte-fotos-lista {
+  display: grid;
+  gap: 9px;
+  margin-top: 15px;
+}
+
+.reporte-fotos-lista > div {
+  min-width: 0;
+  padding: 10px 13px;
+  border: 1px solid #e9e1f6;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #514d69;
+  font-size: 12px;
+}
+
+.reporte-fotos-lista > div span {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.reporte-fotos-lista button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 33px;
+  height: 33px;
+  border: none;
+  border-radius: 9px;
+  background: #fdf0f2;
+  color: #c75061;
+  cursor: pointer;
+}
+
+.reporte-fotos-lista button:hover {
+  background: #f8dce3;
+}
+
+/* RESUMEN Y AVISOS */
+
+.reporte-resumen {
+  margin-top: 23px;
+  padding: 23px;
+  border: 1px solid #e9e1f6;
+  border-radius: 15px;
+  background: #faf8fd;
+}
+
+.reporte-resumen dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0 24px;
+  margin: 15px 0 0;
+}
+
+.reporte-resumen dl > div {
+  min-width: 0;
+  padding: 15px 0;
+  border-bottom: 1px solid #e9e1f6;
+}
+
+.reporte-resumen dt {
+  margin-bottom: 7px;
+  color: #77749a;
+  font-size: 12px;
+}
+
+.reporte-resumen dd {
+  margin: 0;
+  color: #30295d;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+
+.reporte-aviso,
+.reporte-aviso-anonimo {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border: 1px solid #d4f0f3;
+  border-radius: 12px;
+  background: #eaf9fa;
+  color: #168da9;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
 .reporte-checkbox {
-  display: flex !important;
-  gap: 8px;
+  display: flex;
   align-items: flex-start;
+  gap: 12px;
+  margin-top: 25px;
+  color: #514d69;
+  font-size: 12px;
+  line-height: 1.7;
+  cursor: pointer;
 }
 
 .reporte-checkbox input {
-  width: auto;
-  margin-top: 3px;
+  flex-shrink: 0;
+  margin-top: 2px;
 }
 
-@media (max-width: 700px) {
-  .reporte-card {
-    padding: 22px;
+.reporte-error {
+  margin: 18px 0 0;
+  padding: 14px 16px;
+  border: 1px solid #f2cbd2;
+  border-radius: 11px;
+  background: #fdf0f2;
+  color: #c75061;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+/* CONFIRMACIÓN FINAL */
+
+.reporte-confirmacion-final {
+  width: min(100%, 680px);
+  margin: 45px auto 0;
+  padding: 40px;
+  text-align: center;
+}
+
+.reporte-exito-icono {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 74px;
+  height: 74px;
+  margin: 0 auto 22px;
+  border: 1px solid #cceee1;
+  border-radius: 50%;
+  background: #e9f8f1;
+  color: #268356;
+}
+
+.reporte-folio-final {
+  margin-top: 25px;
+  padding: 25px;
+  border: 1px solid #e9e1f6;
+  border-radius: 15px;
+  background: #faf8fd;
+}
+
+.reporte-folio-final > span,
+.reporte-folio-final > small {
+  display: block;
+  color: #77749a;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.reporte-folio-final > strong {
+  display: block;
+  margin: 14px 0;
+  color: #51448d;
+  font-size: 25px;
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+.reporte-folio-acciones {
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.reporte-volver-inicio {
+  margin-top: 23px;
+}
+
+/* RESPONSIVO */
+
+@media (max-width: 768px) {
+  .reporte-page {
+    padding: 24px 16px 50px;
   }
 
-  .reporte-opciones {
+  .reporte-breadcrumb {
+    margin-bottom: 28px;
+  }
+
+  .reporte-header {
+    margin-bottom: 24px;
+  }
+
+  .reporte-header h1 {
+    font-size: 27px;
+  }
+
+  .reporte-header p {
+    font-size: 13px;
+  }
+
+  .reporte-card,
+  .reporte-progreso {
+    border-radius: 17px;
+  }
+
+  .reporte-card {
+    margin-bottom: 18px;
+    padding: 20px;
+  }
+
+  .reporte-card h1 {
+    font-size: 20px;
+  }
+
+  .reporte-progreso {
+    margin-bottom: 18px;
+    padding: 19px 16px;
+  }
+
+  .reporte-progreso-encabezado {
+    margin-bottom: 17px;
+  }
+
+  .reporte-progreso-pasos {
+    gap: 7px;
+  }
+
+  .reporte-progreso-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 10px;
+  }
+
+  .reporte-progreso-circulo {
+    width: 28px;
+    height: 28px;
+  }
+
+  .reporte-progreso-nombre {
+    line-height: 1.4;
+  }
+
+  .reporte-opciones,
+  .reporte-form-grid,
+  .reporte-resumen dl {
     grid-template-columns: 1fr;
   }
 
-  .reporte-botones {
+  .reporte-opciones button {
+    padding: 19px;
+  }
+
+  .reporte-campo.ancho-completo {
+    grid-column: auto;
+  }
+
+  .reporte-mapa-encabezado,
+  .reporte-fotos-encabezado {
+    align-items: flex-start;
     flex-direction: column;
+  }
+
+  .reporte-gps {
+    width: 100%;
+  }
+
+  .reporte-mapa-contenedor,
+  .reporte-mapa-leaflet,
+  .reporte-mapa-cargando {
+    height: 310px;
+  }
+
+  .reporte-fotografias,
+  .reporte-resumen {
+    padding: 17px;
+  }
+
+  .reporte-botones {
+    flex-direction: column-reverse;
+    align-items: stretch;
+    gap: 10px;
   }
 
   .reporte-botones button {
     width: 100%;
+  }
+
+  .reporte-botones > span {
+    display: none;
+  }
+
+  .reporte-confirmacion-final {
+    margin-top: 25px;
+    padding: 27px 20px;
+  }
+
+  .reporte-folio-final {
+    padding: 18px;
+  }
+
+  .reporte-folio-final > strong {
+    font-size: 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reporte-page button,
+  .reporte-page input,
+  .reporte-page select,
+  .reporte-page textarea,
+  .reporte-breadcrumb a {
+    transition: none;
   }
 }
 
