@@ -1,7 +1,5 @@
-
 "use client";
 
-import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import {
   ClipboardList,
@@ -13,7 +11,10 @@ import {
   TrendingUp,
 } from "lucide-react";
 
-const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
+import GraficaMunicipios from "@/components/dashboard/GraficaMunicipios";
+
+const URL_BASE =
+  "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
 
 function obtenerFechaLocal(valor) {
   if (!valor) return null;
@@ -21,6 +22,7 @@ function obtenerFechaLocal(valor) {
   if (typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
     const [anio, mes, dia] = valor.split("-").map(Number);
     const fecha = new Date(anio, mes - 1, dia);
+
     return fecha.getFullYear() === anio &&
       fecha.getMonth() === mes - 1 &&
       fecha.getDate() === dia
@@ -37,16 +39,10 @@ function calcularPeriodos(porFecha) {
   hoy.setHours(0, 0, 0, 0);
 
   const inicioSemana = new Date(hoy);
-  const diaSemana = (hoy.getDay() + 6) % 7;
-  inicioSemana.setDate(hoy.getDate() - diaSemana);
+  inicioSemana.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
 
   const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-
-  const resultado = {
-    hoy: 0,
-    semana: 0,
-    mes: 0,
-  };
+  const resultado = { hoy: 0, semana: 0, mes: 0 };
 
   if (!Array.isArray(porFecha)) return resultado;
 
@@ -58,47 +54,45 @@ function calcularPeriodos(porFecha) {
 
     fecha.setHours(0, 0, 0, 0);
 
-    if (fecha.getTime() === hoy.getTime()) {
-      resultado.hoy += total;
-    }
-
-    if (fecha >= inicioSemana) {
-      resultado.semana += total;
-    }
-
-    if (fecha >= inicioMes) {
-      resultado.mes += total;
-    }
+    if (fecha.getTime() === hoy.getTime()) resultado.hoy += total;
+    if (fecha >= inicioSemana) resultado.semana += total;
+    if (fecha >= inicioMes) resultado.mes += total;
   });
 
   return resultado;
 }
 
 export default function Dashboard() {
+  const [rolUsuario, setRolUsuario] = useState(null);
+
   const [resumen, setResumen] = useState(null);
   const [cargandoResumen, setCargandoResumen] = useState(true);
   const [errorResumen, setErrorResumen] = useState("");
+
   const [estadisticas, setEstadisticas] = useState(null);
   const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
   const [errorEstadisticas, setErrorEstadisticas] = useState("");
 
   useEffect(() => {
+    try {
+      const usuario = JSON.parse(localStorage.getItem("usuario") || "null");
+      setRolUsuario(usuario?.rol || null);
+    } catch {
+      setRolUsuario(null);
+    }
+  }, []);
+
+  useEffect(() => {
     const controlador = new AbortController();
-    const baseURL =
-      "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
 
     async function obtenerDatos(ruta) {
       const token = localStorage.getItem("token");
 
-      if (!token) {
-        throw new Error("No hay una sesión activa.");
-      }
+      if (!token) throw new Error("No hay una sesión activa.");
 
-      const respuesta = await fetch(`${baseURL}${ruta}`, {
+      const respuesta = await fetch(`${URL_BASE}${ruta}`, {
         method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         signal: controlador.signal,
       });
 
@@ -106,7 +100,7 @@ export default function Dashboard() {
 
       if (!respuesta.ok) {
         throw new Error(
-          datos.message || datos.error || "No se pudieron obtener los datos"
+          datos.message || datos.error || "No se pudieron obtener los datos",
         );
       }
 
@@ -116,7 +110,7 @@ export default function Dashboard() {
     async function cargarResumen() {
       try {
         const datos = await obtenerDatos("/api/v1/admin/dashboard/resumen");
-        setResumen(datos);
+        if (!controlador.signal.aborted) setResumen(datos);
       } catch (error) {
         if (error.name !== "AbortError") {
           console.error("Error al cargar resumen:", error);
@@ -130,9 +124,10 @@ export default function Dashboard() {
     async function cargarEstadisticas() {
       try {
         const datos = await obtenerDatos(
-          "/api/v1/admin/dashboard/estadisticas?dias=30"
+          "/api/v1/admin/dashboard/estadisticas?dias=30",
         );
-        setEstadisticas(datos);
+
+        if (!controlador.signal.aborted) setEstadisticas(datos);
       } catch (error) {
         if (error.name !== "AbortError") {
           console.error("Error al cargar estadísticas:", error);
@@ -153,9 +148,6 @@ export default function Dashboard() {
     ? estadisticas.por_municipio
     : [];
 
-  const municipios = porMunicipio.map((item) => item.municipio);
-  const reportesPorMunicipio = porMunicipio.map((item) => Number(item.total) || 0);
-
   const periodos = calcularPeriodos(estadisticas?.por_fecha);
 
   const valorResumen = (campo) => {
@@ -168,85 +160,6 @@ export default function Dashboard() {
     if (cargandoEstadisticas) return "...";
     if (errorEstadisticas) return "—";
     return periodos[campo];
-  };
-
-  const opcionesBase = {
-    chart: {
-      type: "bar",
-      toolbar: { show: false },
-      fontFamily: "inherit",
-      background: "transparent",
-      foreColor: "#77749a",
-      animations: { enabled: true, speed: 600 },
-    },
-    colors: ["#a879da"],
-    fill: {
-      type: "solid",
-      opacity: 1,
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true,
-        borderRadius: 6,
-        barHeight: "50%",
-      },
-    },
-    dataLabels: { enabled: false },
-    stroke: { show: false },
-    grid: {
-      borderColor: "#eae7f7",
-      strokeDashArray: 4,
-      xaxis: { lines: { show: true } },
-      yaxis: { lines: { show: false } },
-    },
-    xaxis: {
-      categories: municipios,
-      labels: {
-        style: { colors: "#8985a2", fontSize: "11px" },
-      },
-      axisBorder: { show: false },
-      axisTicks: { show: false },
-    },
-    yaxis: {
-      labels: {
-        style: { colors: "#3e3869", fontSize: "11px" },
-        maxWidth: 150,
-      },
-    },
-    tooltip: { theme: "light" },
-    legend: { show: false },
-    noData: { text: "No hay reportes registrados" },
-  };
-
-  const graficaMunicipios = {
-    series: [{ name: "Reportes", data: reportesPorMunicipio }],
-    options: opcionesBase,
-  };
-
-  const graficaCobertura = {
-    series: [{
-      name: "Reportes",
-      data: reportesPorMunicipio,
-    }],
-    options: {
-      ...opcionesBase,
-      colors: ["#e989bd"],
-      plotOptions: {
-        bar: {
-          horizontal: false,
-          borderRadius: 6,
-          columnWidth: "48%",
-        },
-      },
-      xaxis: {
-        ...opcionesBase.xaxis,
-        labels: {
-          rotate: -45,
-          hideOverlappingLabels: true,
-          style: { colors: "#8985a2", fontSize: "10px" },
-        },
-      },
-    },
   };
 
   const metricas = [
@@ -300,11 +213,6 @@ export default function Dashboard() {
       clase: "today",
     },
   ];
-
-  const mostrarGrafica =
-    !cargandoEstadisticas &&
-    !errorEstadisticas &&
-    porMunicipio.length > 0;
 
   return (
     <div className="rieti-dashboard">
@@ -371,65 +279,18 @@ export default function Dashboard() {
         </div>
       )}
 
-      <section className="rieti-chart-grid" aria-label="Gráficas de reportes">
-        <article className="rieti-panel large">
-          <div className="rieti-panel-header">
-            <div>
-              <span>MUNICIPIOS</span>
-              <h3>Reportes recibidos por municipio</h3>
-            </div>
-          </div>
-
-          <div className="rieti-chart">
-            {cargandoEstadisticas ? (
-              <p className="rieti-chart-placeholder">Cargando gráfica...</p>
-            ) : mostrarGrafica ? (
-              <Chart
-                options={graficaMunicipios.options}
-                series={graficaMunicipios.series}
-                type="bar"
-                height={320}
-                width="100%"
-              />
-            ) : (
-              <p className="rieti-chart-placeholder">
-                {errorEstadisticas
-                  ? "No se pudo cargar la gráfica."
-                  : "No hay datos disponibles."}
-              </p>
-            )}
-          </div>
-        </article>
-
-        <article className="rieti-panel">
-          <div className="rieti-panel-header">
-            <div>
-              <span>COBERTURA</span>
-              <h3>Reportes por municipio</h3>
-            </div>
-          </div>
-
-          <div className="rieti-chart">
-            {cargandoEstadisticas ? (
-              <p className="rieti-chart-placeholder">Cargando gráfica...</p>
-            ) : mostrarGrafica ? (
-              <Chart
-                options={graficaCobertura.options}
-                series={graficaCobertura.series}
-                type="bar"
-                height={320}
-                width="100%"
-              />
-            ) : (
-              <p className="rieti-chart-placeholder">
-                {errorEstadisticas
-                  ? "No se pudo cargar la gráfica."
-                  : "No hay datos disponibles."}
-              </p>
-            )}
-          </div>
-        </article>
-      </section>
+      {rolUsuario === "Administrador" && (
+        <section
+          className="rieti-chart-grid"
+          aria-label="Gráficas por municipio"
+        >
+          <GraficaMunicipios
+            datos={porMunicipio}
+            cargando={cargandoEstadisticas}
+            error={errorEstadisticas}
+          />
+        </section>
+      )}
     </div>
   );
 }
