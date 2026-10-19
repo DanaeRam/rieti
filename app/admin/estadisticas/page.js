@@ -5,6 +5,7 @@ import MapaMunicipios from "@/components/MapaMunicipios";
 import MapaCalor from "@/components/MapaCalor";
 import MapaPuntos from "@/components/MapaPuntos";
 import GraficaActividad from "@/components/estadisticas/GraficaActividad";
+import GraficaEvolucion from "@/components/estadisticas/GraficaEvolucion";
 
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
@@ -105,6 +106,10 @@ export default function Estadisticas() {
     ? estadisticas.por_actividad
     : [];
 
+  const porFecha = Array.isArray(estadisticas?.por_fecha)
+    ? estadisticas.por_fecha
+    : [];
+
   return (
     <main className="estadisticas-page">
       <div className="rieti-page-title">
@@ -176,6 +181,12 @@ export default function Estadisticas() {
       >
         <GraficaActividad
           datos={porActividad}
+          cargando={cargandoEstadisticas}
+          error={errorEstadisticas}
+        />
+
+        <GraficaEvolucion
+          datos={porFecha}
           cargando={cargandoEstadisticas}
           error={errorEstadisticas}
         />

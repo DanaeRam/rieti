@@ -10,9 +10,9 @@ const Chart = dynamic(() => import("react-apexcharts"), {
 /**
  * Gráfica de tipos de actividad de RIETI.
  *
- * Representa la cantidad de reportes registrados
- * por actividad mediante barras horizontales,
- * ordenadas de mayor a menor frecuencia.
+ * Muestra reportes por actividad mediante barras
+ * horizontales, ordenadas de mayor a menor.
+ * Incluye una escala proporcional y exportación.
  *
  * @component
  */
@@ -33,16 +33,50 @@ export default function GraficaActividad({
       .sort((a, b) => b.total - a.total);
   }, [datos]);
 
+  const maximo = Math.max(0, ...actividades.map((item) => item.total));
+
+  const intervalo = maximo <= 10 ? 2 : maximo <= 50 ? 5 : 10;
+
+  const limiteX = Math.max(
+    intervalo,
+    Math.ceil(maximo / intervalo) * intervalo,
+  );
+
   const opciones = {
     chart: {
       type: "bar",
-      toolbar: { show: false },
       background: "transparent",
       fontFamily: "inherit",
       foreColor: "#77749a",
       animations: {
         enabled: true,
         speed: 600,
+      },
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false,
+        },
+        export: {
+          csv: {
+            filename: "RIETI_reportes_por_actividad",
+            columnDelimiter: ",",
+            headerCategory: "Actividad",
+            headerValue: "Reportes",
+          },
+          svg: {
+            filename: "RIETI_reportes_por_actividad",
+          },
+          png: {
+            filename: "RIETI_reportes_por_actividad",
+          },
+        },
       },
     },
 
@@ -70,16 +104,27 @@ export default function GraficaActividad({
     grid: {
       borderColor: "#eae7f7",
       strokeDashArray: 4,
-      xaxis: { lines: { show: true } },
-      yaxis: { lines: { show: false } },
+      xaxis: {
+        lines: { show: true },
+      },
+      yaxis: {
+        lines: { show: false },
+      },
+      padding: {
+        top: 5,
+        right: 10,
+        bottom: 0,
+        left: 5,
+      },
     },
 
     xaxis: {
       categories: actividades.map((item) => item.nombre),
       min: 0,
-      tickAmount: 5,
+      max: limiteX,
+      tickAmount: Math.max(1, limiteX / intervalo),
       labels: {
-        formatter: (valor) => Math.round(valor).toString(),
+        formatter: (valor) => String(Math.round(valor)),
         style: {
           colors: "#8985a2",
           fontSize: "11px",
@@ -106,12 +151,21 @@ export default function GraficaActividad({
       },
     },
 
-    legend: { show: false },
+    legend: {
+      show: false,
+    },
 
     noData: {
       text: "No hay actividades registradas.",
     },
   };
+
+  const series = [
+    {
+      name: "Reportes",
+      data: actividades.map((item) => item.total),
+    },
+  ];
 
   return (
     <article className="rieti-panel rieti-analitica-actividad">
@@ -132,14 +186,9 @@ export default function GraficaActividad({
         ) : actividades.length > 0 ? (
           <Chart
             options={opciones}
-            series={[
-              {
-                name: "Reportes",
-                data: actividades.map((item) => item.total),
-              },
-            ]}
+            series={series}
             type="bar"
-            height={Math.max(320, actividades.length * 52 + 75)}
+            height={310}
             width="100%"
           />
         ) : (
