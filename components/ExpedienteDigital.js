@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import MapaExpediente from "@/components/MapaExpediente";
 
 export default function ExpedienteDigital({ expediente, cerrar }) {
   const [pestana, setPestana] = useState("encabezado");
@@ -369,22 +370,30 @@ export default function ExpedienteDigital({ expediente, cerrar }) {
                   <span>Código postal</span>
                   <strong>{reporte.cp || "—"}</strong>
                 </div>
-
-                <div className="expediente-dato">
-                  <span>Latitud</span>
-                  <strong>{reporte.latitud || "—"}</strong>
-                </div>
-
-                <div className="expediente-dato">
-                  <span>Longitud</span>
-                  <strong>{reporte.longitud || "—"}</strong>
-                </div>
               </div>
 
               <div className="expediente-descripcion">
                 <span>Referencias de ubicación</span>
                 <p>{reporte.referencias || "—"}</p>
               </div>
+
+              {!cargando && (
+                <div className="expediente-ubicacion">
+                  <div className="expediente-ubicacion-header">
+                    <span>Ubicación del reporte</span>
+                    <p>
+                      Punto geográfico registrado al momento de enviar el
+                      reporte.
+                    </p>
+                  </div>
+
+                  <MapaExpediente
+                    latitud={reporte.latitud}
+                    longitud={reporte.longitud}
+                    folio={reporte.folio}
+                  />
+                </div>
+              )}
             </section>
           )}
 
