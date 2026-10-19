@@ -2621,7 +2621,7 @@ body {
   }
 }
 
-/* */
+/* ESTADISTICAS */
 
 .estadisticas-page {
   box-sizing: border-box;
@@ -2831,6 +2831,46 @@ body {
     height: 300px;
   }
 }
+
+
+/* GRÁFICAS DE ESTADÍSTICAS Y ANALÍTICA */
+/**
+ * Estilos de las gráficas estadísticas de RIETI.
+ *
+ * Define la distribución de las visualizaciones,
+ * el espaciado de las gráficas y la adaptación
+ * a dispositivos móviles.
+ *
+ * @author ChatGPT (OpenAI)
+ */
+
+.rieti-analitica-graficas {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  margin-top: 24px;
+}
+
+.rieti-analitica-graficas > .rieti-panel {
+  min-width: 0;
+}
+
+.rieti-analitica-graficas > .rieti-panel:only-child {
+  grid-column: 1 / -1;
+}
+
+.rieti-analitica-actividad .rieti-chart {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .rieti-analitica-graficas {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 16px;
+  }
+}
+
 
 
 

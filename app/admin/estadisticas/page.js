@@ -4,52 +4,106 @@ import { useEffect, useState } from "react";
 import MapaMunicipios from "@/components/MapaMunicipios";
 import MapaCalor from "@/components/MapaCalor";
 import MapaPuntos from "@/components/MapaPuntos";
+import GraficaActividad from "@/components/estadisticas/GraficaActividad";
 
+const URL_BASE =
+  "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
+
+/**
+ * Página de estadísticas y analítica
+ *
+ * Presenta la distribución territorial de reportes
+ * y las gráficas estadísticas del sistema.
+ *
+ * @component
+ */
 export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState("");
   const [pestanaActiva, setPestanaActiva] = useState("municipios");
 
-  const URL_BASE =
-    "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
+  const [estadisticas, setEstadisticas] = useState(null);
+  const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
+  const [errorEstadisticas, setErrorEstadisticas] = useState("");
 
   useEffect(() => {
+    const controlador = new AbortController();
+
+    async function obtenerDatos(ruta) {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        throw new Error("No hay una sesión activa.");
+      }
+
+      const respuesta = await fetch(`${URL_BASE}${ruta}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        signal: controlador.signal,
+      });
+
+      const datos = await respuesta.json();
+
+      if (!respuesta.ok) {
+        throw new Error(
+          datos.message || datos.error || "No se pudieron obtener los datos.",
+        );
+      }
+
+      return datos;
+    }
+
     async function obtenerReportes() {
       try {
-        const token = localStorage.getItem("token");
+        const datos = await obtenerDatos("/admin/reportes");
 
-        if (!token) {
-          throw new Error("No hay una sesión activa.");
+        if (!controlador.signal.aborted) {
+          setReportes(Array.isArray(datos) ? datos : datos.reportes || []);
         }
-
-        const respuesta = await fetch(`${URL_BASE}/admin/reportes`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        const datos = await respuesta.json();
-
-        if (!respuesta.ok) {
-          throw new Error(
-            datos.message ||
-              datos.error ||
-              "No se pudieron obtener los reportes.",
-          );
-        }
-
-        setReportes(Array.isArray(datos) ? datos : datos.reportes || []);
       } catch (error) {
-        console.error("Error al obtener reportes:", error);
-        setError(error.message);
+        if (error.name !== "AbortError") {
+          console.error("Error al obtener reportes:", error);
+          setError(error.message);
+        }
       } finally {
-        setCargando(false);
+        if (!controlador.signal.aborted) {
+          setCargando(false);
+        }
+      }
+    }
+
+    async function obtenerEstadisticas() {
+      try {
+        const datos = await obtenerDatos(
+          "/admin/dashboard/estadisticas?dias=30",
+        );
+
+        if (!controlador.signal.aborted) {
+          setEstadisticas(datos);
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error al obtener estadísticas:", error);
+          setErrorEstadisticas(error.message);
+        }
+      } finally {
+        if (!controlador.signal.aborted) {
+          setCargandoEstadisticas(false);
+        }
       }
     }
 
     obtenerReportes();
+    obtenerEstadisticas();
+
+    return () => controlador.abort();
   }, []);
+
+  const porActividad = Array.isArray(estadisticas?.por_actividad)
+    ? estadisticas.por_actividad
+    : [];
 
   return (
     <main className="estadisticas-page">
@@ -115,6 +169,17 @@ export default function Estadisticas() {
           </div>
         </article>
       )}
+
+      <section
+        className="rieti-analitica-graficas"
+        aria-label="Análisis estadístico de reportes"
+      >
+        <GraficaActividad
+          datos={porActividad}
+          cargando={cargandoEstadisticas}
+          error={errorEstadisticas}
+        />
+      </section>
     </main>
   );
 }
