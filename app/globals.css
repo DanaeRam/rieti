@@ -4227,11 +4227,10 @@ body {
   height: 100%;
 }
 
-/* ADMINISTRACIÓN DE USUARIOS */
 
 /* ADMINISTRACIÓN DE USUARIOS */
 /**
- * Estilos de administración de usuarios alimentadores.
+ * Estilos de administración de usuarios
  *
  * Reutiliza el diseño de la bandeja de reportes para
  * tarjetas, encabezados, formularios y tablas.
@@ -4694,6 +4693,93 @@ body {
     animation: none;
   }
 }
+
+
+.usuarios-creado {
+  width: min(480px, 100%);
+}
+
+.usuarios-creado-datos {
+  display: grid;
+  gap: 15px;
+  margin: 22px 0;
+}
+
+.usuarios-creado-datos > div {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.usuarios-creado-datos label {
+  color: #77749a;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.usuarios-creado-datos strong {
+  padding: 12px 14px;
+  border: 1px solid #e4e0ef;
+  border-radius: 10px;
+  background: rgba(244, 239, 252, 0.65);
+  color: #30295d;
+  font-size: 13px;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.usuarios-creado-password {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.usuarios-creado-password strong {
+  flex: 1;
+  min-width: 0;
+}
+
+.usuarios-creado-password button {
+  padding: 10px;
+  border: 1px solid #e4e0ef;
+  border-radius: 9px;
+  background: #fff;
+  color: #7955c8;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.usuarios-creado-password button:hover {
+  background: #f3f1fa;
+}
+
+.usuarios-creado-aviso {
+  margin: 0;
+  color: #77749a;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .usuarios-creado-datos {
+    gap: 12px;
+    margin: 16px 0;
+  }
+
+  .usuarios-creado-password {
+    flex-wrap: wrap;
+  }
+
+  .usuarios-creado-password strong {
+    flex-basis: 100%;
+  }
+
+  .usuarios-creado-password button {
+    flex: 1;
+  }
+}
+
 
 /* ANIMACIÓN PAPALOTE */
 /**

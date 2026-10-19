@@ -26,6 +26,9 @@ export default function Usuarios() {
 
   const [mensaje, setMensaje] = useState("");
   const [tipoMensaje, setTipoMensaje] = useState("");
+  const [usuarioCreado, setUsuarioCreado] = useState(null);
+  const [credencialesVisibles, setCredencialesVisibles] = useState(false);
+  const [copiado, setCopiado] = useState(false);
 
   const [cargando, setCargando] = useState(false);
   const [cargandoUsuarios, setCargandoUsuarios] = useState(false);
@@ -154,8 +157,14 @@ export default function Usuarios() {
         );
       }
 
-      setMensaje("El alimentador fue creado correctamente.");
-      setTipoMensaje("success");
+      setUsuarioCreado({
+        nombre,
+        correo: correoInstitucional,
+        password,
+      });
+
+      setCredencialesVisibles(false);
+      setCopiado(false);
 
       setNombre("");
       setCorreoInstitucional("");
@@ -173,6 +182,23 @@ export default function Usuarios() {
     } finally {
       setCargando(false);
     }
+  }
+
+  async function copiarPassword() {
+    if (!usuarioCreado) return;
+
+    try {
+      await navigator.clipboard.writeText(usuarioCreado.password);
+      setCopiado(true);
+    } catch {
+      setCopiado(false);
+    }
+  }
+
+  function cerrarUsuarioCreado() {
+    setUsuarioCreado(null);
+    setCredencialesVisibles(false);
+    setCopiado(false);
   }
 
   /**
@@ -669,6 +695,77 @@ export default function Usuarios() {
                   : accionEstado === "desactivar"
                     ? "Desactivar"
                     : "Activar"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {usuarioCreado && (
+        <div className="usuarios-modal-overlay">
+          <div
+            className="usuarios-confirmacion usuarios-creado"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="usuario-creado-titulo"
+          >
+            <div className="usuarios-confirmacion-header">
+              <span>CUENTA CREADA</span>
+              <h2 id="usuario-creado-titulo">
+                Alimentador creado correctamente
+              </h2>
+            </div>
+
+            <p className="usuarios-confirmacion-texto">
+              Guarda las credenciales y compártelas de forma segura con el
+              funcionario.
+            </p>
+
+            <div className="usuarios-creado-datos">
+              <div>
+                <label>Nombre completo</label>
+                <strong>{usuarioCreado.nombre}</strong>
+              </div>
+
+              <div>
+                <label>Correo institucional</label>
+                <strong>{usuarioCreado.correo}</strong>
+              </div>
+
+              <div>
+                <label>Contraseña temporal</label>
+
+                <div className="usuarios-creado-password">
+                  <strong>
+                    {credencialesVisibles ? usuarioCreado.password : "••••••••"}
+                  </strong>
+
+                  <button
+                    type="button"
+                    onClick={() => setCredencialesVisibles((actual) => !actual)}
+                  >
+                    {credencialesVisibles ? "Ocultar" : "Mostrar"}
+                  </button>
+
+                  <button type="button" onClick={copiarPassword}>
+                    {copiado ? "Copiada" : "Copiar"}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <p className="usuarios-creado-aviso">
+              Estas credenciales dejarán de mostrarse al cerrar la ventana. No
+              compartas la contraseña por canales inseguros.
+            </p>
+
+            <div className="usuarios-modal-actions">
+              <button
+                type="button"
+                className="usuarios-modal-button primary"
+                onClick={cerrarUsuarioCreado}
+              >
+                Entendido, cerrar
               </button>
             </div>
           </div>
