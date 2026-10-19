@@ -168,54 +168,99 @@ export default function AsignacionReporte({
   }
 
   return (
-    <div>
-      <h3>Asignar responsable</h3>
-
-      <p>
-        <strong>Folio:</strong> {reporte.folio}
-      </p>
-
-      <p>
-        <strong>Municipio:</strong> {reporte.municipio}
-      </p>
-
-      <label htmlFor="alimentador">Alimentador responsable:</label>
-
-      <select
-        id="alimentador"
-        value={idUsuario}
-        onChange={(e) => setIdUsuario(e.target.value)}
-        disabled={cargando || guardando}
+    <div className="rieti-asignacion-overlay">
+      <div
+        className="rieti-asignacion-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="asignacion-titulo"
       >
-        <option value="">
-          {cargando ? "Cargando alimentadores..." : "Seleccionar alimentador"}
-        </option>
+        <div className="rieti-asignacion-header">
+          <div>
+            <span>ASIGNACIÓN DE REPORTE</span>
+            <h2 id="asignacion-titulo">Asignar responsable</h2>
+            <p>Selecciona al funcionario que atenderá este reporte.</p>
+          </div>
 
-        {alimentadores.map((usuario) => (
-          <option key={usuario.idUsuario} value={usuario.idUsuario}>
-            {usuario.nombre}
-          </option>
-        ))}
-      </select>
+          <button
+            type="button"
+            className="rieti-asignacion-close"
+            onClick={cerrar}
+            disabled={guardando}
+            aria-label="Cerrar asignación"
+          >
+            ×
+          </button>
+        </div>
 
-      {!cargando && alimentadores.length === 0 && !error && (
-        <p>No hay alimentadores activos en este municipio.</p>
-      )}
+        <div className="rieti-asignacion-content">
+          <div className="rieti-asignacion-info">
+            <div>
+              <span>Folio del reporte</span>
+              <strong>{reporte.folio}</strong>
+            </div>
 
-      {error && <p role="alert">{error}</p>}
+            <div>
+              <span>Municipio</span>
+              <strong>{reporte.municipio}</strong>
+            </div>
+          </div>
 
-      <div>
-        <button type="button" onClick={cerrar} disabled={guardando}>
-          Cancelar
-        </button>
+          <div className="rieti-asignacion-field">
+            <label htmlFor="alimentador">Alimentador responsable</label>
 
-        <button
-          type="button"
-          onClick={asignarReporte}
-          disabled={!idUsuario || cargando || guardando}
-        >
-          {guardando ? "Asignando..." : "Asignar reporte"}
-        </button>
+            <select
+              id="alimentador"
+              value={idUsuario}
+              onChange={(e) => setIdUsuario(e.target.value)}
+              disabled={cargando || guardando}
+            >
+              <option value="">
+                {cargando
+                  ? "Cargando alimentadores..."
+                  : "Seleccionar alimentador"}
+              </option>
+
+              {alimentadores.map((usuario) => (
+                <option key={usuario.idUsuario} value={usuario.idUsuario}>
+                  {usuario.nombre}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {!cargando && alimentadores.length === 0 && !error && (
+            <p className="rieti-asignacion-empty">
+              No hay alimentadores activos en este municipio.
+            </p>
+          )}
+
+          {error && (
+            <p className="rieti-asignacion-error" role="alert">
+              {error}
+            </p>
+          )}
+
+          <div className="rieti-asignacion-actions">
+            <button
+              type="button"
+              className="rieti-asignacion-button secondary"
+              onClick={cerrar}
+              disabled={guardando}
+            >
+              Cancelar
+            </button>
+
+            <button
+              type="button"
+              className="rieti-asignacion-button primary"
+              onClick={asignarReporte}
+              disabled={!idUsuario || cargando || guardando}
+            >
+              {guardando ? "Asignando..." : "Asignar reporte"}
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
