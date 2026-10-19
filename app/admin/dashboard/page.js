@@ -13,6 +13,7 @@ import {
 
 import GraficaMunicipios from "@/components/dashboard/GraficaMunicipios";
 import GraficaEstatus from "@/components/dashboard/GraficaEstatus";
+import TablaAtencion from "@/components/dashboard/TablaAtencion";
 
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
@@ -73,6 +74,10 @@ export default function Dashboard() {
   const [estadisticas, setEstadisticas] = useState(null);
   const [cargandoEstadisticas, setCargandoEstadisticas] = useState(true);
   const [errorEstadisticas, setErrorEstadisticas] = useState("");
+
+  const [reportes, setReportes] = useState([]);
+  const [cargandoReportes, setCargandoReportes] = useState(true);
+  const [errorReportes, setErrorReportes] = useState("");
 
   useEffect(() => {
     try {
@@ -141,6 +146,26 @@ export default function Dashboard() {
 
     cargarResumen();
     cargarEstadisticas();
+    cargarReportes();
+
+    async function cargarReportes() {
+      try {
+        const datos = await obtenerDatos("/api/v1/admin/reportes");
+
+        if (!controlador.signal.aborted) {
+          setReportes(Array.isArray(datos.reportes) ? datos.reportes : []);
+        }
+      } catch (error) {
+        if (error.name !== "AbortError") {
+          console.error("Error al cargar reportes:", error);
+          setErrorReportes(error.message);
+        }
+      } finally {
+        if (!controlador.signal.aborted) {
+          setCargandoReportes(false);
+        }
+      }
+    }
 
     return () => controlador.abort();
   }, []);
@@ -302,6 +327,14 @@ export default function Dashboard() {
           error={errorEstadisticas}
         />
       </section>
+
+      <TablaAtencion
+        reportes={reportes}
+        cargando={cargandoReportes}
+        error={errorReportes}
+        limite={rolUsuario === "Administrador" ? 10 : 5}
+        mostrarMunicipio={rolUsuario === "Administrador"}
+      />
     </div>
   );
 }

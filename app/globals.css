@@ -2022,6 +2022,177 @@ body {
   }
 }
 
+/* */
+
+/* REPORTES QUE REQUIEREN ATENCIÓN */
+/**
+ * Estilos de la tabla de seguimiento prioritario de RIETI.
+ *
+ * Define la presentación de expedientes, los indicadores
+ * de riesgo, el acceso al expediente digital y el
+ * comportamiento responsivo de la tabla.
+ *
+ * @author ChatGPT (OpenAI)
+ */
+
+.rieti-atencion {
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.rieti-atencion .rieti-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rieti-atencion-count {
+  padding: 7px 14px;
+  border: 1px solid #e9e1f6;
+  border-radius: 30px;
+  background: rgba(244, 239, 252, 0.8);
+  color: #7955c8;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.rieti-atencion-table-container {
+  margin: 24px 26px 26px;
+  overflow-x: auto;
+  border: 1px solid rgba(225, 219, 240, 0.7);
+  border-radius: 14px;
+}
+
+.rieti-atencion-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.7);
+  font-size: 12px;
+  text-align: left;
+}
+
+.rieti-atencion-table thead {
+  background: rgba(244, 239, 252, 0.8);
+}
+
+.rieti-atencion-table th {
+  padding: 15px 17px;
+  color: #77749a;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rieti-atencion-table td {
+  padding: 15px 17px;
+  border-top: 1px solid #eeeaf5;
+  color: #514d69;
+  vertical-align: middle;
+}
+
+.rieti-atencion-table tbody tr:hover {
+  background: rgba(244, 239, 252, 0.45);
+}
+
+.rieti-atencion-folio {
+  color: #51448d;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rieti-atencion-riesgo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 55px;
+  padding: 6px 10px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.rieti-atencion-riesgo.alta {
+  background: #fdecef;
+  color: #c75061;
+}
+
+.rieti-atencion-riesgo.media {
+  background: #fff3df;
+  color: #c48a35;
+}
+
+.rieti-atencion-riesgo.baja {
+  background: #e9f8f1;
+  color: #268356;
+}
+
+.rieti-atencion-riesgo:not(.alta):not(.media):not(.baja) {
+  background: #f1eef7;
+  color: #77749a;
+}
+
+.rieti-atencion-ver {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid #e4dcf5;
+  border-radius: 9px;
+  background: rgba(244, 239, 252, 0.9);
+  color: #7955c8;
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.rieti-atencion-ver:hover {
+  background: #e9dff8;
+  transform: translateY(-1px);
+}
+
+.rieti-atencion-ver:focus-visible {
+  outline: 2px solid #7955c8;
+  outline-offset: 2px;
+}
+
+@media (max-width: 768px) {
+  .rieti-atencion {
+    margin-top: 16px;
+  }
+
+  .rieti-atencion .rieti-panel-header {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .rieti-atencion-table-container {
+    margin: 16px 18px 18px;
+  }
+
+  .rieti-atencion-table {
+    min-width: 620px;
+  }
+
+  .rieti-atencion-table th,
+  .rieti-atencion-table td {
+    padding: 12px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rieti-atencion-ver {
+    transition: none;
+  }
+}
+
 
 
 /* BANDEJA DE REPORTES */
