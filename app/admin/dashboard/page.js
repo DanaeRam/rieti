@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 
 import GraficaMunicipios from "@/components/dashboard/GraficaMunicipios";
+import GraficaEstatus from "@/components/dashboard/GraficaEstatus";
 
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
@@ -148,6 +149,10 @@ export default function Dashboard() {
     ? estadisticas.por_municipio
     : [];
 
+  const porEstatus = Array.isArray(estadisticas?.por_estatus)
+    ? estadisticas.por_estatus
+    : [];
+
   const periodos = calcularPeriodos(estadisticas?.por_fecha);
 
   const valorResumen = (campo) => {
@@ -279,18 +284,24 @@ export default function Dashboard() {
         </div>
       )}
 
-      {rolUsuario === "Administrador" && (
-        <section
-          className="rieti-chart-grid"
-          aria-label="Gráficas por municipio"
-        >
+      <section
+        className="rieti-chart-grid"
+        aria-label="Gráficas estadísticas de reportes"
+      >
+        {rolUsuario === "Administrador" && (
           <GraficaMunicipios
             datos={porMunicipio}
             cargando={cargandoEstadisticas}
             error={errorEstadisticas}
           />
-        </section>
-      )}
+        )}
+
+        <GraficaEstatus
+          datos={porEstatus}
+          cargando={cargandoEstadisticas}
+          error={errorEstadisticas}
+        />
+      </section>
     </div>
   );
 }

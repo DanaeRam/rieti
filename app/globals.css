@@ -1938,6 +1938,92 @@ body {
   }
 }
 
+/* */
+
+/* GRÁFICA DE REPORTES POR PERIODO */
+/**
+ * Estilos de la gráfica de tendencia de reportes de RIETI.
+ *
+ * Define el contenedor de la gráfica, los filtros
+ * de periodo, los estados activos y el comportamiento
+ * responsivo para dispositivos móviles.
+ *
+ * @author ChatGPT (OpenAI)
+ */
+
+.rieti-tendencia {
+  margin-bottom: 24px;
+}
+
+.rieti-tendencia .rieti-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rieti-tendencia-filtros {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px;
+  border: 1px solid #e9e1f6;
+  border-radius: 11px;
+  background: rgba(244, 239, 252, 0.8);
+}
+
+.rieti-tendencia-filtros button {
+  padding: 9px 14px;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: #77749a;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+}
+
+.rieti-tendencia-filtros button:hover {
+  color: #7955c8;
+}
+
+.rieti-tendencia-filtros button.active {
+  background: #ffffff;
+  color: #7955c8;
+  box-shadow: 0 2px 8px rgba(78, 65, 131, 0.1);
+}
+
+.rieti-tendencia .rieti-chart {
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .rieti-tendencia .rieti-panel-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rieti-tendencia-filtros {
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .rieti-tendencia-filtros button {
+    flex: 1;
+    padding: 9px 6px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rieti-tendencia-filtros button {
+    transition: none;
+  }
+}
+
+
+
 /* BANDEJA DE REPORTES */
 /**
  * Estilos de la bandeja de reportes del panel administrativo.
