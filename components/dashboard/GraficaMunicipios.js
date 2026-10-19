@@ -17,10 +17,35 @@ export default function GraficaMunicipios({
   const options = {
     chart: {
       type: "bar",
-      toolbar: { show: false },
       background: "transparent",
       fontFamily: "inherit",
       foreColor: "#77749a",
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false,
+        },
+        export: {
+          csv: {
+            filename: "RIETI_reportes_por_municipio",
+            columnDelimiter: ",",
+            headerCategory: "Municipio",
+            headerValue: "Reportes",
+          },
+          svg: {
+            filename: "RIETI_reportes_por_municipio",
+          },
+          png: {
+            filename: "RIETI_reportes_por_municipio",
+          },
+        },
+      },
     },
     colors: ["#7955c8"],
     plotOptions: {

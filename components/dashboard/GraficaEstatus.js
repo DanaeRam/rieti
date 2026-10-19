@@ -79,10 +79,35 @@ export default function GraficaEstatus({
   const options = {
     chart: {
       type: "donut",
-      toolbar: { show: false },
       background: "transparent",
       fontFamily: "inherit",
       foreColor: "#77749a",
+      toolbar: {
+        show: true,
+        tools: {
+          download: true,
+          selection: false,
+          zoom: false,
+          zoomin: false,
+          zoomout: false,
+          pan: false,
+          reset: false,
+        },
+        export: {
+          csv: {
+            filename: "RIETI_reportes_por_estatus",
+            columnDelimiter: ",",
+            headerCategory: "Estatus",
+            headerValue: "Reportes",
+          },
+          svg: {
+            filename: "RIETI_reportes_por_estatus",
+          },
+          png: {
+            filename: "RIETI_reportes_por_estatus",
+          },
+        },
+      },
     },
     labels: distribucion.map((item) => item.nombre),
     colors: distribucion.map((item) => item.color),
@@ -149,7 +174,6 @@ export default function GraficaEstatus({
       },
     ],
   };
-
   return (
     <article className="rieti-panel">
       <div className="rieti-panel-header">
