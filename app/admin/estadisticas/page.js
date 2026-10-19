@@ -8,6 +8,7 @@ import GraficaActividad from "@/components/estadisticas/GraficaActividad";
 import GraficaEvolucion from "@/components/estadisticas/GraficaEvolucion";
 import GraficaMunicipioPrioridad from "@/components/estadisticas/GraficaMunicipioPrioridad";
 import GraficaMunicipioEstatus from "@/components/estadisticas/GraficaMunicipioEstatus";
+import TablaZonasRecurrentes from "@/components/estadisticas/TablaZonasRecurrentes";
 
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
@@ -176,6 +177,12 @@ export default function Estadisticas() {
           </div>
         </article>
       )}
+
+      <TablaZonasRecurrentes
+        reportes={reportes}
+        cargando={cargando}
+        error={error}
+      />
 
       <section
         className="rieti-analitica-graficas"

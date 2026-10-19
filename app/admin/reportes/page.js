@@ -320,7 +320,7 @@ export default function Reportes() {
           </div>
 
           <div className="reporte-filtro">
-            <label htmlFor="estatus">estatus</label>
+            <label htmlFor="estatus">Estatus</label>
 
             <select
               id="estatus"

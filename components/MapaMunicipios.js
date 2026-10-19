@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { booleanPointInPolygon } from "@turf/boolean-point-in-polygon";
 
 const COLORES = {
-  sinReportes: "#e9e7ef",
+  sinReportes: "#ffffff",
   baja: "#38bdf8",
   media: "#facc15",
   alta: "#dc2626",
@@ -17,6 +17,8 @@ function obtenerCoordenadas(reporte) {
   if (
     reporte.latitud == null ||
     reporte.longitud == null ||
+    String(reporte.latitud).trim() === "" ||
+    String(reporte.longitud).trim() === "" ||
     !Number.isFinite(lat) ||
     !Number.isFinite(lon) ||
     (lat === 0 && lon === 0) ||
@@ -48,7 +50,6 @@ function contarReportes(reportes, municipios) {
     if (!municipio) continue;
 
     const clave = municipio.properties.cveinegi;
-
     conteos.set(clave, conteos.get(clave) + 1);
   }
 
@@ -56,7 +57,9 @@ function contarReportes(reportes, municipios) {
 }
 
 function obtenerColor(cantidad, maximo) {
-  if (cantidad === 0) return COLORES.sinReportes;
+  if (cantidad === 0 || maximo === 0) {
+    return COLORES.sinReportes;
+  }
 
   const porcentaje = cantidad / maximo;
 
@@ -75,24 +78,17 @@ export default function MapaMunicipios({ reportes = [] }) {
   const reportesRef = useRef(reportes);
 
   const [error, setError] = useState("");
+  const [maximo, setMaximo] = useState(0);
 
-  useEffect(() => {
-    reportesRef.current = reportes;
-
-    const L = leafletRef.current;
-    const capa = capaRef.current;
-    const municipios = municipiosRef.current;
-
-    if (!L || !capa || !municipios) return;
-
-    mostrarMunicipios(L, capa, municipios, reportes);
-  }, [reportes]);
+  reportesRef.current = reportes;
 
   function mostrarMunicipios(L, capa, municipios, listaReportes) {
     capa.clearLayers();
 
     const conteos = contarReportes(listaReportes, municipios);
-    const maximo = Math.max(0, ...conteos.values());
+    const mayorConteo = Math.max(0, ...conteos.values());
+
+    setMaximo(mayorConteo);
 
     L.geoJSON(municipios, {
       style: (municipio) => {
@@ -101,8 +97,8 @@ export default function MapaMunicipios({ reportes = [] }) {
         return {
           color: "#ffffff",
           weight: 1,
-          fillColor: obtenerColor(cantidad, maximo),
-          fillOpacity: 0.75,
+          fillColor: obtenerColor(cantidad, mayorConteo),
+          fillOpacity: 0.8,
         };
       },
 
@@ -112,16 +108,22 @@ export default function MapaMunicipios({ reportes = [] }) {
 
         poligono.bindTooltip(nombre);
 
-        poligono.bindPopup(
-          `<strong>${nombre}</strong><p>Reportes: ${cantidad}</p>`,
-        );
+        const contenido = document.createElement("div");
+        const titulo = document.createElement("strong");
+        const total = document.createElement("p");
+
+        titulo.textContent = nombre;
+        total.textContent = `Reportes: ${cantidad}`;
+
+        contenido.append(titulo, total);
+        poligono.bindPopup(contenido);
 
         poligono.on({
           mouseover(evento) {
             evento.target.setStyle({
               color: "#51448d",
               weight: 2,
-              fillOpacity: 0.9,
+              fillOpacity: 0.95,
             });
 
             evento.target.bringToFront();
@@ -131,14 +133,24 @@ export default function MapaMunicipios({ reportes = [] }) {
             evento.target.setStyle({
               color: "#ffffff",
               weight: 1,
-              fillColor: obtenerColor(cantidad, maximo),
-              fillOpacity: 0.75,
+              fillColor: obtenerColor(cantidad, mayorConteo),
+              fillOpacity: 0.8,
             });
           },
         });
       },
     }).addTo(capa);
   }
+
+  useEffect(() => {
+    const L = leafletRef.current;
+    const capa = capaRef.current;
+    const municipios = municipiosRef.current;
+
+    if (!L || !capa || !municipios) return;
+
+    mostrarMunicipios(L, capa, municipios, reportes);
+  }, [reportes]);
 
   useEffect(() => {
     let cancelado = false;
@@ -198,9 +210,7 @@ export default function MapaMunicipios({ reportes = [] }) {
     }
 
     cargarMapa().catch((error) => {
-      if (!cancelado) {
-        setError(error.message);
-      }
+      if (!cancelado) setError(error.message);
     });
 
     return () => {
@@ -214,15 +224,76 @@ export default function MapaMunicipios({ reportes = [] }) {
     };
   }, []);
 
+  const umbralMedio = Math.max(1, Math.ceil(maximo * 0.34));
+  const umbralAlto = Math.max(1, Math.ceil(maximo * 0.67));
+
+  const simbologia = [
+    {
+      nombre: "Sin reportes",
+      detalle: "0 reportes",
+      color: COLORES.sinReportes,
+    },
+    {
+      nombre: "Baja concentración",
+      detalle:
+        maximo > 0 ? `1–${Math.max(0, umbralMedio - 1)} reportes` : "Sin datos",
+      color: COLORES.baja,
+    },
+    {
+      nombre: "Media concentración",
+      detalle:
+        maximo > 0
+          ? `${umbralMedio}–${Math.max(umbralMedio, umbralAlto - 1)} reportes`
+          : "Sin datos",
+      color: COLORES.media,
+    },
+    {
+      nombre: "Alta concentración",
+      detalle: maximo > 0 ? `${umbralAlto} o más reportes` : "Sin datos",
+      color: COLORES.alta,
+    },
+  ];
+
   return (
-    <div>
+    <div className="rieti-municipios-contenedor">
       {error && <p role="alert">{error}</p>}
 
       <div
         ref={contenedorRef}
         className="rieti-mapa-calor"
-        aria-label="Mapa de reportes por municipio"
+        aria-label="Mapa de concentración de reportes por municipio"
       />
+
+      <div
+        className="rieti-municipios-simbologia"
+        aria-label="Simbología de concentración por municipio"
+      >
+        <div className="rieti-municipios-simbologia-header">
+          <strong>Concentración de reportes</strong>
+          <span>Por municipio</span>
+        </div>
+
+        <div className="rieti-municipios-simbologia-lista">
+          {simbologia.map((item) => (
+            <div className="rieti-municipios-simbologia-item" key={item.nombre}>
+              <span
+                className="rieti-municipios-simbologia-color"
+                style={{ backgroundColor: item.color }}
+              />
+
+              <div>
+                <strong>{item.nombre}</strong>
+                <span>{item.detalle}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <p>
+          Los niveles se calculan respecto al municipio con mayor número de
+          reportes.
+        </p>
+      </div>
     </div>
   );
 }

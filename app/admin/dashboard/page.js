@@ -18,51 +18,89 @@ import TablaAtencion from "@/components/dashboard/TablaAtencion";
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
 
+
 function obtenerFechaLocal(valor) {
   if (!valor) return null;
 
-  if (typeof valor === "string" && /^\d{4}-\d{2}-\d{2}$/.test(valor)) {
-    const [anio, mes, dia] = valor.split("-").map(Number);
-    const fecha = new Date(anio, mes - 1, dia);
+  if (typeof valor === "string") {
+    const coincidencia = valor.match(
+      /^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/
+    );
 
-    return fecha.getFullYear() === anio &&
-      fecha.getMonth() === mes - 1 &&
-      fecha.getDate() === dia
-      ? fecha
-      : null;
+    if (coincidencia) {
+      const [, anioTexto, mesTexto, diaTexto] = coincidencia;
+      const anio = Number(anioTexto);
+      const mes = Number(mesTexto);
+      const dia = Number(diaTexto);
+
+      const fecha = new Date(anio, mes - 1, dia);
+
+      if (
+        fecha.getFullYear() === anio &&
+        fecha.getMonth() === mes - 1 &&
+        fecha.getDate() === dia
+      ) {
+        return fecha;
+      }
+
+      return null;
+    }
   }
 
   const fecha = new Date(valor);
   return Number.isNaN(fecha.getTime()) ? null : fecha;
 }
 
-function calcularPeriodos(porFecha) {
+function calcularPeriodos(reportes) {
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
 
   const inicioSemana = new Date(hoy);
-  inicioSemana.setDate(hoy.getDate() - ((hoy.getDay() + 6) % 7));
+  inicioSemana.setDate(
+    hoy.getDate() - ((hoy.getDay() + 6) % 7)
+  );
 
-  const inicioMes = new Date(hoy.getFullYear(), hoy.getMonth(), 1);
-  const resultado = { hoy: 0, semana: 0, mes: 0 };
+  const inicioMes = new Date(
+    hoy.getFullYear(),
+    hoy.getMonth(),
+    1
+  );
 
-  if (!Array.isArray(porFecha)) return resultado;
+  const resultado = {
+    hoy: 0,
+    semana: 0,
+    mes: 0,
+  };
 
-  porFecha.forEach((item) => {
-    const fecha = obtenerFechaLocal(item.fecha);
-    const total = Number(item.total ?? 0);
+  if (!Array.isArray(reportes)) return resultado;
 
-    if (!fecha || !Number.isFinite(total) || fecha > new Date()) return;
+  reportes.forEach((reporte) => {
+    const fecha = obtenerFechaLocal(
+      reporte.fecha_registro
+    );
+
+    if (!fecha) return;
 
     fecha.setHours(0, 0, 0, 0);
 
-    if (fecha.getTime() === hoy.getTime()) resultado.hoy += total;
-    if (fecha >= inicioSemana) resultado.semana += total;
-    if (fecha >= inicioMes) resultado.mes += total;
+    if (fecha > hoy) return;
+
+    if (fecha.getTime() === hoy.getTime()) {
+      resultado.hoy++;
+    }
+
+    if (fecha >= inicioSemana) {
+      resultado.semana++;
+    }
+
+    if (fecha >= inicioMes) {
+      resultado.mes++;
+    }
   });
 
   return resultado;
 }
+
 
 export default function Dashboard() {
   const [rolUsuario, setRolUsuario] = useState(null);
@@ -178,7 +216,7 @@ export default function Dashboard() {
     ? estadisticas.por_estatus
     : [];
 
-  const periodos = calcularPeriodos(estadisticas?.por_fecha);
+const periodos = calcularPeriodos(reportes);
 
   const valorResumen = (campo) => {
     if (cargandoResumen) return "...";
@@ -186,11 +224,11 @@ export default function Dashboard() {
     return resumen?.[campo] ?? 0;
   };
 
-  const valorPeriodo = (campo) => {
-    if (cargandoEstadisticas) return "...";
-    if (errorEstadisticas) return "—";
-    return periodos[campo];
-  };
+const valorPeriodo = (campo) => {
+  if (cargandoReportes) return "...";
+  if (errorReportes) return "—";
+  return periodos[campo];
+};
 
   const metricas = [
     {

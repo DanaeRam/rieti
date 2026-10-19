@@ -3136,6 +3136,350 @@ body {
   }
 }
 
+/* tablaaa */
+
+/**
+ * Tabla de zonas recurrentes de RIETI.
+ * Mantiene el diseño de las tablas administrativas,
+ * con encabezados lilas, filas alternadas,
+ * acciones y adaptación móvil.
+ */
+
+.rieti-zonas-panel {
+  margin-top: 24px;
+  overflow: hidden;
+}
+
+.rieti-zonas-contenido {
+  padding: 10px 28px 26px;
+}
+
+.rieti-zonas-herramientas {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+
+.rieti-zonas-herramientas p,
+.rieti-zonas-nota {
+  margin: 0;
+  color: #77749a;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.rieti-zonas-filtro {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #51448d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.rieti-zonas-filtro select {
+  min-width: 125px;
+  padding: 10px 12px;
+  border: 1px solid #e4d7f6;
+  border-radius: 10px;
+  background: #f8f5fd;
+  color: #51448d;
+  font: inherit;
+  cursor: pointer;
+}
+
+.rieti-zonas-tabla-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e9e3f6;
+  border-radius: 16px;
+}
+
+.rieti-zonas-tabla {
+  width: 100%;
+  min-width: 800px;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.rieti-zonas-tabla th {
+  padding: 20px;
+  background: #f5f1fc;
+  color: #77749a;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: left;
+}
+
+.rieti-zonas-tabla th:nth-child(1) { width: 18%; }
+.rieti-zonas-tabla th:nth-child(2) { width: 29%; }
+.rieti-zonas-tabla th:nth-child(3) { width: 15%; }
+.rieti-zonas-tabla th:nth-child(4) { width: 18%; }
+.rieti-zonas-tabla th:nth-child(5) { width: 20%; }
+
+.rieti-zonas-fila {
+  padding: 0;
+  border-top: 1px solid #ece7f6;
+}
+
+.rieti-zonas-tabla tbody tr:nth-child(even) {
+  background: rgba(247, 243, 252, 0.65);
+}
+
+.rieti-zonas-fila-principal {
+  display: grid;
+  grid-template-columns: 18% 29% 15% 18% 20%;
+  align-items: center;
+  min-height: 82px;
+}
+
+.rieti-zonas-fila-principal > * {
+  min-width: 0;
+  padding: 14px 20px;
+  color: #30295d;
+  font-size: 13px;
+}
+
+.rieti-zonas-celda-zona {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  color: #51448d;
+}
+
+.rieti-zonas-celda-zona svg {
+  flex-shrink: 0;
+  color: #7955c8;
+}
+
+.rieti-zonas-cantidad {
+  font-weight: 700;
+  color: #7955c8 !important;
+}
+
+.rieti-zonas-boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: fit-content;
+  padding: 11px 14px;
+  border: 1px solid #e4d7f6;
+  border-radius: 11px;
+  background: #f4effc;
+  color: #7955c8;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.rieti-zonas-boton:hover {
+  background: #e9dff8;
+  transform: translateY(-1px);
+}
+
+.rieti-zonas-detalle {
+  padding: 8px 20px 18px;
+  border-top: 1px dashed #e4d7f6;
+  background: rgba(248, 245, 253, 0.7);
+}
+
+.rieti-zonas-expediente {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 13px 10px;
+  border-bottom: 1px solid #eae5f4;
+}
+
+.rieti-zonas-expediente:last-child {
+  border-bottom: 0;
+}
+
+.rieti-zonas-expediente > div {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.rieti-zonas-expediente strong {
+  color: #51448d;
+  font-size: 13px;
+}
+
+.rieti-zonas-expediente span {
+  color: #77749a;
+  font-size: 12px;
+}
+
+.rieti-zonas-mensaje {
+  padding: 30px 15px;
+  color: #77749a;
+  font-size: 13px;
+  text-align: center;
+}
+
+.rieti-zonas-nota {
+  margin-top: 16px;
+  font-size: 12px;
+}
+
+@media (max-width: 768px) {
+  .rieti-zonas-panel {
+    margin-top: 18px;
+  }
+
+  .rieti-zonas-contenido {
+    padding: 8px 14px 20px;
+  }
+
+  .rieti-zonas-herramientas {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rieti-zonas-filtro {
+    flex-wrap: wrap;
+  }
+
+  .rieti-zonas-tabla th {
+    padding: 15px 12px;
+    font-size: 12px;
+  }
+
+  .rieti-zonas-fila-principal > * {
+    padding: 12px;
+    font-size: 12px;
+  }
+
+  .rieti-zonas-expediente {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .rieti-zonas-boton {
+    padding: 9px 11px;
+  }
+}
+
+/* mapa municipios */
+
+/**
+ * Simbología del mapa municipal de RIETI.
+ * Presenta una leyenda flotante con los niveles
+ * de concentración de reportes.
+ */
+
+.rieti-municipios-contenedor {
+  position: relative;
+  width: 100%;
+  min-width: 0;
+}
+
+.rieti-municipios-simbologia {
+  position: absolute;
+  bottom: 22px;
+  left: 22px;
+  z-index: 500;
+  width: 235px;
+  padding: 16px;
+  border: 1px solid rgba(228, 215, 246, 0.9);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 8px 28px rgba(78, 65, 131, 0.15);
+  backdrop-filter: blur(14px);
+}
+
+.rieti-municipios-simbologia-header {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  margin-bottom: 14px;
+}
+
+.rieti-municipios-simbologia-header strong {
+  color: #30295d;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.rieti-municipios-simbologia-header > span {
+  color: #77749a;
+  font-size: 11px;
+}
+
+.rieti-municipios-simbologia-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.rieti-municipios-simbologia-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rieti-municipios-simbologia-color {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
+  border: 1px solid rgba(81, 68, 141, 0.1);
+  border-radius: 5px;
+}
+
+.rieti-municipios-simbologia-item > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.rieti-municipios-simbologia-item strong {
+  color: #51448d;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.rieti-municipios-simbologia-item div span {
+  color: #8985a2;
+  font-size: 10px;
+}
+
+.rieti-municipios-simbologia > p {
+  margin: 13px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid #eee8f6;
+  color: #8985a2;
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .rieti-municipios-simbologia {
+    bottom: 12px;
+    left: 12px;
+    width: 200px;
+    padding: 12px;
+    border-radius: 12px;
+  }
+
+  .rieti-municipios-simbologia-header {
+    margin-bottom: 10px;
+  }
+
+  .rieti-municipios-simbologia-lista {
+    gap: 8px;
+  }
+}
+
+
 
 
 /* FORMULARIO DE REPORTES */
