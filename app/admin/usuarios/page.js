@@ -346,185 +346,191 @@ export default function Usuarios() {
 
   return (
     <>
-      <div className="rieti-page-title">
-        <h2>Administración de usuarios</h2>
-      </div>
-
-      <section className="rieti-panel">
-        <div className="rieti-panel-header">
-          <div>
-            <span>NUEVO ALIMENTADOR</span>
-            <h3>Crear alimentador</h3>
-          </div>
+      <div className="reportes-page usuarios-page">
+        <div className="rieti-page-title">
+          <h2>Administración de usuarios</h2>
         </div>
 
-        <form onSubmit={crearUsuario} className="usuarios-form">
-          <div className="usuario-filtro">
-            <label htmlFor="nombre">Nombre</label>
-
-            <input
-              id="nombre"
-              type="text"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-            />
+        <section className="rieti-panel">
+          <div className="rieti-panel-header">
+            <div>
+              <span>NUEVO ALIMENTADOR</span>
+              <h3>Crear alimentador</h3>
+            </div>
           </div>
 
-          <div className="usuario-filtro">
-            <label htmlFor="correoInstitucional">Correo institucional</label>
+          <form onSubmit={crearUsuario} className="usuarios-form">
+            <div className="usuario-filtro">
+              <label htmlFor="nombre">Nombre</label>
 
-            <input
-              id="correoInstitucional"
-              type="email"
-              value={correoInstitucional}
-              onChange={(e) => setCorreoInstitucional(e.target.value)}
-              required
-            />
-          </div>
+              <input
+                id="nombre"
+                type="text"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="usuario-filtro">
-            <label htmlFor="telefono">Teléfono</label>
-            <input
-              id="telefono"
-              type="tel"
-              value={telefono}
-              onChange={(e) => setTelefono(e.target.value)}
-            />
-          </div>
+            <div className="usuario-filtro">
+              <label htmlFor="correoInstitucional">Correo institucional</label>
 
-          <div className="usuario-filtro">
-            <label htmlFor="password">Contraseña</label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
+              <input
+                id="correoInstitucional"
+                type="email"
+                value={correoInstitucional}
+                onChange={(e) => setCorreoInstitucional(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="usuario-filtro">
-            <label htmlFor="idMunicipio">Municipio</label>
-            <select
-              id="idMunicipio"
-              value={idMunicipio}
-              onChange={(e) => setIdMunicipio(e.target.value)}
-              required
-            >
-              <option value="">Seleccionar municipio</option>
+            <div className="usuario-filtro">
+              <label htmlFor="telefono">Teléfono</label>
+              <input
+                id="telefono"
+                type="tel"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
+            </div>
 
-              {municipios.map((municipio) => (
-                <option
-                  key={municipio.idMunicipio}
-                  value={municipio.idMunicipio}
-                >
-                  {municipio.nombre}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="usuario-filtro">
+              <label htmlFor="password">Contraseña</label>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
 
-          <div className="usuarios-form-actions">
-            <button
-              type="submit"
-              className="usuarios-button"
-              disabled={cargando}
-            >
-              {cargando ? "Cargando..." : "Crear alimentador"}
-            </button>
-          </div>
+            <div className="usuario-filtro">
+              <label htmlFor="idMunicipio">Municipio</label>
+              <select
+                id="idMunicipio"
+                value={idMunicipio}
+                onChange={(e) => setIdMunicipio(e.target.value)}
+                required
+              >
+                <option value="">Seleccionar municipio</option>
 
-          {mensaje && (
-            <div className={`usuarios-mensaje ${tipoMensaje}`}>{mensaje}</div>
-          )}
-        </form>
-      </section>
-
-      <section className="rieti-panel">
-        <div className="rieti-panel-header usuarios-list-header">
-          <div>
-            <span>USUARIOS</span>
-            <h3>Alimentadores registrados</h3>
-          </div>
-
-          <span className="reportes-count">{totalUsuarios} alimentadores</span>
-        </div>
-
-        <div className="reportes-table-container usuarios-table-container">
-          <table className="reportes-table">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Teléfono</th>
-                <th>Municipio</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              {cargandoUsuarios && (
-                <tr>
-                  <td colSpan="6">Cargando alimentadores...</td>
-                </tr>
-              )}
-
-              {!cargandoUsuarios && errorUsuarios && (
-                <tr>
-                  <td colSpan="6">{errorUsuarios}</td>
-                </tr>
-              )}
-
-              {!cargandoUsuarios && !errorUsuarios && usuarios.length === 0 && (
-                <tr>
-                  <td colSpan="6">No hay alimentadores registrados.</td>
-                </tr>
-              )}
-
-              {!cargandoUsuarios &&
-                !errorUsuarios &&
-                usuarios.map((usuario) => (
-                  <tr key={usuario.idUsuario}>
-                    <td>{usuario.nombre}</td>
-                    <td>{usuario.correo_institucional}</td>
-                    <td>{usuario.telefono || "—"}</td>
-                    <td>{usuario.municipio}</td>
-                    <td>
-                      <span
-                        className={`usuario-estado ${
-                          usuario.activo === 1 ? "activo" : "inactivo"
-                        }`}
-                      >
-                        <span className="usuario-estado-punto"></span>
-                        {usuario.activo === 1 ? "Activo" : "Inactivo"}
-                      </span>
-                    </td>
-
-                    <td>
-                      <div>
-                        <button
-                          type="button"
-                          onClick={() => abrirEditar(usuario)}
-                        >
-                          Editar
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => abrirCambioEstado(usuario)}
-                        >
-                          {usuario.activo === 1 ? "Desactivar" : "Activar"}
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                {municipios.map((municipio) => (
+                  <option
+                    key={municipio.idMunicipio}
+                    value={municipio.idMunicipio}
+                  >
+                    {municipio.nombre}
+                  </option>
                 ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
+              </select>
+            </div>
+
+            <div className="usuarios-form-actions">
+              <button
+                type="submit"
+                className="usuarios-button"
+                disabled={cargando}
+              >
+                {cargando ? "Cargando..." : "Crear alimentador"}
+              </button>
+            </div>
+
+            {mensaje && (
+              <div className={`usuarios-mensaje ${tipoMensaje}`}>{mensaje}</div>
+            )}
+          </form>
+        </section>
+
+        <section className="rieti-panel">
+          <div className="rieti-panel-header usuarios-list-header">
+            <div>
+              <span>USUARIOS</span>
+              <h3>Alimentadores registrados</h3>
+            </div>
+
+            <span className="reportes-count">
+              {totalUsuarios} alimentadores
+            </span>
+          </div>
+
+          <div className="reportes-table-container usuarios-table-container">
+            <table className="reportes-table">
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Teléfono</th>
+                  <th>Municipio</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                {cargandoUsuarios && (
+                  <tr>
+                    <td colSpan="6">Cargando alimentadores...</td>
+                  </tr>
+                )}
+
+                {!cargandoUsuarios && errorUsuarios && (
+                  <tr>
+                    <td colSpan="6">{errorUsuarios}</td>
+                  </tr>
+                )}
+
+                {!cargandoUsuarios &&
+                  !errorUsuarios &&
+                  usuarios.length === 0 && (
+                    <tr>
+                      <td colSpan="6">No hay alimentadores registrados.</td>
+                    </tr>
+                  )}
+
+                {!cargandoUsuarios &&
+                  !errorUsuarios &&
+                  usuarios.map((usuario) => (
+                    <tr key={usuario.idUsuario}>
+                      <td>{usuario.nombre}</td>
+                      <td>{usuario.correo_institucional}</td>
+                      <td>{usuario.telefono || "—"}</td>
+                      <td>{usuario.municipio}</td>
+                      <td>
+                        <span
+                          className={`usuario-estado ${
+                            usuario.activo === 1 ? "activo" : "inactivo"
+                          }`}
+                        >
+                          <span className="usuario-estado-punto"></span>
+                          {usuario.activo === 1 ? "Activo" : "Inactivo"}
+                        </span>
+                      </td>
+
+                      <td>
+                        <div>
+                          <button
+                            type="button"
+                            onClick={() => abrirEditar(usuario)}
+                          >
+                            Editar
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() => abrirCambioEstado(usuario)}
+                          >
+                            {usuario.activo === 1 ? "Desactivar" : "Activar"}
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
 
       {usuarioEditar && (
         <div className="usuarios-modal-overlay">
