@@ -181,7 +181,6 @@ export default function Bitacora({ folio, cerrar }) {
       aria-modal="true"
       aria-labelledby="titulo-bitacora"
     >
-
       <div className="rieti-bitacora-header">
         <div>
           <h2 id="titulo-bitacora">Bitácora</h2>
@@ -384,20 +383,13 @@ export default function Bitacora({ folio, cerrar }) {
                     <div className="rieti-bitacora-item-header">
                       <div>
                         <h4>{item.accion}</h4>
-
                         <span>{formatearFecha(item.fecha)}</span>
                       </div>
-
-                      <small>Actuación #{item.idBitacora}</small>
                     </div>
 
                     <p className="rieti-bitacora-item-note">
                       {item.nota_interna}
                     </p>
-
-                    <div className="rieti-bitacora-item-user">
-                      Usuario #{item.idUsuario}
-                    </div>
                   </div>
                 </article>
               ))}
