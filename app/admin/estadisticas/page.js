@@ -6,6 +6,8 @@ import MapaCalor from "@/components/MapaCalor";
 import MapaPuntos from "@/components/MapaPuntos";
 import GraficaActividad from "@/components/estadisticas/GraficaActividad";
 import GraficaEvolucion from "@/components/estadisticas/GraficaEvolucion";
+import GraficaMunicipioPrioridad from "@/components/estadisticas/GraficaMunicipioPrioridad";
+import GraficaMunicipioEstatus from "@/components/estadisticas/GraficaMunicipioEstatus";
 
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
@@ -189,6 +191,18 @@ export default function Estadisticas() {
           datos={porFecha}
           cargando={cargandoEstadisticas}
           error={errorEstadisticas}
+        />
+
+        <GraficaMunicipioPrioridad
+          reportes={reportes}
+          cargando={cargando}
+          error={error}
+        />
+
+        <GraficaMunicipioEstatus
+          reportes={reportes}
+          cargando={cargando}
+          error={error}
         />
       </section>
     </main>
