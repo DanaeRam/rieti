@@ -193,7 +193,8 @@ La tabla reúne los principales servicios documentados en la API de RIETI. Para 
 
 ---
 
-# Almacenamiento de evidencias fotográficas
+
+## Almacenamiento de evidencias fotográficas
 
 Las fotografías de referencia se almacenan mediante Amazon S3.
 
@@ -224,6 +225,7 @@ Solicita URL temporal a la API
              |
              v
  Confirmación mediante la API
+```
 
 ---
 
@@ -239,7 +241,7 @@ Para ejecutar el proyecto se necesita:
 - Visual Studio Code u otro editor de código.
 - Conexión a Internet para instalar dependencias y consumir la API.
 
-Se recomienda utilizar Node.js 20.9 o superior, respetando los requisitos de compatibilidad de Next.js.
+Se recomienda utilizar Node.js 20.9 o superior.
 
 ## 1. Clonar el repositorio
 
@@ -248,6 +250,7 @@ Abre una terminal y ejecuta:
 ```bash
 git clone https://github.com/DanaeRam/rieti.git
 ```
+
 
 ## 2. Entrar al proyecto
 
