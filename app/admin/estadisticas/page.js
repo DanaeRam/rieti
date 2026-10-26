@@ -1,3 +1,8 @@
+/**
+ * Página de mapas y estadísticas de reportes.
+ *
+ * @module app/admin/estadisticas/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -21,6 +26,11 @@ const URL_BASE =
  *
  * @component
  */
+/**
+ * Presenta mapas y gráficas con datos de los reportes.
+ *
+ * @component
+ */
 export default function Estadisticas() {
   const [reportes, setReportes] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -34,6 +44,12 @@ export default function Estadisticas() {
   useEffect(() => {
     const controlador = new AbortController();
 
+    /**
+     * Consulta un recurso administrativo con la sesión actual.
+     *
+     * @param {string} ruta - Ruta de la API que se consultará.
+     * @returns {Promise<Object>} Datos devueltos por la API.
+     */
     async function obtenerDatos(ruta) {
       const token = localStorage.getItem("token");
 
@@ -59,6 +75,7 @@ export default function Estadisticas() {
       return datos;
     }
 
+    /** Carga los reportes que se muestran en mapas y gráficas. */
     async function obtenerReportes() {
       try {
         const datos = await obtenerDatos("/admin/reportes");
@@ -78,6 +95,7 @@ export default function Estadisticas() {
       }
     }
 
+    /** Carga los totales estadísticos de los últimos 30 días. */
     async function obtenerEstadisticas() {
       try {
         const datos = await obtenerDatos(

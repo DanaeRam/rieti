@@ -1,3 +1,8 @@
+/**
+ * Modal para asignar un reporte a un alimentador municipal.
+ *
+ * @module components/AsignacionReporte
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -5,6 +10,11 @@ import { useEffect, useState } from "react";
 const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
 
+/**
+ * Permite elegir a la persona responsable de atender un reporte.
+ *
+ * @component
+ */
 export default function AsignacionReporte({
   reporte,
   cerrar,
@@ -19,6 +29,7 @@ export default function AsignacionReporte({
   useEffect(() => {
     const controlador = new AbortController();
 
+    /** Carga los alimentadores activos del municipio del reporte. */
     async function cargarAlimentadores() {
       setCargando(true);
       setAlimentadores([]);
@@ -113,6 +124,7 @@ export default function AsignacionReporte({
     return () => controlador.abort();
   }, [reporte.municipio]);
 
+  /** Envía a la API la asignación elegida. */
   async function asignarReporte() {
     if (!idUsuario || guardando || cargando) return;
 

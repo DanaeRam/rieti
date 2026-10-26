@@ -1,7 +1,17 @@
+/**
+ * Modal con los cambios de estatus registrados para un reporte.
+ *
+ * @module components/HistorialEstatus
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Muestra los cambios de estatus registrados para un reporte.
+ *
+ * @component
+ */
 export default function HistorialEstatus({ folio, cerrar }) {
   const [historial, setHistorial] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -10,6 +20,7 @@ export default function HistorialEstatus({ folio, cerrar }) {
   const URL_BASE =
     "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
 
+  /** Consulta el historial de estatus del reporte. */
   async function obtenerHistorial() {
     try {
       setCargando(true);
@@ -49,6 +60,12 @@ export default function HistorialEstatus({ folio, cerrar }) {
     }
   }, [folio]);
 
+  /**
+   * Presenta la fecha del cambio en formato local.
+   *
+   * @param {string} fecha - Fecha recibida desde la API.
+   * @returns {string} Fecha formateada o mensaje alternativo.
+   */
   function formatearFecha(fecha) {
     if (!fecha) {
       return "Fecha no disponible";
@@ -69,6 +86,12 @@ export default function HistorialEstatus({ folio, cerrar }) {
     });
   }
 
+  /**
+   * Devuelve la clase visual asociada a un estatus conocido.
+   *
+   * @param {string} estatus - Estatus del reporte.
+   * @returns {string} Clase CSS correspondiente o una cadena vacía.
+   */
   function obtenerClaseEstatus(estatus) {
     if (!estatus) {
       return "";

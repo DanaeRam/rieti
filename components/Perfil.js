@@ -1,3 +1,8 @@
+/**
+ * Modal para consultar el perfil y cambiar la contraseña.
+ *
+ * @module components/Perfil
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -6,6 +11,11 @@ import { X, UserRoundPen, UserLock } from "lucide-react";
 const API =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
 
+/**
+ * Permite consultar los datos de cuenta y cambiar la contraseña.
+ *
+ * @component
+ */
 export default function PerfilModal({ seccionInicial, onClose }) {
   const [seccion, setSeccion] = useState(seccionInicial);
 
@@ -24,6 +34,7 @@ export default function PerfilModal({ seccionInicial, onClose }) {
   useEffect(() => {
     let activo = true;
 
+    /** Consulta la información de la cuenta autenticada. */
     async function cargarUsuario() {
       const token = localStorage.getItem("token");
 
@@ -68,6 +79,11 @@ export default function PerfilModal({ seccionInicial, onClose }) {
     };
   }, []);
 
+  /**
+   * Valida y envía la nueva contraseña a la API.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Envío del formulario.
+   */
   async function cambiarPwd(event) {
     event.preventDefault();
 

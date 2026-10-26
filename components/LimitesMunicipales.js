@@ -1,14 +1,25 @@
+/**
+ * Carga y muestra los límites municipales en un mapa Leaflet.
+ *
+ * @module components/LimitesMunicipales
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 import { GeoJSON } from "react-leaflet";
 
+/**
+ * Carga los límites municipales y los dibuja en el mapa activo.
+ *
+ * @component
+ */
 export default function LimitesMunicipales() {
   const [municipios, setMunicipios] = useState(null);
 
   useEffect(() => {
     const controlador = new AbortController();
 
+    /** Consulta el archivo geográfico de municipios. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch("/geojson/municipios-edomex.geojson", {

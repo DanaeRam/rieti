@@ -1,3 +1,8 @@
+/**
+ * Gráfica de reportes recibidos por municipio.
+ *
+ * @module components/dashboard/GraficaMunicipios
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -6,6 +11,11 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
+/**
+ * Representa el total de reportes recibidos por municipio.
+ *
+ * @component
+ */
 export default function GraficaMunicipios({
   datos = [],
   cargando = false,

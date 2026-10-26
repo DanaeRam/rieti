@@ -1,3 +1,8 @@
+/**
+ * Gráfica de evolución de reportes por fecha.
+ *
+ * @module components/estadisticas/GraficaEvolucion
+ */
 "use client";
 
 import dynamic from "next/dynamic";

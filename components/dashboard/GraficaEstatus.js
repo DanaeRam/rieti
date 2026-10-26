@@ -1,3 +1,8 @@
+/**
+ * Gráfica de distribución de reportes por estatus.
+ *
+ * @module components/dashboard/GraficaEstatus
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -17,6 +22,12 @@ const ESTATUS = [
   { nombre: "Reincidencia", clave: "reincidencia", color: "#eea45a" },
 ];
 
+/**
+ * Normaliza el estatus para compararlo con el catálogo conocido.
+ *
+ * @param {string} texto - Estatus recibido desde la API.
+ * @returns {string} Estatus sin acentos y en minúsculas.
+ */
 function normalizar(texto) {
   return String(texto || "")
     .normalize("NFD")

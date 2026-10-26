@@ -1,3 +1,8 @@
+/**
+ * Gráfica de reportes agrupados por nivel de prioridad.
+ *
+ * @module components/estadisticas/GraficaPrioridad
+ */
 "use client";
 
 import dynamic from "next/dynamic";

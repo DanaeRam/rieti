@@ -1,4 +1,9 @@
 
+/**
+ * Sección informativa y animada sobre los datos de RIETI.
+ *
+ * @module components/DatosRieti
+ */
 "use client";
 
 import { useEffect, useRef } from "react";
@@ -34,6 +39,7 @@ const monios = [
   { x: -120, y: 0, color: "#9870d5" },
 ];
 
+/** Dibuja la trayectoria animada del papalote de RIETI. */
 function TrayectoriaPapalote() {
   const cabeza = "M 21 0 L 0 -19 L -18 0 L 0 19 Z";
   const cola = "M -23 0 C -34 -8, -42 8, -52 0 S -74 -8, -88 0 S -110 8, -124 0";
@@ -83,6 +89,11 @@ function TrayectoriaPapalote() {
   );
 }
 
+/**
+ * Muestra datos generales y la sección institucional de RIETI.
+ *
+ * @component
+ */
 export default function DatosRieti() {
   const seccionRef = useRef(null);
 

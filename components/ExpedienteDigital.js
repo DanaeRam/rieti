@@ -1,8 +1,18 @@
+/**
+ * Modal que muestra los datos, la ubicación y evidencias de un reporte.
+ *
+ * @module components/ExpedienteDigital
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 import MapaExpediente from "@/components/MapaExpediente";
 
+/**
+ * Presenta el expediente, la ubicación y las evidencias de un reporte.
+ *
+ * @component
+ */
 export default function ExpedienteDigital({ expediente, cerrar }) {
   const [pestana, setPestana] = useState("encabezado");
   const [datosExpediente, setDatosExpediente] = useState(null);
@@ -18,6 +28,7 @@ export default function ExpedienteDigital({ expediente, cerrar }) {
 
     const controlador = new AbortController();
 
+    /** Consulta los datos y las evidencias del expediente seleccionado. */
     async function cargarExpediente() {
       setCargando(true);
       setError("");
@@ -70,6 +81,7 @@ export default function ExpedienteDigital({ expediente, cerrar }) {
 
     const controlador = new AbortController();
 
+    /** Solicita las URL de lectura de las fotografías del expediente. */
     async function cargarFotografias() {
       setUrlsEvidencias([]);
       setErrorEvidencias("");

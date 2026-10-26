@@ -1,3 +1,8 @@
+/**
+ * Gráfica de prioridades de reportes agrupadas por municipio.
+ *
+ * @module components/estadisticas/GraficaMunicipioPrioridad
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -7,6 +12,12 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
+/**
+ * Normaliza texto para comparar niveles de prioridad.
+ *
+ * @param {string} valor - Texto que se va a normalizar.
+ * @returns {string} Texto sin acentos y en minúsculas.
+ */
 function normalizarTexto(valor) {
   return String(valor || "")
     .normalize("NFD")
@@ -15,6 +26,11 @@ function normalizarTexto(valor) {
     .toLowerCase();
 }
 
+/**
+ * Compara la cantidad de reportes por prioridad y municipio.
+ *
+ * @component
+ */
 export default function GraficaMunicipioPrioridad({
   reportes = [],
   cargando = false,

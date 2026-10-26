@@ -1,9 +1,20 @@
+/**
+ * Mapa de calor de reportes con coordenadas válidas.
+ *
+ * @module components/MapaCalor
+ */
 "use client";
 
 import { useEffect, useRef } from "react";
 
 const CENTRO_EDOMEX = [19.35, -99.65];
 
+/**
+ * Convierte reportes con coordenadas válidas en puntos del mapa de calor.
+ *
+ * @param {Array<Object>} reportes - Reportes que se van a representar.
+ * @returns {Array<Array<number>>} Coordenadas y peso de cada punto.
+ */
 function obtenerPuntos(reportes) {
   return reportes
     .filter((reporte) => {
@@ -25,6 +36,11 @@ function obtenerPuntos(reportes) {
     .map((reporte) => [Number(reporte.latitud), Number(reporte.longitud), 1]);
 }
 
+/**
+ * Muestra la concentración geográfica de reportes.
+ *
+ * @component
+ */
 export default function MapaCalor({ reportes = [] }) {
   const contenedorRef = useRef(null);
   const mapaRef = useRef(null);
@@ -36,6 +52,7 @@ export default function MapaCalor({ reportes = [] }) {
   useEffect(() => {
     let cancelado = false;
 
+    /** Inicializa Leaflet, sus capas y los límites municipales. */
     async function cargarMapa() {
       const L = (await import("leaflet")).default;
       await import("leaflet.heat");

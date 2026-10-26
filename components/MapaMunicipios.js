@@ -1,3 +1,8 @@
+/**
+ * Mapa que resume los reportes por municipio.
+ *
+ * @module components/MapaMunicipios
+ */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -10,6 +15,12 @@ const COLORES = {
   alta: "#dc2626",
 };
 
+/**
+ * Valida las coordenadas de un reporte para el formato GeoJSON.
+ *
+ * @param {Object} reporte - Reporte con latitud y longitud.
+ * @returns {[number, number]|null} Longitud y latitud válidas o null.
+ */
 function obtenerCoordenadas(reporte) {
   const lat = Number(reporte.latitud);
   const lon = Number(reporte.longitud);
@@ -31,6 +42,13 @@ function obtenerCoordenadas(reporte) {
   return [lon, lat];
 }
 
+/**
+ * Cuenta los reportes ubicados dentro de cada municipio.
+ *
+ * @param {Array<Object>} reportes - Reportes que se van a contar.
+ * @param {Object} municipios - GeoJSON con límites municipales.
+ * @returns {Map<string, number>} Conteo de reportes por clave municipal.
+ */
 function contarReportes(reportes, municipios) {
   const conteos = new Map();
 
@@ -56,6 +74,13 @@ function contarReportes(reportes, municipios) {
   return conteos;
 }
 
+/**
+ * Elige el color de concentración correspondiente al conteo.
+ *
+ * @param {number} cantidad - Reportes del municipio.
+ * @param {number} maximo - Conteo más alto del mapa.
+ * @returns {string} Color para representar el nivel.
+ */
 function obtenerColor(cantidad, maximo) {
   if (cantidad === 0 || maximo === 0) {
     return COLORES.sinReportes;
@@ -69,6 +94,11 @@ function obtenerColor(cantidad, maximo) {
   return COLORES.baja;
 }
 
+/**
+ * Presenta la concentración de reportes dentro de cada municipio.
+ *
+ * @component
+ */
 export default function MapaMunicipios({ reportes = [] }) {
   const contenedorRef = useRef(null);
   const mapaRef = useRef(null);
@@ -82,6 +112,7 @@ export default function MapaMunicipios({ reportes = [] }) {
 
   reportesRef.current = reportes;
 
+  /** Actualiza los polígonos y conteos mostrados en el mapa. */
   function mostrarMunicipios(L, capa, municipios, listaReportes) {
     capa.clearLayers();
 
@@ -156,6 +187,7 @@ export default function MapaMunicipios({ reportes = [] }) {
     let cancelado = false;
     let observador;
 
+    /** Inicializa Leaflet y carga los límites municipales. */
     async function cargarMapa() {
       const L = (await import("leaflet")).default;
 

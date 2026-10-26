@@ -1,3 +1,8 @@
+/**
+ * Encabezado del área administrativa y menú de usuario.
+ *
+ * @module components/Header
+ */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -12,6 +17,11 @@ import {
   LogOut,
 } from "lucide-react";
 
+/**
+ * Muestra el menú superior, el perfil y las opciones de sesión.
+ *
+ * @component
+ */
 export default function Header({ setSidebarAbierto }) {
   const [usuario, setUsuario] = useState(null);
   const [perfilAbierto, setPerfilAbierto] = useState(false);
@@ -32,6 +42,7 @@ export default function Header({ setSidebarAbierto }) {
   }, []);
 
   useEffect(() => {
+    /** Cierra el menú del perfil cuando se pulsa fuera de él. */
     function cerrarPerfil(event) {
       if (perfilRef.current && !perfilRef.current.contains(event.target)) {
         setPerfilAbierto(false);
@@ -45,12 +56,14 @@ export default function Header({ setSidebarAbierto }) {
     };
   }, []);
 
+  /** Abre una sección del modal de cuenta. */
   function abrirModal(seccion) {
     setSeccionModal(seccion);
     setPerfilAbierto(false);
     setModalAbierto(true);
   }
 
+  /** Elimina los datos de sesión y vuelve al portal público. */
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");

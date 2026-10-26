@@ -1,4 +1,9 @@
 
+/**
+ * Tabla de zonas con reportes cercanos entre sí.
+ *
+ * @module components/estadisticas/TablaZonasRecurrentes
+ */
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
@@ -6,6 +11,12 @@ import { ChevronDown, ChevronUp, FolderOpen, MapPin } from "lucide-react";
 
 const RADIOS = [50, 100, 200, 500];
 
+/**
+ * Valida las coordenadas de un reporte para agrupar su ubicación.
+ *
+ * @param {Object} reporte - Reporte con latitud y longitud.
+ * @returns {{lat: number, lon: number}|null} Coordenadas válidas o null.
+ */
 function obtenerCoordenadas(reporte) {
   if (
     reporte.latitud == null ||
@@ -32,6 +43,14 @@ function obtenerCoordenadas(reporte) {
   return { lat, lon };
 }
 
+/**
+ * Agrupa reportes cercanos y calcula sus datos de proximidad.
+ *
+ * @param {Object} L - Instancia de Leaflet para medir distancias.
+ * @param {Array<Object>} reportes - Reportes con datos de ubicación.
+ * @param {number} radio - Distancia máxima entre reportes del grupo.
+ * @returns {Array<Object>} Zonas con reportes cercanos.
+ */
 function crearZonas(L, reportes, radio) {
   const puntos = reportes
     .map((reporte, indice) => {
@@ -130,6 +149,11 @@ function crearZonas(L, reportes, radio) {
     );
 }
 
+/**
+ * Muestra grupos de reportes con ubicaciones cercanas.
+ *
+ * @component
+ */
 export default function TablaZonasRecurrentes({
   reportes = [],
   cargando = false,

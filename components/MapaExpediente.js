@@ -1,8 +1,18 @@
 
+/**
+ * Mapa de la ubicación registrada en un expediente.
+ *
+ * @module components/MapaExpediente
+ */
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 
+/**
+ * Muestra en un mapa la ubicación de un reporte.
+ *
+ * @component
+ */
 export default function MapaExpediente({
   latitud,
   longitud,
@@ -37,6 +47,7 @@ export default function MapaExpediente({
     let cancelado = false;
     let observador;
 
+    /** Crea el mapa y el marcador del expediente. */
     async function cargarMapa() {
       setError("");
 

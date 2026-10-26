@@ -1,3 +1,8 @@
+/**
+ * Panel con el resumen y las métricas de reportes.
+ *
+ * @module app/admin/dashboard/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -19,6 +24,12 @@ const URL_BASE =
   "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws";
 
 
+/**
+ * Convierte una fecha en un objeto local y rechaza fechas inválidas.
+ *
+ * @param {string|Date} valor - Fecha recibida desde el reporte.
+ * @returns {Date|null} Fecha válida o null si no se puede convertir.
+ */
 function obtenerFechaLocal(valor) {
   if (!valor) return null;
 
@@ -51,6 +62,12 @@ function obtenerFechaLocal(valor) {
   return Number.isNaN(fecha.getTime()) ? null : fecha;
 }
 
+/**
+ * Cuenta los reportes registrados hoy, esta semana y este mes.
+ *
+ * @param {Array<Object>} reportes - Reportes que se van a contar.
+ * @returns {{hoy: number, semana: number, mes: number}} Totales por periodo.
+ */
 function calcularPeriodos(reportes) {
   const hoy = new Date();
   hoy.setHours(0, 0, 0, 0);
@@ -102,6 +119,11 @@ function calcularPeriodos(reportes) {
 }
 
 
+/**
+ * Muestra el resumen, las gráficas y los reportes prioritarios.
+ *
+ * @component
+ */
 export default function Dashboard() {
   const [rolUsuario, setRolUsuario] = useState(null);
 
@@ -129,6 +151,12 @@ export default function Dashboard() {
   useEffect(() => {
     const controlador = new AbortController();
 
+    /**
+     * Consulta un recurso administrativo con la sesión actual.
+     *
+     * @param {string} ruta - Ruta de la API que se consultará.
+     * @returns {Promise<Object>} Datos devueltos por la API.
+     */
     async function obtenerDatos(ruta) {
       const token = localStorage.getItem("token");
 
@@ -151,6 +179,7 @@ export default function Dashboard() {
       return datos;
     }
 
+    /** Carga el resumen general de reportes. */
     async function cargarResumen() {
       try {
         const datos = await obtenerDatos("/api/v1/admin/dashboard/resumen");
@@ -165,6 +194,7 @@ export default function Dashboard() {
       }
     }
 
+    /** Carga las estadísticas de los últimos 30 días. */
     async function cargarEstadisticas() {
       try {
         const datos = await obtenerDatos(
@@ -186,6 +216,7 @@ export default function Dashboard() {
     cargarEstadisticas();
     cargarReportes();
 
+    /** Carga los reportes usados para calcular los totales por periodo. */
     async function cargarReportes() {
       try {
         const datos = await obtenerDatos("/api/v1/admin/reportes");
@@ -224,11 +255,17 @@ const periodos = calcularPeriodos(reportes);
     return resumen?.[campo] ?? 0;
   };
 
-const valorPeriodo = (campo) => {
-  if (cargandoReportes) return "...";
-  if (errorReportes) return "—";
-  return periodos[campo];
-};
+  /**
+   * Devuelve el total de un periodo o el estado de carga correspondiente.
+   *
+   * @param {"hoy"|"semana"|"mes"} campo - Periodo que se muestra.
+   * @returns {number|string} Total, indicador de carga o guion si hay error.
+   */
+  const valorPeriodo = (campo) => {
+    if (cargandoReportes) return "...";
+    if (errorReportes) return "—";
+    return periodos[campo];
+  };
 
   const metricas = [
     {

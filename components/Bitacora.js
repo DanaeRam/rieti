@@ -1,7 +1,17 @@
+/**
+ * Bitácora para consultar y registrar actuaciones de un reporte.
+ *
+ * @module components/Bitacora
+ */
 "use client";
 
 import { useEffect, useState } from "react";
 
+/**
+ * Permite consultar y registrar actuaciones de un reporte.
+ *
+ * @component
+ */
 export default function Bitacora({ folio, cerrar }) {
   const [bitacora, setBitacora] = useState([]);
   const [cargando, setCargando] = useState(true);
@@ -21,6 +31,7 @@ export default function Bitacora({ folio, cerrar }) {
   const URL_BASE =
     "https://csyacibpg4mwuom4vwqyem4bie0asjsc.lambda-url.us-east-1.on.aws/api/v1";
 
+  /** Consulta el historial de actuaciones del reporte. */
   async function obtenerBitacora() {
     try {
       setCargando(true);
@@ -60,6 +71,7 @@ export default function Bitacora({ folio, cerrar }) {
     }
   }, [folio]);
 
+  /** Restablece los campos y errores del formulario de actuación. */
   function limpiarFormulario() {
     setAccion("");
     setNotaInterna("");
@@ -69,16 +81,23 @@ export default function Bitacora({ folio, cerrar }) {
     setError("");
   }
 
+  /** Abre el formulario para registrar una actuación. */
   function abrirFormulario() {
     limpiarFormulario();
     setMensaje("");
     setMostrarFormulario(true);
   }
 
+  /** Cierra el formulario y descarta sus cambios. */
   function cancelarFormulario() {
     limpiarFormulario();
     setMostrarFormulario(false);
   }
+  /**
+   * Valida y envía una actuación para el reporte actual.
+   *
+   * @param {import("react").FormEvent<HTMLFormElement>} event - Envío del formulario.
+   */
   async function registrarActuacion(event) {
     event.preventDefault();
 
@@ -154,6 +173,12 @@ export default function Bitacora({ folio, cerrar }) {
     }
   }
 
+  /**
+   * Presenta la fecha de una actuación en formato local.
+   *
+   * @param {string} fecha - Fecha recibida desde la API.
+   * @returns {string} Fecha formateada o mensaje alternativo.
+   */
   function formatearFecha(fecha) {
     if (!fecha) {
       return "Fecha no disponible";

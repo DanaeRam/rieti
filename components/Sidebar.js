@@ -20,6 +20,11 @@ import {
   LogOut,
 } from "lucide-react";
 
+/**
+ * Muestra las rutas administrativas disponibles para el usuario.
+ *
+ * @component
+ */
 export default function Sidebar({ abierto }) {
   const pathname = usePathname();
   const [esAdministrador, setEsAdministrador] = useState(false);
@@ -37,6 +42,7 @@ export default function Sidebar({ abierto }) {
     }
   }, []);
 
+  /** Elimina la sesión y vuelve al portal público. */
   function cerrarSesion() {
     localStorage.removeItem("token");
     localStorage.removeItem("usuario");

@@ -1,3 +1,8 @@
+/**
+ * Tabla con los reportes que requieren atención prioritaria.
+ *
+ * @module components/dashboard/TablaAtencion
+ */
 "use client";
 
 import { useState } from "react";
@@ -10,6 +15,12 @@ const PRIORIDADES = {
   baja: 3,
 };
 
+/**
+ * Normaliza texto para comparar estatus y prioridades.
+ *
+ * @param {string} valor - Texto que se va a normalizar.
+ * @returns {string} Texto sin acentos y en minúsculas.
+ */
 function normalizar(valor) {
   return String(valor || "")
     .normalize("NFD")
@@ -18,6 +29,12 @@ function normalizar(valor) {
     .toLowerCase();
 }
 
+/**
+ * Presenta una fecha de reporte en formato local.
+ *
+ * @param {string} valor - Fecha recibida desde la API.
+ * @returns {string} Fecha formateada o un guion si no es válida.
+ */
 function formatearFecha(valor) {
   if (!valor) return "—";
 
@@ -35,6 +52,12 @@ function formatearFecha(valor) {
     : fecha.toLocaleDateString("es-MX");
 }
 
+/**
+ * Convierte una fecha en milisegundos para ordenar reportes.
+ *
+ * @param {string} valor - Fecha recibida desde la API.
+ * @returns {number} Tiempo de la fecha o infinito si no es válida.
+ */
 function obtenerTiempo(valor) {
   if (!valor) return Number.POSITIVE_INFINITY;
 
@@ -44,6 +67,11 @@ function obtenerTiempo(valor) {
     : fecha.getTime();
 }
 
+/**
+ * Ordena y muestra los reportes que requieren atención.
+ *
+ * @component
+ */
 export default function TablaAtencion({
   reportes = [],
   cargando = false,

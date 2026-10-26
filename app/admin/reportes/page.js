@@ -45,6 +45,7 @@ export default function Reportes() {
 
   useEffect(() => {
     /** Carga el catálogo de municipios para el filtro de reportes. */
+    /** Carga el catálogo de municipios para el filtro. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
@@ -63,6 +64,7 @@ export default function Reportes() {
 
   useEffect(() => {
     /** Carga el catálogo de actividades para el filtro de reportes. */
+    /** Carga el catálogo de actividades para el filtro. */
     async function cargarActividades() {
       try {
         const respuesta = await fetch(
@@ -121,36 +123,43 @@ export default function Reportes() {
     cargarReportes();
   }, []);
 
+  /** Abre el expediente del reporte seleccionado. */
   function abrirExpediente(reporte) {
     setFolioBitacora(null);
     setHistorialAbierto(null);
     setExpediente(reporte);
   }
 
+  /** Abre la bitácora del reporte seleccionado. */
   function abrirBitacora(reporte) {
     setExpediente(null);
     setHistorialAbierto(null);
     setFolioBitacora(reporte.folio);
   }
 
+  /** Abre el historial de estatus del reporte seleccionado. */
   function abrirHistorial(reporte) {
     setExpediente(null);
     setFolioBitacora(null);
     setHistorialAbierto(reporte.folio);
   }
 
+  /** Cierra el expediente abierto. */
   function cerrarExpediente() {
     setExpediente(null);
   }
 
+  /** Cierra la bitácora abierta. */
   function cerrarBitacora() {
     setFolioBitacora(null);
   }
 
+  /** Cierra el historial de estatus abierto. */
   function cerrarHistorial() {
     setHistorialAbierto(null);
   }
 
+  /** Abre la asignación del reporte seleccionado. */
   function abrirAsignacion(reporte) {
     setExpediente(null);
     setFolioBitacora(null);
@@ -159,10 +168,16 @@ export default function Reportes() {
     setMensajeAsignacion("");
   }
 
+  /** Cierra el modal de asignación. */
   function cerrarAsignacion() {
     setReporteAsignacion(null);
   }
 
+  /**
+   * Cierra el modal de asignación y actualiza la bandeja.
+   *
+   * @param {Object} datos - Respuesta de la asignación realizada.
+   */
   async function asignacionExitosa(datos) {
     setReporteAsignacion(null);
     setMensajeAsignacion(datos.message || "Reporte asignado correctamente.");
@@ -261,6 +276,7 @@ export default function Reportes() {
    * Restablece los filtros de búsqueda a sus valores iniciales.
    */
 
+  /** Restablece los filtros de búsqueda a sus valores iniciales. */
   function limpiarFiltros() {
     setMunicipio("");
     setEstatus("");

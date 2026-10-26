@@ -1,4 +1,9 @@
 
+/**
+ * Carga el mapa interactivo de ubicación solo en el cliente.
+ *
+ * @module components/MapaUbicacion
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -21,6 +26,11 @@ const MapaLeaflet = dynamic(
   }
 );
 
+/**
+ * Presenta el mapa de ubicación cargado solo en el navegador.
+ *
+ * @component
+ */
 export default function MapaUbicacion(props) {
   return <MapaLeaflet {...props} />;
 }

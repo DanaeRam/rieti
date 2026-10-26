@@ -46,6 +46,7 @@ export default function Usuarios() {
 
   useEffect(() => {
     /** Carga el catálogo de municipios para los formularios de usuario. */
+    /** Carga los municipios disponibles para los formularios de usuario. */
     async function cargarMunicipios() {
       try {
         const respuesta = await fetch(
@@ -184,6 +185,7 @@ export default function Usuarios() {
     }
   }
 
+  /** Copia la contraseña temporal del usuario recién creado. */
   async function copiarPassword() {
     if (!usuarioCreado) return;
 
@@ -195,6 +197,7 @@ export default function Usuarios() {
     }
   }
 
+  /** Cierra el mensaje con los datos del usuario creado. */
   function cerrarUsuarioCreado() {
     setUsuarioCreado(null);
     setCredencialesVisibles(false);

@@ -1,6 +1,16 @@
+/**
+ * Página principal del portal ciudadano de RIETI.
+ *
+ * @module app/page
+ */
 import Link from "next/link";
 import DatosRieti from "@/components/DatosRieti";
 
+/**
+ * Muestra los accesos públicos y la información de RIETI.
+ *
+ * @component
+ */
 export default function Home() {
   return (
     <main className="rieti-home">

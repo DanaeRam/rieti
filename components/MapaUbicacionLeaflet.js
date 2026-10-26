@@ -1,3 +1,8 @@
+/**
+ * Mapa Leaflet para seleccionar la ubicación de un reporte.
+ *
+ * @module components/MapaUbicacionLeaflet
+ */
 "use client";
 
 import { useEffect } from "react";

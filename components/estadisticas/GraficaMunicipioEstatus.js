@@ -1,3 +1,8 @@
+/**
+ * Gráfica de estatus de reportes agrupados por municipio.
+ *
+ * @module components/estadisticas/GraficaMunicipioEstatus
+ */
 "use client";
 
 import dynamic from "next/dynamic";
@@ -7,6 +12,12 @@ const Chart = dynamic(() => import("react-apexcharts"), {
   ssr: false,
 });
 
+/**
+ * Normaliza texto para comparar nombres de estatus.
+ *
+ * @param {string} valor - Texto que se va a normalizar.
+ * @returns {string} Texto sin acentos y en minúsculas.
+ */
 function normalizarTexto(valor) {
   return String(valor || "")
     .normalize("NFD")
@@ -25,6 +36,11 @@ const ESTATUS_CONFIG = [
   { nombre: "Reincidencia", clave: "reincidencia", color: "#eba24e" },
 ];
 
+/**
+ * Compara la cantidad de reportes por estatus y municipio.
+ *
+ * @component
+ */
 export default function GraficaMunicipioEstatus({
   reportes = [],
   cargando = false,

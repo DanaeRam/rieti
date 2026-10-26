@@ -1,3 +1,8 @@
+/**
+ * Gráfica de reportes agrupados por tipo de actividad.
+ *
+ * @module components/estadisticas/GraficaActividad
+ */
 "use client";
 
 import dynamic from "next/dynamic";

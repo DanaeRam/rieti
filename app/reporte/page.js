@@ -1,3 +1,8 @@
+/**
+ * Formulario público para registrar reportes en RIETI.
+ *
+ * @module app/reporte/page
+ */
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,6 +31,14 @@ const PASOS = ["Información general", "Ubicación", "Confirmación y envío"];
 const MAX_FOTOS = 2;
 const TIPOS_FOTO = ["image/jpeg", "image/png", "image/webp"];
 
+/**
+ * Busca el nombre asociado a una opción seleccionada.
+ *
+ * @param {Array<Object>} lista - Opciones disponibles.
+ * @param {string|number} id - Identificador seleccionado.
+ * @param {string} campoId - Nombre del campo que contiene el identificador.
+ * @returns {string} Nombre de la opción o texto predeterminado.
+ */
 function textoOpcion(lista, id, campoId) {
   return (
     lista.find((item) => String(item[campoId]) === String(id))?.nombre ||
@@ -82,6 +95,12 @@ export default function Reporte() {
   useEffect(() => {
     const controlador = new AbortController();
 
+    /**
+     * Carga un catálogo y guarda una lista segura para el formulario.
+     *
+     * @param {string} ruta - Ruta del catálogo en la API.
+     * @param {Function} guardar - Función que actualiza el catálogo.
+     */
     async function cargarCatalogo(ruta, guardar) {
       try {
         const respuesta = await fetch(`${API_BASE}${ruta}`, {
@@ -110,12 +129,14 @@ export default function Reporte() {
     return () => controlador.abort();
   }, []);
 
+  /** Guarda las coordenadas elegidas en el mapa o por GPS. */
   function seleccionarUbicacion(lat, lng) {
     setLatitud(lat);
     setLongitud(lng);
     setErrorUbicacion("");
   }
 
+  /** Solicita la ubicación actual del dispositivo. */
   function usarGPS() {
     if (!navigator.geolocation) {
       setErrorUbicacion(
@@ -145,6 +166,7 @@ export default function Reporte() {
     );
   }
 
+  /** Comprueba los campos obligatorios de información general. */
   function validarGeneral() {
     if (
       !numNinos ||
@@ -162,6 +184,7 @@ export default function Reporte() {
     return true;
   }
 
+  /** Comprueba las coordenadas y el municipio seleccionados. */
   function validarUbicacion() {
     if (
       latitud === "" ||
@@ -186,6 +209,7 @@ export default function Reporte() {
     return true;
   }
 
+  /** Valida el paso actual y avanza al siguiente paso del formulario. */
   function siguiente() {
     if (
       paso === 0 &&
@@ -205,6 +229,11 @@ export default function Reporte() {
     setPaso((actual) => Math.min(actual + 1, 3));
   }
 
+  /**
+   * Valida y agrega fotografías seleccionadas por la persona usuaria.
+   *
+   * @param {Event} evento - Evento de selección de archivos.
+   */
   function agregarFotografias(evento) {
     const seleccionados = Array.from(evento.target.files || []);
 
@@ -234,6 +263,13 @@ export default function Reporte() {
     setFotografias((anteriores) => [...anteriores, ...sinDuplicados]);
   }
 
+  /**
+   * Solicita la carga, sube y confirma una fotografía del reporte.
+   *
+   * @param {File} archivo - Fotografía que se va a subir.
+   * @param {string} folioReporte - Folio del reporte asociado.
+   * @returns {Promise<Object>} Confirmación de la API.
+   */
   async function subirFotografia(archivo, folioReporte) {
     const respuestaUrl = await fetch(`${API_BASE}/evidencias/presigned-url`, {
       method: "POST",
@@ -296,6 +332,7 @@ export default function Reporte() {
     return confirmacion;
   }
 
+  /** Registra el reporte y procesa sus fotografías adjuntas. */
   async function enviarReporte() {
     if (enviando || !aceptoAviso) return;
     if (!validarGeneral() || !validarUbicacion()) return;
@@ -418,6 +455,7 @@ export default function Reporte() {
     }
   }
 
+  /** Copia el folio registrado al portapapeles. */
   async function copiarFolio() {
     try {
       await navigator.clipboard.writeText(folioRegistrado);
@@ -429,6 +467,7 @@ export default function Reporte() {
     }
   }
 
+  /** Comparte el folio de seguimiento o copia el enlace como alternativa. */
   async function compartirFolio() {
     const url = `${window.location.origin}/seguimiento`;
     const texto = `Consulta tu reporte RIETI con el folio ${folioRegistrado}: ${url}`;

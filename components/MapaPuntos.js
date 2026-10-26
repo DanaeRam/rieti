@@ -1,9 +1,21 @@
+/**
+ * Mapa de reportes individuales con agrupación de marcadores.
+ *
+ * @module components/MapaPuntos
+ */
 "use client";
 
 import { useEffect, useRef } from "react";
 
 const CENTRO_EDOMEX = [19.35, -99.65];
 
+/**
+ * Actualiza los marcadores de reportes con coordenadas válidas.
+ *
+ * @param {Object} L - Instancia de Leaflet.
+ * @param {Object} grupos - Capa de agrupación de marcadores.
+ * @param {Array<Object>} reportes - Reportes que se van a mostrar.
+ */
 function agregarReportes(L, grupos, reportes) {
   grupos.clearLayers();
 
@@ -42,6 +54,11 @@ function agregarReportes(L, grupos, reportes) {
   });
 }
 
+/**
+ * Muestra reportes individuales agrupados en un mapa.
+ *
+ * @component
+ */
 export default function MapaPuntos({ reportes = [] }) {
   const contenedorRef = useRef(null);
   const mapaRef = useRef(null);
@@ -54,6 +71,7 @@ export default function MapaPuntos({ reportes = [] }) {
   useEffect(() => {
     let cancelado = false;
 
+    /** Inicializa Leaflet y la capa de marcadores agrupados. */
     async function cargarMapa() {
       const L = (await import("leaflet")).default;
       await import("leaflet.markercluster");
