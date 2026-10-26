@@ -2,6 +2,7 @@
  * Página principal del portal ciudadano de RIETI.
  *
  * @module app/page
+ * @author Danae Ramírez
  */
 import Link from "next/link";
 import DatosRieti from "@/components/DatosRieti";

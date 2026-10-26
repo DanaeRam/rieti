@@ -2,6 +2,7 @@
  * Página para consultar el estado de un reporte mediante su folio.
  *
  * @module app/seguimiento/page
+ * @author Danae Ramírez
  */
 "use client";
 

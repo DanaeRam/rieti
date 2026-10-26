@@ -2,6 +2,7 @@
  * Página de acceso para el personal administrativo de RIETI.
  *
  * @module app/login/page
+ * @author Danae Ramírez
  */
 "use client";
 

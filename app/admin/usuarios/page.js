@@ -3,6 +3,7 @@
  * Permite consultar, crear, editar y cambiar el estado de las cuentas.
  *
  * @module app/admin/usuarios/page
+ * @author Danae Ramírez
  */
 "use client";
 

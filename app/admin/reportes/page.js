@@ -2,6 +2,7 @@
  * Bandeja de reportes para consultar y filtrar reportes recibidos.
  *
  * @module app/admin/reportes/page
+ * @author Danae Ramírez
  */
 "use client";
 

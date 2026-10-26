@@ -2,6 +2,7 @@
  * Panel con el resumen y las métricas de reportes.
  *
  * @module app/admin/dashboard/page
+ * @author Danae Ramírez
  */
 "use client";
 

@@ -2,6 +2,7 @@
  * Formulario público para registrar reportes en RIETI.
  *
  * @module app/reporte/page
+ * @author Danae Ramírez
  */
 "use client";
 

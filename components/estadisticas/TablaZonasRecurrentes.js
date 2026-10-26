@@ -16,6 +16,7 @@ const RADIOS = [50, 100, 200, 500];
  *
  * @param {Object} reporte - Reporte con latitud y longitud.
  * @returns {{lat: number, lon: number}|null} Coordenadas válidas o null.
+ * @author Danae Ramírez
  */
 function obtenerCoordenadas(reporte) {
   if (
@@ -50,6 +51,7 @@ function obtenerCoordenadas(reporte) {
  * @param {Array<Object>} reportes - Reportes con datos de ubicación.
  * @param {number} radio - Distancia máxima entre reportes del grupo.
  * @returns {Array<Object>} Zonas con reportes cercanos.
+ * @author ChatGPT (OpenAI)
  */
 function crearZonas(L, reportes, radio) {
   const puntos = reportes
@@ -153,6 +155,7 @@ function crearZonas(L, reportes, radio) {
  * Muestra grupos de reportes con ubicaciones cercanas.
  *
  * @component
+ * @author Danae Ramírez
  */
 export default function TablaZonasRecurrentes({
   reportes = [],

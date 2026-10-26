@@ -2,6 +2,7 @@
  * Página de mapas y estadísticas de reportes.
  *
  * @module app/admin/estadisticas/page
+ * @author Danae Ramírez
  */
 "use client";
 

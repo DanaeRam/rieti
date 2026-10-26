@@ -39,7 +39,13 @@ const monios = [
   { x: -120, y: 0, color: "#9870d5" },
 ];
 
-/** Dibuja la trayectoria animada del papalote de RIETI. */
+/**
+ * Dibuja la trayectoria animada del papalote de RIETI
+ * utilizando elementos SVG.
+ *
+ * @author ChatGPT (OpenAI)
+ * @component
+ */
 function TrayectoriaPapalote() {
   const cabeza = "M 21 0 L 0 -19 L -18 0 L 0 19 Z";
   const cola = "M -23 0 C -34 -8, -42 8, -52 0 S -74 -8, -88 0 S -110 8, -124 0";
@@ -97,6 +103,16 @@ function TrayectoriaPapalote() {
 export default function DatosRieti() {
   const seccionRef = useRef(null);
 
+  /**
+ * Anima la trayectoria del papalote al desplazarse por la página
+ * y actualiza los contadores de las tarjetas de impacto.
+ *
+ * Adapta las animaciones a dispositivos móviles y respeta
+ * la preferencia del usuario de reducir el movimiento.
+ *
+ * @author ChatGPT (OpenAI)
+ * @description Código generado íntegramente mediante ChatGPT.
+ */
   useEffect(() => {
     const seccion = seccionRef.current;
     if (!seccion) return;
